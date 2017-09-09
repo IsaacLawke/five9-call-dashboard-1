@@ -1,0 +1,142 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    background: #e2e9f7;  /* fallback for old browsers */
+    background: linear-gradient(to right, hsl(32, 35%, 92%), hsl(144, 0%, 94%));
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /*background: linear-gradient(to right, #A6FFCB, #12D8FA, #1FA2FF);*/
+
+    color: #444;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+#message {
+    color: #444;
+    white-space: pre-wrap;
+}
+
+.content-wrapper {
+    padding: 2%;
+}
+
+.stats-box {
+    position: relative;
+    padding: 2%;
+    margin-bottom: 2%;
+    text-align: center;
+    background-color: #fafafb;
+    box-shadow: 0 1px 0 rgba(12,13,14,0.1),
+                0 1px 3px rgba(12,13,14,0.1),
+                0 4px 20px rgba(12,13,14,0.035),
+                0 1px 1px rgba(12,13,14,0.025);
+}
+
+.stats-box .department-name {
+    color: #666;
+}
+
+.stats-box .metric-wrapper {
+    padding: 1%;
+}
+
+.stats-box .metric {
+    font-size: 1.33em;
+    margin: 0;
+}
+
+.stats-box .skills-edit-toggle {
+    text-decoration: none;
+    position: absolute;
+    font-size: 2em;
+    top: 0;
+    right: 0;
+    color: #888;
+
+    margin: 2%;
+}
+.stats-box .skills-edit-toggle:hover {
+    color: #444;
+}
+
+
+.credentials-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    min-height: 300px;
+    overflow-x: hidden;
+}
+
+.credentials-form, .credentials-cover {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    transition: all 1s ease;
+}
+
+.credentials-form.out-of-the-way {
+    transform: translate(-100vw);
+}
+
+.credentials-form p {
+    font-family: monospace;
+}
+
+.credentials-cover {
+    color: #444;
+    letter-spacing: 2px;
+    padding: 0;
+}
+.credentials-cover.out-of-the-way {
+    transform: translate(100vw);
+}
+
+
+button {
+    border: none;
+    width: 100%;
+    height: 50px;
+    text-transform: uppercase;
+    font-size: 1.05em;
+    letter-spacing: 3px;
+}
+
+.btn.begin-session {
+    color: white;
+    max-width: 500px;
+    background: linear-gradient(to right, hsl(32, 35%, 63%), hsl(157, 10%, 55%));
+}
+
+
+.btn.begin-session:hover {
+    background: linear-gradient(to right, hsl(32, 35%, 80%), hsl(157, 10%, 75%));
+}
+
+.btn.credentials-cover-toggle {
+    background: transparent;
+    color: #888;
+    width: 100%;
+    height: 100%;
+    min-height: 50px;
+
+    transition: all 100ms linear;
+    /*transition: letter-spacing 1s ease;*/
+    background: linear-gradient(to right, #fafafb 50%, hsl(240, 90%, 98%) 50%);
+    background-size: 200% 100%;
+    background-position:left bottom;
+}
+
+.btn.credentials-cover-toggle:hover {
+    border: 3px solid #ccc;
+    color: #444;
+    letter-spacing: 30px;
+    background-position: right bottom;
+}

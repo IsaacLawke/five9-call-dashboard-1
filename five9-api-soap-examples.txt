@@ -1,0 +1,47 @@
+
+
+##############################
+# setSessionParameters example
+# Required to initialize statistics API session
+##############################
+<x:Envelope xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.supervisor.ws.five9.com/">
+    <x:Header/>
+    <x:Body>
+        <ser:setSessionParameters>
+            <viewSettings>
+                <appType>?</appType>
+                <forceLogoutSession>false</forceLogoutSession>
+                <idleTimeOut>60</idleTimeOut>
+                <rollingPeriod>Minutes5</rollingPeriod>
+                <shiftStart>0</shiftStart>
+                <statisticsRange>CurrentDay</statisticsRange>
+                <timeZone>0</timeZone>
+            </viewSettings>
+        </ser:setSessionParameters>
+    </x:Body>
+</x:Envelope>
+
+
+##############################
+# Statistics API service requests
+##############################
+<x:Envelope xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.supervisor.ws.five9.com/">
+    <x:Header/>
+    <x:Body>
+        <ser:${service}>
+            <statisticType>${statisticType}</statisticType>
+        </ser:${service}>
+    </x:Body>
+</x:Envelope>
+
+##############################
+# Get statistics example
+##############################
+<x:Envelope xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.supervisor.ws.five9.com/">
+<x:Header/>
+    <x:Body>
+        <ser:getStatistics>
+            <statisticType>${statisticType}</statisticType>
+        </ser:getStatistics>
+    </x:Body>
+</x:Envelope>
