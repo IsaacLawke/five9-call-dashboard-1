@@ -39,6 +39,10 @@ body * {
                 0 1px 1px rgba(12,13,14,0.025);
 }
 
+.stats-box.gizmo {
+    width: 200px;
+}
+
 .stats-box .department-name {
     color: #666;
 }

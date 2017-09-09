@@ -1,9 +1,10 @@
-
+// Info on filters & names for each gizmo-widget
 const gizmos = {};
-let openGizmoMenu = null;
+
+// timeout to pause event loop when needed
+let timeout = null;
 
 $(document).ready(() => {
-    let timeout = null;
 
     // show Login form
     $('.credentials-cover-toggle').click(() => {
@@ -13,6 +14,7 @@ $(document).ready(() => {
 
     // listen for sign-in button press
     $('.begin-session').click(async () => {
+        // stop any current event loops running
         if (timeout != null) {
             clearTimeout(timeout);
         }
@@ -44,8 +46,7 @@ $(document).ready(() => {
 
     // Listen for skill filter updates
     $('.modal .save').click(() => {
-        console.log('setting the settings for ' + openGizmoMenu);
-        const name   = $('.modal .name').val();
+        const name   = $('.modal .gizmo-name').val();
         const skills = $('.modal .skills').val();
         if (!gizmos[openGizmoMenu]) gizmos[openGizmoMenu] = {};
         gizmos[openGizmoMenu].name        = name;
@@ -85,13 +86,13 @@ async function run() {
         refreshView(formatJSON(data));
 
         // restart loop
-        return setTimeout(() => {
+        timeout = setTimeout(() => {
             eventLoop(interval);
         }, interval);
     }
 
     try {
-        return await eventLoop(3000);
+        eventLoop(3000);
     } catch (err) {
         error(err, 'Error while running event loop.');
     }
@@ -99,14 +100,14 @@ async function run() {
 
 
 function error(err, message) {
+    $('#message').text(`Whoops! An error occurred when fetching data:   ${err.message}. ${message}`);
+    console.error(err);
+
     // timestamp
     var newDate = new Date();
     newDate.setTime(Date.now());
     dateString = newDate.toTimeString();
     console.log(dateString);
-
-    $('#message').text(`Whoops! An error occurred when fetching data:   ${err.message}. ${message}`);
-    console.error(err);
 }
 
 
@@ -116,15 +117,12 @@ function refreshView(data) {
     $('.gizmo').each((i, gizmo) => {
         let skillFilter, name;
         try {
-            console.log('updating view for ' + gizmo.id);
             skillFilter = gizmos[gizmo.id].skillFilter;
             name = gizmos[gizmo.id].name;
         } catch (e) {
-            console.log('err on skills');
             skillFilter = [];
             name = 'Gizmo Widget';
         }
-        console.log('skillfilter = ', skillFilter);
 
         // Determine calls in queue & max wait
         let callsInQueue = 0;
@@ -219,9 +217,11 @@ function getParameters(requestType) {
     return params;
 }
 
+// Breaks down " skill1, skill2 , skill3" string
+//          to ['skill1','skill2','skill3'] array
 function skillStringToArray(skillString) {
     if (skillString == '') return [];
-    return skillString.split(',');
+    return skillString.split(',').map((skill) => skill.trim());
 }
 
 // Return formatted column / key assignments
