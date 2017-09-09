@@ -92,25 +92,20 @@ function error(err, message) {
 // Takes nicely formatted data. Updates dashboard view.
 function refreshView(data) {
     // update each gizmo on the screen
-    $('.gizmo').each((i, gizmo) => {
-        let skillFilter, name;
-        try {
-            skillFilter = gizmos[gizmo.id].skillFilter;
-            name = gizmos[gizmo.id].name;
-        } catch (e) {
-            skillFilter = [];
-            name = 'Gizmo Widget';
-        }
+    $('.gizmo').each((i, gizmoElement) => {
+        let name = gizmo.gizmos[gizmoElement.id].name;
+        let skills = gizmo.gizmos[gizmoElement.id].skillFilter;
 
         // Determine calls in queue & max wait
         let callsInQueue = 0;
         let maxWait = 0;
         for (let i=0; i < data.length; i++) {
             let queue = data[i];
-            if (skillFilter.includes(queue['Skill Name']) || skillFilter.length == 0) {
+            // Include skills in gizmo filter, or all skills if none are in filter
+            if (skills.includes(queue['Skill Name']) || skills.length == 0) {
                 callsInQueue += queue['Calls In Queue'] * 1;
                 maxWait = Math.max(maxWait, queue['Current Longest Queue Time'] * 1);
-                if (queue['Current Longest Queue Time'] * 1 > 0) console.log(queue);
+                // if (queue['Current Longest Queue Time'] * 1 > 0) console.log(queue);
             }
         }
         // Format wait time from seconds to MM:SS or HH:MM:SS
@@ -124,9 +119,9 @@ function refreshView(data) {
         }
 
         // Update view
-        $(gizmo).find('.metric.calls-in-queue').text(callsInQueue);
-        $(gizmo).find('.metric.max-wait').text(waitString);
-        $(gizmo).find('.department-name').html(name);
+        $(gizmoElement).find('.metric.calls-in-queue').text(callsInQueue);
+        $(gizmoElement).find('.metric.max-wait').text(waitString);
+        $(gizmoElement).find('.department-name').html(name);
     });
 
     // Clear old messages
