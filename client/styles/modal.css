@@ -42,3 +42,21 @@
     height: 10em;
     width: 100%;
 }
+
+.modal .button-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal button {
+    width: 40%;
+    color: #444;
+}
+
+.modal .save:hover {
+    /*color: white;*/
+    background-color: hsl(144, 60%, 75%);
+}
+.modal .cancel:hover {
+    background-color: hsl(21, 42%, 69%)
+}

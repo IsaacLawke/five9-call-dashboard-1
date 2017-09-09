@@ -107,6 +107,7 @@ button {
     text-transform: uppercase;
     font-size: 1.05em;
     letter-spacing: 3px;
+    transition: all 200ms linear;
 }
 
 .btn.begin-session {
@@ -133,7 +134,7 @@ button {
     background-position:left bottom;
 }
 
-.btn.credentials-cover-toggle:hover {
+.btn:hover {
     border: 3px solid #ccc;
     color: #444;
     letter-spacing: 5px;

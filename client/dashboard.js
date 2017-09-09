@@ -131,6 +131,7 @@ function refreshView(data) {
 }
 
 
+// Make a request to server with given parameters (from getParameters)
 async function request(parameters) {
     const apiURL = 'http://localhost:3000/';
 
@@ -152,31 +153,6 @@ async function request(parameters) {
         }).catch((err) => {
             error(err);
         });
-}
-
-
-// Return formatted column / key assignments
-// Takes JSON generated from original Five9 SOAP API response
-function formatJSON(json,
-                    includeFields=['Skill Name', 'Calls In Queue',
-                                   'Current Longest Queue Time']) {
-    let columns = json['columns'][0]['values'][0]['data'];
-    let rows = json['rows'];
-    let data = [];
-
-    for (let i=0; i < rows.length; i++) {
-        let row = rows[i]['values'][0]['data'];
-        let newRow = {};
-        for (let j=0; j < includeFields.length; j++) {
-            let field = includeFields[j];
-            newRow[field] = row[columns.indexOf(field)];
-            // trim extra 0's to fix time formatting (to seconds)
-            if (field == 'Current Longest Queue Time')
-                newRow[field] = newRow[field].slice(0, -3);
-        }
-        data.push(newRow);
-    }
-    return data;
 }
 
 
@@ -211,6 +187,30 @@ function getParameters(requestType) {
     params['authorization'] = btoa(auth); // Base 64 encryption. Yum!
 
     return params;
+}
+
+// Return formatted column / key assignments
+// Takes JSON generated from original Five9 SOAP API response
+function formatJSON(json,
+                    includeFields=['Skill Name', 'Calls In Queue',
+                                   'Current Longest Queue Time']) {
+    let columns = json['columns'][0]['values'][0]['data'];
+    let rows = json['rows'];
+    let data = [];
+
+    for (let i=0; i < rows.length; i++) {
+        let row = rows[i]['values'][0]['data'];
+        let newRow = {};
+        for (let j=0; j < includeFields.length; j++) {
+            let field = includeFields[j];
+            newRow[field] = row[columns.indexOf(field)];
+            // trim extra 0's to fix time formatting (to seconds)
+            if (field == 'Current Longest Queue Time')
+                newRow[field] = newRow[field].slice(0, -3);
+        }
+        data.push(newRow);
+    }
+    return data;
 }
 
 
