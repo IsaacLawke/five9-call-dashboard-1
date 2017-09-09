@@ -39,8 +39,22 @@ body * {
                 0 1px 1px rgba(12,13,14,0.025);
 }
 
+/* Template used for cloning */
+.stats-box.template {
+    display: none;
+}
+
+/* Live queue gizmos */
+.gizmo-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    justify-content: space-between;
+}
+
 .stats-box.gizmo {
     width: 200px;
+    /*padding-right: 2%;*/
 }
 
 .stats-box .department-name {
@@ -56,15 +70,16 @@ body * {
     margin: 0;
 }
 
+/* Hamburger menu to open skill editor */
 .stats-box .skills-edit-toggle {
     text-decoration: none;
     position: absolute;
-    font-size: 2em;
+    font-size: 1.5em;
     top: 0;
     right: 0;
     color: #888;
 
-    margin: 2%;
+    margin: 4w%;
 }
 .stats-box .skills-edit-toggle:hover {
     color: #444;
@@ -90,8 +105,10 @@ body * {
     transform: translate(-100vw);
 }
 
-.credentials-form p {
+.credentials-form label {
     font-family: monospace;
+    display: block;
+    margin: 4%;
 }
 
 .credentials-cover {
@@ -104,6 +121,8 @@ body * {
 }
 
 
+
+/* Buttons! */
 button {
     border: none;
     width: 100%;
@@ -112,6 +131,30 @@ button {
     font-size: 1.05em;
     letter-spacing: 3px;
     transition: all 200ms linear;
+}
+
+.btn.add-gizmo {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 4%;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #888;
+    font-size: 1.5em;
+}
+.btn.add-gizmo span {
+    text-align: center;
+    width: 40px;
+    margin: auto;
+}
+.btn.add-gizmo:hover {
+    border: none;
+    background-color: hsl(23, 60%, 82%);
+    color: black;
 }
 
 .btn.begin-session {

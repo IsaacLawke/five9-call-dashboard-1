@@ -1,11 +1,8 @@
-// Info on filters & names for each gizmo-widget
-const gizmos = {};
 
 // timeout to pause event loop when needed
 let timeout = null;
 
 $(document).ready(() => {
-
     // show Login form
     $('.credentials-cover-toggle').click(() => {
         $('.credentials-form').removeClass('out-of-the-way');
@@ -13,7 +10,9 @@ $(document).ready(() => {
     });
 
     // listen for sign-in button press
-    $('.begin-session').click(async () => {
+    $('.begin-session').click(async (event) => {
+        // prevent redirection
+        event.preventDefault();
         // stop any current event loops running
         if (timeout != null) {
             clearTimeout(timeout);
@@ -30,27 +29,6 @@ $(document).ready(() => {
         } catch (err) {
             error(err, 'Full authenticated?');
         }
-    });
-
-
-    // Handle menu to change skills (modal)
-    $('.skills-edit-toggle').click(function () {
-        $('.modal').css('display', 'block');
-        openGizmoMenu = $(this).parent().attr('id');
-    });
-    $('.close, .cancel, .save').click(() => $('.modal').css('display', 'none'));
-    $(window).click((event) => {
-        if ($(event.target).is('.modal'))
-            $('.modal').css('display', 'none');
-    })
-
-    // Listen for skill filter updates
-    $('.modal .save').click(() => {
-        const name   = $('.modal .gizmo-name').val();
-        const skills = $('.modal .skills').val();
-        if (!gizmos[openGizmoMenu]) gizmos[openGizmoMenu] = {};
-        gizmos[openGizmoMenu].name        = name;
-        gizmos[openGizmoMenu].skillFilter = skillStringToArray(skills);
     });
 });
 
