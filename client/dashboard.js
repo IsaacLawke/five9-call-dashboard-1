@@ -62,7 +62,6 @@ async function run() {
         params = getParameters('ACDStatus');
         response = await request(params);
         let data = await response.json();
-        console.log(data);
         data = data['soap:Envelope']['soap:Body'][0]
                    ['ns2:getStatisticsResponse'][0]['return'][0];
 
@@ -119,7 +118,7 @@ function refreshView(data) {
     wait.setSeconds(maxWait);
     if (maxWait < 3600) {
         waitString = wait.toISOString().substr(14, 5);
-URL    } else {
+    } else {
         waitString = wait.toISOString().substr(11, 8);
     }
     $('.metric.max-wait').text(waitString);
@@ -128,7 +127,7 @@ URL    } else {
     $('#message').text('');
 
     // Update clock
-
+    $('.clock').text(formatAMPM(new Date()));
 }
 
 
@@ -149,7 +148,6 @@ async function request(parameters) {
             if (!response.ok) error(response.status);
             return response;
         }).then((response) => {
-            console.log(response.status);
             return response;
         }).catch((err) => {
             error(err);
@@ -213,4 +211,18 @@ function getParameters(requestType) {
     params['authorization'] = btoa(auth); // Base 64 encryption. Yum!
 
     return params;
+}
+
+
+function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    seconds = seconds < 10 ? '0'+seconds : seconds;
+    var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+    return strTime;
 }

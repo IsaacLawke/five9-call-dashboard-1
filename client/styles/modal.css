@@ -32,3 +32,13 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.modal input,
+.modal textarea {
+    font-size: 1.2em;
+}
+
+.modal textarea {
+    height: 10em;
+    width: 100%;
+}

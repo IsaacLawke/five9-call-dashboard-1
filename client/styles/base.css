@@ -128,7 +128,6 @@ button {
     min-height: 50px;
 
     transition: all 100ms linear;
-    /*transition: letter-spacing 1s ease;*/
     background: linear-gradient(to right, #fafafb 50%, hsl(240, 90%, 98%) 50%);
     background-size: 200% 100%;
     background-position:left bottom;
@@ -137,6 +136,11 @@ button {
 .btn.credentials-cover-toggle:hover {
     border: 3px solid #ccc;
     color: #444;
-    letter-spacing: 30px;
+    letter-spacing: 5px;
     background-position: right bottom;
+}
+
+.clock {
+    text-align: center;
+    color: hsl(236, 19%, 70%)
 }
