@@ -1,4 +1,6 @@
 
+const gizmos = {};
+let openGizmoMenu = null;
 
 $(document).ready(() => {
     let timeout = null;
@@ -22,19 +24,33 @@ $(document).ready(() => {
         const success = await beginSession();
 
         try {
-            timeout = await run();
+            run();
         } catch (err) {
             error(err, 'Full authenticated?');
         }
     });
 
-    // Handle menus to change skills
-    $('.skills-edit-toggle').click(() => $('.modal').css('display', 'block'));
-    $('.close').click(() => $('.modal').css('display', 'none'));
+
+    // Handle menu to change skills (modal)
+    $('.skills-edit-toggle').click(function () {
+        $('.modal').css('display', 'block');
+        openGizmoMenu = $(this).parent().attr('id');
+    });
+    $('.close, .cancel, .save').click(() => $('.modal').css('display', 'none'));
     $(window).click((event) => {
         if ($(event.target).is('.modal'))
             $('.modal').css('display', 'none');
     })
+
+    // Listen for skill filter updates
+    $('.modal .save').click(() => {
+        console.log('setting the settings for ' + openGizmoMenu);
+        const name   = $('.modal .name').val();
+        const skills = $('.modal .skills').val();
+        if (!gizmos[openGizmoMenu]) gizmos[openGizmoMenu] = {};
+        gizmos[openGizmoMenu].name        = name;
+        gizmos[openGizmoMenu].skillFilter = skillStringToArray(skills);
+    });
 });
 
 
@@ -91,37 +107,51 @@ function error(err, message) {
 
     $('#message').text(`Whoops! An error occurred when fetching data:   ${err.message}. ${message}`);
     console.error(err);
-    throw Error(err);
 }
-
-
 
 
 // Takes nicely formatted data. Updates dashboard view.
 function refreshView(data) {
-    // Determine calls in queue & max wait
-    let callsInQueue = 0;
-    let maxWait = 0;
-    for (let i=0; i < data.length; i++) {
-        let queue = data[i];
-        callsInQueue += queue['Calls In Queue'] * 1;
-        maxWait = Math.max(maxWait, queue['Current Longest Queue Time'] * 1);
-        if (queue['Current Longest Queue Time'] * 1 > 0) console.log(queue);
-    }
+    // update each gizmo on the screen
+    $('.gizmo').each((i, gizmo) => {
+        let skillFilter, name;
+        try {
+            console.log('updating view for ' + gizmo.id);
+            skillFilter = gizmos[gizmo.id].skillFilter;
+            name = gizmos[gizmo.id].name;
+        } catch (e) {
+            console.log('err on skills');
+            skillFilter = [];
+            name = 'Gizmo Widget';
+        }
+        console.log('skillfilter = ', skillFilter);
 
-    // Update view
-    $('.metric.calls-in-queue').text(callsInQueue);
+        // Determine calls in queue & max wait
+        let callsInQueue = 0;
+        let maxWait = 0;
+        for (let i=0; i < data.length; i++) {
+            let queue = data[i];
+            if (skillFilter.includes(queue['Skill Name']) || skillFilter.length == 0) {
+                callsInQueue += queue['Calls In Queue'] * 1;
+                maxWait = Math.max(maxWait, queue['Current Longest Queue Time'] * 1);
+                if (queue['Current Longest Queue Time'] * 1 > 0) console.log(queue);
+            }
+        }
+        // Format wait time from seconds to MM:SS or HH:MM:SS
+        let waitString;
+        const wait = new Date(null);
+        wait.setSeconds(maxWait);
+        if (maxWait < 3600) {
+            waitString = wait.toISOString().substr(14, 5);
+        } else {
+            waitString = wait.toISOString().substr(11, 8);
+        }
 
-    // Format time from seconds to MM:SS or HH:MM:SS
-    let waitString;
-    const wait = new Date(null);
-    wait.setSeconds(maxWait);
-    if (maxWait < 3600) {
-        waitString = wait.toISOString().substr(14, 5);
-    } else {
-        waitString = wait.toISOString().substr(11, 8);
-    }
-    $('.metric.max-wait').text(waitString);
+        // Update view
+        $(gizmo).find('.metric.calls-in-queue').text(callsInQueue);
+        $(gizmo).find('.metric.max-wait').text(waitString);
+        $(gizmo).find('.department-name').html(name);
+    });
 
     // Clear old messages
     $('#message').text('');
@@ -187,6 +217,11 @@ function getParameters(requestType) {
     params['authorization'] = btoa(auth); // Base 64 encryption. Yum!
 
     return params;
+}
+
+function skillStringToArray(skillString) {
+    if (skillString == '') return [];
+    return skillString.split(',');
 }
 
 // Return formatted column / key assignments
