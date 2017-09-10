@@ -220,3 +220,9 @@ button {
     text-align: center;
     color: hsl(236, 19%, 70%)
 }
+
+@media screen and (max-width: 400px) {
+    .stats-box.gizmo {
+        width: 180px;
+    }
+}
