@@ -143,7 +143,7 @@ function refreshView(data) {
 
 // Make a request to server with given parameters (from getParameters)
 async function request(parameters) {
-    const apiURL = 'http://localhost:3000/';
+    const apiURL = API_URL; // defined in api_url.js
 
     const requestOptions = {
         method: 'POST',
