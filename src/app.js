@@ -1,10 +1,11 @@
-const bodyParser = require('body-parser');
-const compression = require('compression');
+const bodyParser = require('body-parser'); // parse JSON requests
+const compression = require('compression'); // compress file to GZIP
 const cors = require('cors');
 const express = require('express');
 const five9 = require('./five9-interface');
 const fs = require('fs');
-const parseString = require('xml2js').parseString;
+const helmet = require('helmet'); // security
+const parseString = require('xml2js').parseString; // parse XML to JSON
 const path = require('path');
 const port = parseInt(process.env.PORT, 10) || 3000;
 
@@ -19,6 +20,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 // Parse JSON requests
 app.use(bodyParser.json());
+// And throw in some security middleware for good measure...
+app.use(helmet());
 
 
 // Listen for POST to pass along to Five9 API
