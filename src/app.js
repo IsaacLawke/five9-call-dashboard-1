@@ -6,7 +6,7 @@ const five9 = require('./five9-interface');
 const fs = require('fs');
 const parseString = require('xml2js').parseString;
 const path = require('path');
-const port = parseInt(process.env.PORT, 10) || 8080;
+const port = parseInt(process.env.PORT, 10) || 3000;
 
 
 const app = express();
