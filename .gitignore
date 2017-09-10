@@ -1,2 +1,3 @@
 /node_modules/
 secret_settings.*
+api_url.js

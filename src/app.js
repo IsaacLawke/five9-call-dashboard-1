@@ -1,3 +1,4 @@
+#!/usr/bin/env nodejs
 const bodyParser = require('body-parser'); // parse JSON requests
 const compression = require('compression'); // compress file to GZIP
 const cors = require('cors');
@@ -25,7 +26,7 @@ app.use(helmet());
 
 
 // Listen for POST to pass along to Five9 API
-app.post('/', async (req, res) => {
+app.post('/api', async (req, res) => {
     try {
         // Generate SOAP message for Five9
         const message = five9.jsonToSOAP(req.body);
