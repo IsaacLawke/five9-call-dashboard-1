@@ -69,7 +69,7 @@ async function run() {
             // Parse the data and pass it to the view updater
             refreshView(formatJSON(data));
         } catch (err) {
-            error(err, 'Server may have not responded');
+            error(err, 'Server responded unexpectedly. You authorized?');
         }
 
         // restart loop
@@ -117,7 +117,6 @@ function refreshView(data) {
             // Include skills in gizmo filter, or all skills if none are in filter
             if (skills.includes(queue['Skill Name']) || skills.length == 0) {
                 callsInQueue += queue['Calls In Queue']*1;
-                console.log(queue);
                 maxWait = Math.max(maxWait, queue['Current Longest Queue Time']*1);
                 agentsLoggedIn = Math.max(agentsLoggedIn, queue['Agents Logged In'].split(' ')[0]*1);
                 agentsNotReady = Math.max(agentsNotReady, queue['Agents Not Ready For Calls']*1);

@@ -67,7 +67,7 @@ body * {
 }
 
 .stats-box .metric-wrapper {
-    padding: 1%;
+    padding: 0.5em;
 }
 
 .stats-box .metric {
@@ -78,6 +78,18 @@ body * {
 .stats-box .descriptor {
     margin: 0.5em auto;
 }
+
+.stats-box .agent-states-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.stats-box .agent-states-wrapper .agents-ready-for-calls { color: hsl(120, 44%, 32%); }
+.stats-box .agent-states-wrapper .agents-on-call         { color: hsl(20, 49%, 50%); }
+.stats-box .agent-states-wrapper .agents-not-ready-for-calls { color: hsl(0, 66%, 45%); }
+
 
 /* Hamburger menu to open skill editor and X to remove */
 .gizmo-control {
@@ -155,6 +167,7 @@ button {
     line-height: 40px;
     color: #888;
     font-size: 1.5em;
+    background-color: hsla(0,0%,75%, 0.4);
 }
 .btn.add-gizmo span {
     text-align: center;
