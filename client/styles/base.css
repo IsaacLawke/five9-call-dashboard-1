@@ -58,6 +58,10 @@ body * {
 }
 
 .stats-box .department-name {
+    margin-top: 0;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    height: 2em;
     color: #666;
 }
 
@@ -70,18 +74,19 @@ body * {
     margin: 0;
 }
 
-/* Hamburger menu to open skill editor */
-.stats-box .skills-edit-toggle {
+/* Hamburger menu to open skill editor and X to remove */
+.gizmo-control {
     text-decoration: none;
     position: absolute;
     font-size: 1.5em;
+    color: #888;
+    margin: 4%;
+}
+.stats-box .skills-edit-toggle {
     top: 0;
     right: 0;
-    color: #888;
-
-    margin: 4w%;
 }
-.stats-box .skills-edit-toggle:hover {
+.stats-box .gizmo-control:hover {
     color: #444;
 }
 

@@ -49,13 +49,16 @@
 }
 
 .modal button {
-    width: 40%;
+    width: 30%;
     color: #444;
 }
 
 .modal .save:hover {
-    /*color: white;*/
-    background-color: hsl(144, 60%, 75%);
+    background-color: hsl(144, 42%, 75%);
+}
+.modal .remove:hover {
+    color: white;
+    background-color: hsl(21, 92%, 42%)
 }
 .modal .cancel:hover {
     background-color: hsl(21, 42%, 69%)

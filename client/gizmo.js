@@ -6,7 +6,7 @@ function gizmoManager() {
     // ID tracking
     let lastGizmoId = 0;
     // which gizmo has a menu open?
-    openGizmoMenu = null;
+    let openGizmoMenu = null;
 
     function build(id=null) {
         let template = document.getElementById('gizmo-template');
@@ -42,7 +42,7 @@ function gizmoManager() {
     function setupInteractions(id) {
         let gizmo = $('#' + id);
 
-        gizmo.find('.skills-edit-toggle').click(function () {
+        gizmo.find('.skills-edit-toggle').click(function (event) {
             // Show the modal...
             $('.modal').css('display', 'block');
             // Track currently open menu...
@@ -54,7 +54,9 @@ function gizmoManager() {
     }
 
     function remove(gizmoID) {
-
+        document.getElementById(gizmoID).remove();
+        delete gizmos[gizmoID];
+        save();
     }
 
     // Which gizmo is currently edited in the skill menu? This function will
@@ -69,6 +71,10 @@ function gizmoManager() {
     $('.modal').find('.close, .cancel, .save').click(() =>
         $('.modal').css('display', 'none')
     );
+    $('.modal').find('.remove').click(() => {
+        $('.modal').css('display', 'none');
+        remove(openGizmoMenu);
+    });
     $(window).click((event) => {
         if ($(event.target).is('.modal'))
             $('.modal').css('display', 'none');
