@@ -18,9 +18,8 @@ body * {
     box-sizing: border-box;
 }
 
-#message {
-    color: #444;
-    white-space: pre-wrap;
+.message {
+    color: #666;
 }
 
 .content-wrapper {
@@ -50,6 +49,7 @@ body * {
     flex-wrap: wrap;
     max-width: 100%;
     justify-content: space-between;
+    margin-top: 2em;
 }
 
 .stats-box.gizmo {

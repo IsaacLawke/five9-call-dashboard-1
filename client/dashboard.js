@@ -2,7 +2,11 @@
 // timeout to pause event loop when needed
 let timeout = null;
 
+let gizmo = null;
+
 $(document).ready(() => {
+    gizmo = gizmoManager();
+
     // show Login form
     $('.credentials-cover-toggle').click(() => {
         $('.credentials-form').removeClass('out-of-the-way');
