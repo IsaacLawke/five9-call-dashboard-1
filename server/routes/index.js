@@ -1,3 +1,4 @@
+const compression = require('compression');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -7,6 +8,8 @@ const five9 = require('./../five9-interface');
 
 const app = express();
 
+// GZIP it up
+app.use(compression());
 // Allow CORS
 app.use(cors());
 // Parse JSON requests
