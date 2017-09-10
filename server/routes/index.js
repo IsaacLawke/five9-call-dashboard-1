@@ -18,18 +18,23 @@ app.use(bodyParser.json());
 
 // Listen for POST to pass along to Five9 API
 app.post('/', async (req, res) => {
-    // Generate SOAP message for Five9
-    const message = five9.jsonToSOAP(req.body);
-    const auth = req.body['authorization'];
+    try {
+        // Generate SOAP message for Five9
+        const message = five9.jsonToSOAP(req.body);
+        const auth = req.body['authorization'];
 
-    // Send request to Five9
-    let xmlData = await five9.statsRequest(message, auth);
+        // Send request to Five9
+        let xmlData = await five9.statsRequest(message, auth);
 
-    // On response, format as JSON and send back to client
-    parseString(xmlData, (err, result) => {
-        res.set('Content-Type', 'application/json');
-        res.send(result);
-    });
+        // On response, format as JSON and send back to client
+        parseString(xmlData, (err, result) => {
+            res.set('Content-Type', 'application/json');
+            res.send(result);
+        });
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.send('An error occurred on the server during POST.');
+    }
 });
 
 // Listen for post to initialize session.
