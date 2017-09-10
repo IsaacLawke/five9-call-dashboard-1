@@ -38,21 +38,6 @@ function gizmoManager() {
         return id;
     }
 
-    // Set up menu interactions for gizmo with the given ID
-    function setupInteractions(id) {
-        let gizmo = $('#' + id);
-
-        gizmo.find('.skills-edit-toggle').click(function (event) {
-            // Show the modal...
-            $('.modal').css('display', 'block');
-            // Track currently open menu...
-            openGizmoMenu = id;
-            // And set modal values to match this gizmo
-            $('.modal').find('.gizmo-name').val(gizmos[id].name);
-            $('.modal').find('.skills').text(gizmos[id].skillFilter);
-        });
-    }
-
     function remove(gizmoID) {
         document.getElementById(gizmoID).remove();
         delete gizmos[gizmoID];
@@ -66,6 +51,20 @@ function gizmoManager() {
         gizmos[openGizmoMenu].skillFilter = skillStringToArray(skills);
     }
 
+    // Set up menu interactions for a gizmo with the given ID
+    function setupInteractions(id) {
+        let gizmo = $('#' + id);
+
+        gizmo.find('.skills-edit-toggle').click(function (event) {
+            // Show the modal...
+            $('.modal').css('display', 'block');
+            // Track currently open menu...
+            openGizmoMenu = id;
+            // And set modal values to match this gizmo
+            $('.modal').find('.gizmo-name').val(gizmos[id].name);
+            $('.modal').find('.skills').val(gizmos[id].skillFilter);
+        });
+    }
 
     // set up modal window for editing skills.
     $('.modal').find('.close, .cancel, .save').click(() =>
