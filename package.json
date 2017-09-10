@@ -4,7 +4,7 @@
   "description": "Dashboard to display real-time Five9 statistics.",
   "main": "app.js",
   "scripts": {
-    "start": "node ./server/routes/index.js",
+    "start": "node ./src/app.js",
     "test": "./node_modules/mocha/bin/_mocha"
   },
   "author": "Nathan Clonts",

@@ -4,7 +4,7 @@ const should = chai.should();
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
-const server = require('../server/routes/index');
+const server = require('../src/app');
 
 describe('routes : index', () => {
     describe('POST /', () => {

@@ -1,9 +1,12 @@
-const compression = require('compression');
-const express = require('express');
 const bodyParser = require('body-parser');
+const compression = require('compression');
 const cors = require('cors');
+const express = require('express');
+const five9 = require('./five9-interface');
+const fs = require('fs');
 const parseString = require('xml2js').parseString;
-const five9 = require('./../five9-interface');
+const path = require('path');
+const port = parseInt(process.env.PORT, 10) || 8080;
 
 
 const app = express();
@@ -12,6 +15,8 @@ const app = express();
 app.use(compression());
 // Allow CORS
 app.use(cors());
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
 // Parse JSON requests
 app.use(bodyParser.json());
 
@@ -37,20 +42,17 @@ app.post('/', async (req, res) => {
     }
 });
 
-// Listen for post to initialize session.
-// POST body should include credentials in 'username:password' form.
-app.post('/initialize', async (req, res) => {
-    const credentials = req.body;
 
-});
-
-app.get('*', async (req, res) => {
-    res.send('Unkown route! Contact technical support.', 404);
+app.get('/', async (req, res) => {
+    let path = './public/index.html';
+    console.log(path);
+    let str = fs.readFileSync(path, 'utf-8');
+    res.send(str);
 });
 
 
-const server = app.listen(3000, () => {
-    console.log('Express listenting on port 3000!')
+const server = app.listen(port, () => {
+    console.log(`Express listenting on port ${port}!`);
 });
 
 module.exports = server;
