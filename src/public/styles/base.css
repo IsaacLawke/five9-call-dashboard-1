@@ -61,6 +61,7 @@ body * {
     margin-top: 0;
     margin-left: 0.5em;
     margin-right: 0.5em;
+    margin-bottom: 0.5em;
     height: 2em;
     color: #666;
 }
@@ -72,6 +73,10 @@ body * {
 .stats-box .metric {
     font-size: 1.33em;
     margin: 0;
+}
+
+.stats-box .descriptor {
+    margin: 0.5em auto;
 }
 
 /* Hamburger menu to open skill editor and X to remove */

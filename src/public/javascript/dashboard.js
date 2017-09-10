@@ -105,16 +105,24 @@ function refreshView(data) {
         let name = gizmo.gizmos[gizmoElement.id].name;
         let skills = gizmo.gizmos[gizmoElement.id].skillFilter;
 
-        // Determine calls in queue & max wait
-        let callsInQueue = 0;
-        let maxWait = 0;
+        // Determine calls and agent stats for this gizmo's skills
+        let callsInQueue = 0,
+            maxWait = 0,
+            agentsLoggedIn = 0,
+            agentsNotReady = 0,
+            agentsOnCall = 0,
+            agentsReady = 0;
         for (let i=0; i < data.length; i++) {
             let queue = data[i];
             // Include skills in gizmo filter, or all skills if none are in filter
             if (skills.includes(queue['Skill Name']) || skills.length == 0) {
-                callsInQueue += queue['Calls In Queue'] * 1;
-                maxWait = Math.max(maxWait, queue['Current Longest Queue Time'] * 1);
-                // if (queue['Current Longest Queue Time'] * 1 > 0) console.log(queue);
+                callsInQueue += queue['Calls In Queue']*1;
+                console.log(queue);
+                maxWait = Math.max(maxWait, queue['Current Longest Queue Time']*1);
+                agentsLoggedIn = Math.max(agentsLoggedIn, queue['Agents Logged In'].split(' ')[0]*1);
+                agentsNotReady = Math.max(agentsNotReady, queue['Agents Not Ready For Calls']*1);
+                agentsOnCall += queue['Agents On Call']*1;
+                agentsReady = Math.max(agentsReady, queue['Agents Ready For Calls']*1);
             }
         }
         // Format wait time from seconds to MM:SS or HH:MM:SS
@@ -130,7 +138,10 @@ function refreshView(data) {
         // Update view
         $(gizmoElement).find('.metric.calls-in-queue').text(callsInQueue);
         $(gizmoElement).find('.metric.max-wait').text(waitString);
-        $(gizmoElement).find('.department-name').html(name);
+        $(gizmoElement).find('.agents-logged-in').text(agentsLoggedIn);
+        $(gizmoElement).find('.agents-not-ready-for-calls').text(agentsNotReady);
+        $(gizmoElement).find('.agents-on-call').text(agentsOnCall);
+        $(gizmoElement).find('.agents-ready-for-calls').text(agentsReady);
     });
 
     // Clear old messages
@@ -209,8 +220,10 @@ function skillStringToArray(skillString) {
 // Return formatted column / key assignments
 // Takes JSON generated from original Five9 SOAP API response
 function formatJSON(json,
-                    includeFields=['Skill Name', 'Calls In Queue',
-                                   'Current Longest Queue Time']) {
+        includeFields=['Skill Name', 'Calls In Queue',
+                        'Current Longest Queue Time', 'Agents Logged In',
+                        'Agents Not Ready For Calls', 'Agents On Call',
+                        'Agents Ready For Calls']) {
     let columns = json['columns'][0]['values'][0]['data'];
     let rows = json['rows'];
     let data = [];

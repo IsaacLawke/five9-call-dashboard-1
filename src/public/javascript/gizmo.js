@@ -82,6 +82,7 @@ function gizmoManager() {
     $('.modal .save').click(() => {
         const name   = $('.modal .gizmo-name').val();
         const skills = $('.modal .skills').val();
+        $('#' + openGizmoMenu).find('.department-name').html(name);
         updateCurrent(name, skills);
         save();
     });
