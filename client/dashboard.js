@@ -22,9 +22,10 @@ $(document).ready(() => {
             clearTimeout(timeout);
         }
 
-        // clear Five9 credentials box
+        // clear Five9 credentials box and update Login button text
         $('.credentials-form').addClass('out-of-the-way');
         $('.credentials-cover').removeClass('out-of-the-way');
+        $('.credentials-cover-toggle').text('Logged In');
 
         const success = await beginSession();
 
@@ -41,10 +42,10 @@ $(document).ready(() => {
 // Authorize user to start pulling data.
 // Returns true if successful, and false otherwise.
 async function beginSession() {
-
     // Initiate session with Five9 statistics API
     let params = getParameters('setSessionParameters');
     let response = await request(params);
+
     if (response.status == 200) {
         console.log('Session has begun!');
         return true;
@@ -61,11 +62,14 @@ async function run() {
         params = getParameters('ACDStatus');
         response = await request(params);
         let data = await response.json();
-        data = data['soap:Envelope']['soap:Body'][0]
-                   ['ns2:getStatisticsResponse'][0]['return'][0];
-
-        // Parse the data and pass it to the view updater
-        refreshView(formatJSON(data));
+        if (data == null) {
+            error(new Error('Data response == null!! Watch out!'));
+        } else {
+            data = data['soap:Envelope']['soap:Body'][0]
+                       ['ns2:getStatisticsResponse'][0]['return'][0];
+            // Parse the data and pass it to the view updater
+            refreshView(formatJSON(data));
+        }
 
         // restart loop
         timeout = setTimeout(() => {
@@ -73,11 +77,7 @@ async function run() {
         }, interval);
     }
 
-    try {
-        eventLoop(3000);
-    } catch (err) {
-        error(err, 'Error while running event loop.');
-    }
+    eventLoop(3000);
 }
 
 
@@ -129,7 +129,7 @@ function refreshView(data) {
     });
 
     // Clear old messages
-    $('#message').text('');
+    $('#message').text(' ');
 
     // Update clock
     $('.clock').text(formatAMPM(new Date()));

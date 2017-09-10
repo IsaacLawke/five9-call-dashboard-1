@@ -1,7 +1,6 @@
 
 // Handling of queue gizmo widgets
 function gizmoManager() {
-    console.log('starting fun');
     // Object storing info on filters & names for each gizmo-widget
     let gizmos = null;
     // ID tracking
@@ -41,7 +40,6 @@ function gizmoManager() {
 
     // Set up menu interactions for gizmo with the given ID
     function setupInteractions(id) {
-        console.log('interation ' + id);
         let gizmo = $('#' + id);
 
         gizmo.find('.skills-edit-toggle').click(function () {
@@ -103,10 +101,9 @@ function gizmoManager() {
             gizmos = {};
         } else {
             gizmos = JSON.parse(data);
-            console.log('gizmos:', gizmos);
+            console.log('Loading gizmos:', gizmos);
             // Build view
             for (const id of Object.keys(gizmos)) {
-                console.log(id);
                 build(id);
                 lastGizmoId++;
             };
