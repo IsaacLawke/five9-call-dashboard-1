@@ -13,18 +13,22 @@
             <!-- Pop-up menu to adjust skill filters -->
             <div class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close" title="Close without saving">&times;</span>
                     <p>
                         <input class="gizmo-name" type="text" placeholder="Gizmo Name" />
                     </p>
-                    <textarea class="skills" placeholder="Skills for Gizmo"></textarea>
+                    <textarea class="skills" placeholder="Skills for Gizmo"
+                              title="Skills for Gizmo"></textarea>
                     <div class="button-wrapper">
-                        <button class="btn save">Save</button>
+                        <button class="btn save" title="Save and close">Save</button>
                         <button class="btn remove">Delete</button>
-                        <button class="btn cancel">Cancel</button>
+                        <button class="btn cancel" title="Close without saving">Cancel</button>
                     </div>
                 </div>
             </div>
+
+            <!-- Create new gizmo button -->
+            <button class="add-gizmo btn" title="Add new gizmo">+</button>
 
             <!-- Status message -->
             <p id="message" class="message">
@@ -33,31 +37,29 @@
 
             <!-- Template for cloning new queue gizmos. Hidden by default. -->
             <div class="stats-box template" id="gizmo-template">
-                <a class="skills-edit-toggle gizmo-control" href="#">&#9776;</a>
+                <a class="skills-edit-toggle gizmo-control" href="#" title="Modify this gizmo widget">&#9776;</a>
                 <h3 class="department-name">
                     Gizmo Widget Thing!
                 </h3>
                 <div class="metric-wrapper">
                     <p class="descriptor">Calls in queue</p>
-                    <p class="metric calls-in-queue">-</p>
+                    <p class="metric calls-in-queue" title="Number of calls in queue">-</p>
                 </div>
                 <div class="metric-wrapper">
                     <p class="descriptor">Max wait</p>
-                    <p class="metric max-wait">-:--</p>
+                    <p class="metric max-wait" title="Current longest wait time">-:--</p>
                 </div>
                 <div class="metric-wrapper">
                     <p class="descriptor">Skilled Staff</p>
-                    <p class="metric agents-logged-in">-</p>
+                    <p class="metric agents-logged-in" title="Agents logged in">-</p>
                     <div class="agent-states-wrapper">
-                        <p class="agents-ready-for-calls"></p>
-                        <p class="agents-on-call"></p>
-                        <p class="agents-not-ready-for-calls"></p>
+                        <p class="agents-ready-for-calls" title="Agents ready for calls">-</p>
+                        <p class="agents-on-call" title="Agents on calls">-</p>
+                        <p class="agents-not-ready-for-calls" title="Agents not ready for calls">-</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Create new gizmo button -->
-            <button class="add-gizmo btn">+</button>
 
             <!-- Real live gizmo boxes (created dynamically by gizmo.js) -->
             <div class="gizmo-wrapper">
