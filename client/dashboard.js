@@ -59,16 +59,17 @@ async function beginSession() {
 async function run() {
     async function eventLoop(interval) {
         // Get the data
-        params = getParameters('ACDStatus');
-        response = await request(params);
-        let data = await response.json();
-        if (data == null) {
-            error(new Error('Data response == null!! Watch out!'));
-        } else {
+        let params = getParameters('ACDStatus');
+        let response = await request(params);
+
+        try {
+            let data = await response.json();
             data = data['soap:Envelope']['soap:Body'][0]
                        ['ns2:getStatisticsResponse'][0]['return'][0];
             // Parse the data and pass it to the view updater
             refreshView(formatJSON(data));
+        } catch (err) {
+            error(err, 'Server may have not responded');
         }
 
         // restart loop
@@ -77,12 +78,16 @@ async function run() {
         }, interval);
     }
 
-    eventLoop(3000);
+    // Refresh every 10 seconds.
+    // Five9 stats API has a limit of 500 requests per hour
+    //      (1 request every 7.2 seconds).
+    eventLoop(10000);
 }
 
 
-function error(err, message) {
+function error(err, message='Uh oh.') {
     $('#message').text(`Whoops! An error occurred when fetching data:   ${err.message}. ${message}`);
+    console.log('Error log:');
     console.error(err);
 
     // timestamp

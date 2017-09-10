@@ -39,9 +39,9 @@ function statsRequest(message, auth) {    // Generate SOAP message for Five9
     // Wrap in promise
     return new Promise((resolve, reject) => {
         var req = https.request(options, (res) => {
-            console.log('\n---------------------------------------');
-            console.log('---- Status:', res.statusCode, res.statusMessage);
-            console.log('---- Headers:', res.headers);
+            // console.log('\n---------------------------------------');
+            // console.log('---- Status:', res.statusCode, res.statusMessage);
+            // console.log('---- Headers:', res.headers);
 
             var data = [];
             res.on('data', (d) => {
