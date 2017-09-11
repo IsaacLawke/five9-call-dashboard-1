@@ -37,6 +37,7 @@ app.post('/api', async (req, res) => {
 
         // On response, format as JSON and send back to client
         parseString(xmlData, (err, result) => {
+            console.log(xmlData);
             res.set('Content-Type', 'application/json');
             res.send(result);
         });

@@ -27,8 +27,14 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        const success = await beginSession();
-
+        // Initiate a new session
+        try {
+            const success = await beginSession();
+        } catch (err) {
+            error(err);
+            return; // abort on failure
+        }
+        // begin updating data & page every few seconds
         try {
             run();
         } catch (err) {
@@ -48,10 +54,12 @@ async function beginSession() {
 
     if (response.status == 200) {
         console.log('Session has begun!');
-        return true;
+        let data = await response.json();
+        let fault = getFaultStringFromData(data);
+        if (fault != '') throw new Error('Set Session Parameters issue: ' + fault);
     } else {
         console.log(response);
-        error(new Error('HTTP status code: ' + response.statusCode));
+        throw new Error('Set sessions parameters HTTP status code: ' + response.statusCode);
     }
 }
 
@@ -61,15 +69,19 @@ async function run() {
         // Get the data
         let params = getParameters('ACDStatus');
         let response = await request(params);
+        let data;
 
         try {
-            let data = await response.json();
+            data = await response.json();
+            console.log(data);
             data = data['soap:Envelope']['soap:Body'][0]
                        ['ns2:getStatisticsResponse'][0]['return'][0];
             // Parse the data and pass it to the view updater
             refreshView(formatJSON(data));
         } catch (err) {
-            error(err, 'Server responded unexpectedly. You authorized?');
+            // try to get <message> tag, if it exists
+            let msg = getFaultStringFromData(data);
+            error(err, `Server responded unexpectedly, with message: ${msg}. You authorized?`);
         }
 
         // restart loop
@@ -87,7 +99,7 @@ async function run() {
 
 // Send out an error alert in console and on the page.
 function error(err, message='Uh oh.') {
-    $('#message').text(`Whoops! An error occurred when fetching data:   ${err.message}. ${message}`);
+    $('#message').text(`Whoops! An error occurred. ${err.message}. ${message}`);
     console.log('Error log:');
     console.error(err);
 
@@ -256,4 +268,13 @@ function formatAMPM(date) {
     seconds = seconds < 10 ? '0'+seconds : seconds;
     var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
     return strTime;
+}
+
+// takes JSON from server and returns text within 'faultstring' tag (if existant)
+function getFaultStringFromData(data) {
+    try {
+        return data['soap:Envelope']['soap:Body'][0]['soap:Fault'][0]['faultstring'];
+    } catch (err) {
+        return '';
+    }
 }
