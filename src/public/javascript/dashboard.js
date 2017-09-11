@@ -85,6 +85,7 @@ async function run() {
 }
 
 
+// Send out an error alert in console and on the page.
 function error(err, message='Uh oh.') {
     $('#message').text(`Whoops! An error occurred when fetching data:   ${err.message}. ${message}`);
     console.log('Error log:');
@@ -112,6 +113,7 @@ function refreshView(data) {
             agentsNotReady = 0,
             agentsOnCall = 0,
             agentsReady = 0;
+
         for (let i=0; i < data.length; i++) {
             let queue = data[i];
             // Include skills in gizmo filter, or all skills if none are in filter
@@ -120,7 +122,7 @@ function refreshView(data) {
                 maxWait = Math.max(maxWait, queue['Current Longest Queue Time']*1);
                 agentsLoggedIn = Math.max(agentsLoggedIn, queue['Agents Logged In'].split(' ')[0]*1);
                 agentsNotReady = Math.max(agentsNotReady, queue['Agents Not Ready For Calls']*1);
-                agentsOnCall += queue['Agents On Call']*1;
+                agentsOnCall = Math.max(agentsOnCall, queue['Agents On Call']*1);
                 agentsReady = Math.max(agentsReady, queue['Agents Ready For Calls']*1);
             }
         }
