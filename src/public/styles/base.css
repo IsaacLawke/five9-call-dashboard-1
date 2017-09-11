@@ -7,8 +7,6 @@ body, html {
 
     background: #e2e9f7;  /* fallback for old browsers */
     background: linear-gradient(to right, hsl(32, 35%, 92%), hsl(144, 0%, 94%));
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    /*background: linear-gradient(to right, #A6FFCB, #12D8FA, #1FA2FF);*/
 
     color: #444;
     font-family: 'Ubuntu', sans-serif;
