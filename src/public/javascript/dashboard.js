@@ -90,10 +90,10 @@ async function run() {
         }, interval);
     }
 
-    // Refresh every 10 seconds.
+    // Refresh every 20 seconds.
     // Five9 stats API has a limit of 500 requests per hour
     //      (1 request every 7.2 seconds).
-    eventLoop(10000);
+    eventLoop(20000);
 }
 
 
