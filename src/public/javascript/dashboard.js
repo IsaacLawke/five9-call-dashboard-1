@@ -73,7 +73,6 @@ async function run() {
 
         try {
             data = await response.json();
-            console.log(data);
             data = data['soap:Envelope']['soap:Body'][0]
                        ['ns2:getStatisticsResponse'][0]['return'][0];
             // Parse the data and pass it to the view updater
@@ -131,6 +130,7 @@ function refreshView(data) {
             // Include skills in gizmo filter, or all skills if none are in filter
             if (skills.includes(queue['Skill Name']) || skills.length == 0) {
                 callsInQueue += queue['Calls In Queue']*1;
+                if (queue['Calls In Queue']*1 > 0) console.log(queue);
                 maxWait = Math.max(maxWait, queue['Current Longest Queue Time']*1);
                 agentsLoggedIn = Math.max(agentsLoggedIn, queue['Agents Logged In'].split(' ')[0]*1);
                 agentsNotReady = Math.max(agentsNotReady, queue['Agents Not Ready For Calls']*1);
