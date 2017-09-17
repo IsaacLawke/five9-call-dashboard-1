@@ -52,7 +52,6 @@ body * {
 
 .stats-box.gizmo {
     width: 200px;
-    /*padding-right: 2%;*/
 }
 
 .stats-box .department-name {
@@ -61,6 +60,8 @@ body * {
     margin-right: 0.5em;
     margin-bottom: 0.5em;
     height: 2em;
+    font-size: 1.2em;
+    font-weight: normal;
     color: #666;
 }
 
