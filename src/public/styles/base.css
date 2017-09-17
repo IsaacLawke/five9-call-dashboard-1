@@ -27,7 +27,7 @@ body * {
 .stats-box {
     position: relative;
     padding: 2%;
-    margin-bottom: 2%;
+    margin-bottom: 0.5em;
     text-align: center;
     background-color: #fffffe;
     box-shadow: 0 1px 0 rgba(12,13,14,0.1),
