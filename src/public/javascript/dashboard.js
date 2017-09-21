@@ -73,8 +73,14 @@ async function run() {
 
         try {
             data = await response.json();
-            data = data['soap:Envelope']['soap:Body'][0]
-                       ['ns2:getStatisticsResponse'][0]['return'][0];
+            try {
+                data = data['env:Envelope']['env:Body'][0]
+                           ['ns2:getStatisticsResponse'][0]['return'][0];
+            } catch (e) {
+                console.log('using SOAP prefix');
+                data = data['soap:Envelope']['soap:Body'][0]
+                           ['ns2:getStatisticsResponse'][0]['return'][0];
+            }
             // Parse the data and pass it to the view updater
             refreshView(formatJSON(data));
         } catch (err) {
@@ -275,6 +281,10 @@ function getFaultStringFromData(data) {
     try {
         return data['soap:Envelope']['soap:Body'][0]['soap:Fault'][0]['faultstring'];
     } catch (err) {
-        return '';
+        try {
+            return data['env:Envelope']['env:Body'][0]['env:Fault'][0]['faultstring'];
+        } catch (err2) {
+            return '';
+        }
     }
 }
