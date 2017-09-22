@@ -73,14 +73,8 @@ async function run() {
 
         try {
             data = await response.json();
-            try {
-                data = data['env:Envelope']['env:Body'][0]
-                           ['ns2:getStatisticsResponse'][0]['return'][0];
-            } catch (e) {
-                console.log('using SOAP prefix');
-                data = data['soap:Envelope']['soap:Body'][0]
-                           ['ns2:getStatisticsResponse'][0]['return'][0];
-            }
+            data = data['env:Envelope']['env:Body'][0]
+                       ['ns2:getStatisticsResponse'][0]['return'][0];
             // Parse the data and pass it to the view updater
             refreshView(formatJSON(data));
         } catch (err) {
@@ -279,12 +273,8 @@ function formatAMPM(date) {
 // takes JSON from server and returns text within 'faultstring' tag (if existant)
 function getFaultStringFromData(data) {
     try {
-        return data['soap:Envelope']['soap:Body'][0]['soap:Fault'][0]['faultstring'];
+        return data['env:Envelope']['env:Body'][0]['env:Fault'][0]['faultstring'];
     } catch (err) {
-        try {
-            return data['env:Envelope']['env:Body'][0]['env:Fault'][0]['faultstring'];
-        } catch (err2) {
-            return '';
-        }
+        return '[no fault string received from Five9]';
     }
 }
