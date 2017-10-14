@@ -1,0 +1,19 @@
+.map .background {
+    background:  #eee;
+    pointer-events: all;
+}
+
+.map .map-layer {
+    fill: #fff;
+    stroke: #aaa;
+}
+
+.map .effect-layer {
+    pointer-events: none;
+}
+
+.map .states {
+    fill: none;
+    stroke: #cacaca;
+    stroke-linejoin: round;
+}

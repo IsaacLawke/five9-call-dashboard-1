@@ -41,6 +41,21 @@ body * {
     display: none;
 }
 
+.map-panel-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 500px;
+}
+
+.filters-wrapper {
+    flex: 1;
+    height: 100%;
+    max-width: 366px;
+}
+
 /* Live queue gizmos */
 .gizmo-wrapper {
     display: flex;
@@ -52,10 +67,9 @@ body * {
 
 .stats-box.gizmo {
     width: 200px;
-    /*padding-right: 2%;*/
 }
 
-.stats-box .department-name {
+.stats-box h3 {
     margin-top: 0;
     margin-left: 0.5em;
     margin-right: 0.5em;

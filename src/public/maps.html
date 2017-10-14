@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Dashboard Zone - Maps</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1">
+
+        <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+        <link href="styles/base.css" rel="stylesheet" type="text/css">
+        <link href="styles/modal.css" rel="stylesheet" type="text/css">
+        <link href="styles/maps.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <div class="content-wrapper">
+            <!-- Pop-up menu to adjust skill filters -->
+            <div class="modal">
+                <div class="modal-content">
+                    <span class="close" title="Close without saving">&times;</span>
+                    <p>
+                        <input class="gizmo-name" type="text" placeholder="Gizmo Name" />
+                    </p>
+                    <textarea class="skills" placeholder="Skills for Gizmo"
+                              title="Skills for Gizmo"></textarea>
+                    <div class="button-wrapper">
+                        <button class="btn save" title="Save and close">Save</button>
+                        <button class="btn remove">Delete</button>
+                        <button class="btn cancel" title="Close without saving">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create new gizmo button -->
+            <button class="add-gizmo btn" title="Add new gizmo">+</button>
+
+            <!-- Status message -->
+            <p id="message" class="message">
+                Log in below, then add gizmos with the <em>+</em> on the right.
+            </p>
+
+            <div class="map-panel-wrapper">
+                <div class="stats-box filters-wrapper">
+                    <h3>Filters</h3>
+
+                </div>
+
+                <svg class="map" width="960" height="500"></svg>
+            </div>
+
+            <!-- Template for cloning new queue gizmos. Hidden by default. -->
+            <div class="stats-box template" id="gizmo-template">
+                <a class="skills-edit-toggle gizmo-control" href="#" title="Modify this gizmo widget">&#9776;</a>
+                <h3 class="department-name">
+                    Gizmo Widget Thing!
+                </h3>
+                <div class="metric-wrapper">
+                    <p class="descriptor">Calls in queue</p>
+                    <p class="metric calls-in-queue" title="Number of calls in queue">-</p>
+                </div>
+                <div class="metric-wrapper">
+                    <p class="descriptor">Max wait</p>
+                    <p class="metric max-wait" title="Current longest wait time">-:--</p>
+                </div>
+                <div class="metric-wrapper">
+                    <p class="descriptor">Skilled Staff</p>
+                    <p class="metric agents-logged-in" title="Agents with skill logged in">-</p>
+                    <div class="agent-states-wrapper">
+                        <p class="agents-ready-for-calls" title="Agents with skill available">-</p>
+                        <p class="agents-on-call" title="Agents with skill on calls">-</p>
+                        <p class="agents-not-ready-for-calls" title="Agents with skill unavailable">-</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Real live gizmo boxes (created dynamically by gizmo.js) -->
+            <div class="gizmo-wrapper">
+            </div>
+
+            <!-- Login forms -->
+            <div class="credentials-wrapper">
+                <form class="stats-box credentials-form out-of-the-way" action="#">
+                    <h3>Five9 Credentials</h3>
+                    <label for="username">Username
+                        <input type="text" class="credentials username" name="username "/>
+                    </label>
+                    <label for="password">Password
+                        <input type="password" class="credentials password" name="password" />
+                    </label>
+                    <button type="submit" class="begin-session btn">Start Session</button>
+                </form>
+
+                <div class="stats-box credentials-cover">
+                    <button class="btn credentials-cover-toggle">Login</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="clock">
+        </div>
+    </body>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="javascript/lib/lodash.js" type="text/javascript"></script>
+    <script src="javascript/api_url.js" type="text/javascript"></script>
+    <script src="javascript/dashboard.js" type="text/javascript"></script>
+    <script src="javascript/maps.js" type="text/javascript"></script>
+</html>

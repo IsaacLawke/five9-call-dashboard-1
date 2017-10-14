@@ -1,11 +1,10 @@
-
 // timeout to pause event loop when needed
 let timeout = null;
 
 let gizmo = null;
 
 $(document).ready(() => {
-    gizmo = gizmoManager();
+    console.log(getParameters('runReport'));
 
     // show Login form
     $('.credentials-cover-toggle').click(() => {
@@ -18,31 +17,67 @@ $(document).ready(() => {
         // prevent redirection
         event.preventDefault();
         // stop any current event loops running
-        if (timeout != null) {
-            clearTimeout(timeout);
-        }
+        // if (timeout != null) {
+        //     clearTimeout(timeout);
+        // }
 
         // clear Five9 credentials box and update Login button text
         $('.credentials-form').addClass('out-of-the-way');
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
+        beginSession()
+            .then(async () => {
+                console.log('reports!');
+                getReportResults();
+            });
+
         // Initiate a new session
-        try {
-            const success = await beginSession();
-        } catch (err) {
-            error(err);
-            return; // abort on failure
-        }
-        // begin updating data & page every few seconds
-        try {
-            run();
-        } catch (err) {
-            error(err, 'Full authenticated?');
-        }
+        // try {
+        //     const success = await beginSession();
+        // } catch (err) {
+        //     error(err);
+        //     return; // abort on failure
+        // }
+        // // begin updating data & page every few seconds
+        // try {
+        //     run();
+        // } catch (err) {
+        //     error(err, 'Full authenticated?');
+        // }
     });
 });
 
+async function getReportResults() {
+    let runReport = await request(getParameters('runReport'), 'configuration');
+    let reportId = jsonToReturnValue(await runReport.json(), 'runReport');
+
+    async function awaitReport(id) {
+        let runResponse = await request(getParameters('isReportRunning', id),
+                                        'configuration');
+        let stillRunning = jsonToReturnValue(await runResponse.json(), 'isReportRunning');
+
+        if (stillRunning == 'true') {
+            setTimeout(() => awaitReport(id), 5000);
+        } else {
+            let reportResult = await request(getParameters('getReportResultCsv', id),
+                                             'configuration');
+            let res = await reportResult.json();
+            console.log(res);
+            let reportCsv = jsonToReturnValue(res, 'getReportResultCsv');
+            console.log(reportCsv);
+            let data = d3.csvParse(reportCsv);
+
+            data.forEach((d) => {
+                d.CALLS = +d.CALLS;
+            });
+
+            makeMap(process(data));
+        }
+    }
+
+    awaitReport(reportId);
+}
 
 // Let's get started!
 // Authorize user to start pulling data.
@@ -76,7 +111,7 @@ async function run() {
             data = data['soap:Envelope']['soap:Body'][0]
                        ['ns2:getStatisticsResponse'][0]['return'][0];
             // Parse the data and pass it to the view updater
-            refreshView(formatJSON(data));
+            refreshView(jsonToViewData(data));
         } catch (err) {
             // try to get <message> tag, if it exists
             let msg = getFaultStringFromData(data);
@@ -166,8 +201,8 @@ function refreshView(data) {
 
 
 // Make a request to server with given parameters (from getParameters)
-async function request(parameters) {
-    const apiURL = API_URL; // defined in api_url.js
+async function request(parameters, url='statistics') {
+    const apiURL = API_URL + url; // defined in api_url.js
 
     const requestOptions = {
         method: 'POST',
@@ -191,9 +226,12 @@ async function request(parameters) {
 
 
 // Given a requestType, returns JSON to submit to server in POST request.
-function getParameters(requestType) {
+// requestType should match Five9 API command.
+// additionalParameter used for report IDs in some commands.
+function getParameters(requestType, additionalParameter=null) {
     let params = {};
 
+    // Initiate session
     if (requestType == 'setSessionParameters') {
         params = {
             'service': 'setSessionParameters',
@@ -206,6 +244,7 @@ function getParameters(requestType) {
             ]
         }
     }
+    // Get real-time call stats
     if (requestType == 'ACDStatus') {
         params = {
             'service': 'getStatistics',
@@ -214,10 +253,46 @@ function getParameters(requestType) {
             } ]
         }
     }
+
+    // Report running params
+    if (requestType == 'runReport') {
+        params = {
+            'service': 'runReport',
+            'settings': [
+                { 'folderName': 'Contact Center Reports' },
+                { 'reportName': 'Calls by Zip' },
+                { 'criteria': [ {
+                    'time': [
+                        { 'end': '2017-09-24T00:00:00' },
+                        { 'start': '2017-09-23T00:00:00' }
+                    ]
+                } ] }
+            ]
+        }
+    }
+    if (requestType == 'isReportRunning') {
+        params = {
+            'service': 'isReportRunning',
+            'settings': [
+                { 'identifier': additionalParameter },
+                { 'timeout': '5' }
+            ]
+        }
+    }
+    if (requestType == 'getReportResultCsv') {
+        params = {
+            'service': 'getReportResultCsv',
+            'settings': [
+                { 'identifier': additionalParameter }
+            ]
+        }
+    }
+
     // Credentials
     let user = $('.credentials.username').val();
     let pass = $('.credentials.password').val();
     let auth = user + ':' + pass;
+    auth = 'nclonts@risebroadband.com:Breathing1';
     params['authorization'] = btoa(auth); // Base 64 encryption. Yum!
 
     return params;
@@ -232,7 +307,7 @@ function skillStringToArray(skillString) {
 
 // Return formatted column / key assignments
 // Takes JSON generated from original Five9 SOAP API response
-function formatJSON(json,
+function jsonToViewData(json,
         includeFields=['Skill Name', 'Calls In Queue',
                         'Current Longest Queue Time', 'Agents Logged In',
                         'Agents Not Ready For Calls', 'Agents On Call',
@@ -254,6 +329,10 @@ function formatJSON(json,
         data.push(newRow);
     }
     return data;
+}
+
+function jsonToReturnValue(json, type) {
+    return json['env:Envelope']['env:Body'][0]['ns2:'+type+'Response'][0]['return'][0];
 }
 
 

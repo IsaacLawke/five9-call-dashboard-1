@@ -25,8 +25,8 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 
-// Listen for POST to pass along to Five9 API
-app.post('/api', async (req, res) => {
+// Five9 Statistics API request
+app.post('/api/statistics', async (req, res) => {
     try {
         // Generate SOAP message for Five9
         const message = five9.jsonToSOAP(req.body);
@@ -46,17 +46,77 @@ app.post('/api', async (req, res) => {
     }
 });
 
+// Five9 Configuration API requests
+app.post('/api/configuration', async (req, res) => {
+    try {
+        // Generate SOAP message for Five9
+        console.log('config api call!');
+        const message = five9.jsonToSOAP(req.body);
+        const auth = req.body['authorization'];
 
+        // Send request to Five9
+        let xmlData = await five9.configRequest(message, auth);
+
+        // On response, format as JSON and send back to client
+        parseString(xmlData, (err, result) => {
+            res.set('Content-Type', 'text/csv');
+            res.send(result);
+        });
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.send('An error occurred on the server during POST.');
+    }
+});
+
+app.get('/api/data', async (req, res) => {
+    try {
+        // return CSV file
+        let dir = path.join(__dirname + '/public/zip-code-calls.csv');
+        res.sendFile(dir);
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.send('An error occurred on the server during POST.');
+    }
+});
+
+app.get('/api/zip3-data', async (req, res) => {
+    try {
+        // return JSON zip data
+        let dir = path.join(__dirname + '/public/zip3-albers.json');
+        res.sendFile(dir);
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.send('An error occurred on the server during POST.');
+    }
+});
+
+app.get('/api/states', async (req, res) => {
+    try {
+        // return JSON zip data
+        let dir = path.join(__dirname + '/public/states-albers.json');
+        res.sendFile(dir);
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.send('An error occurred on the server during POST.');
+    }
+});
+
+// queue page
 app.get('/', async (req, res) => {
-    let path = './public/index.html';
-    console.log(path);
+    let dir = './public/index.html';
     let str = fs.readFileSync(path, 'utf-8');
     res.send(str);
 });
 
+// maps page
+app.get('/maps', async (req, res) => {
+    let dir = path.join(__dirname + '/public/maps.html');
+    res.sendFile(dir);
+});
+
 
 const server = app.listen(port, () => {
-    console.log(`Express listenting on port ${port}!`);
+    console.log(`Express listening on port ${port}!`);
 });
 
 module.exports = server;
