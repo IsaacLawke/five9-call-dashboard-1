@@ -60,11 +60,13 @@ class CallMap {
     }
 
     onReady(err, usa, zipData) {
+        this.zipData = zipData;
+        this.usa = usa;
         console.log('this = ' + this);
         this.svg.insert('g', '.key')
             .attr('class', 'zips')
           .selectAll('path')
-          .data(zipData.features)
+          .data(this.zipData.features)
           .enter().append('path')
             .attr('d', this.path)
             .attr('fill', (d) => {
@@ -98,8 +100,8 @@ class CallMap {
 
         // Key / legend
         this.g.remove()
-            .exit()
-            .data(this.calls);
+            .exit();
+            // .data(this.calls);
 
         this.g = this.svg.append('g')
             .attr('class', 'key')
@@ -114,7 +116,11 @@ class CallMap {
             .enter().append('rect')
               .attr('height', 8)
               .attr('x', (d) => this.x(d[0]))
-              .attr('width', (d) => this.x(d[1]) - this.x(d[0]))
+              .attr('width', (d) => {
+                  // TODO: some values negative
+                  //if (this.x(d[1]) - this.x(d[0]) < 0) debugger;
+                  return this.x(d[1]) - this.x(d[0]);
+              } )
               .attr('fill', (d) => this.color(d[0]));
 
         this.g.append('text')
@@ -132,6 +138,35 @@ class CallMap {
         .select('.domain')
           .remove();
 
+
+        // data
+        this.svg.selectAll('.zips, .states').remove().exit();
+        this.svg.insert('g', '.key')
+            .attr('class', 'zips')
+          .selectAll('path')
+          .data(this.zipData.features)
+          .enter().append('path')
+            .attr('d', this.path)
+            .attr('fill', (d) => {
+                let zip = d.properties.ZIP;
+                let val = this.calls.has(zip)
+                    ? this.calls.get(zip).value
+                    : 0;
+                return this.color(val);
+            })
+          .append('title')
+            .text((d) => {
+                let zip = d.properties.ZIP;
+                let numCalls = this.calls.has(zip) ? this.calls.get(zip).value : 0;
+                return `ZIP3: ${zip}\nCalls: ${numCalls}`;
+            });
+        
+        this.svg.insert('g', '.key')
+            .attr('class', 'states')
+          .selectAll('path')
+          .data(this.usa.features)
+          .enter().append('path')
+            .attr('d', this.path);
 
         console.log(processedData);
     }
