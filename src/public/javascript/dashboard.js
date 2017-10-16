@@ -59,7 +59,7 @@ async function getReportResults() {
                 d.CALLS = +d.CALLS;
             });
 
-            makeMap(process(data));
+            updateMap(process(data));
         }
     }
     awaitReport(reportId);
