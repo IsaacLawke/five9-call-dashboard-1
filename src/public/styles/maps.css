@@ -1,3 +1,5 @@
+
+/* Styling for map */
 .map .background {
     background:  #eee;
     pointer-events: all;
@@ -16,4 +18,20 @@
     fill: none;
     stroke: #cacaca;
     stroke-linejoin: round;
+}
+
+.map .key {
+    z-index: 500;
+}
+
+
+/* Toggle switch */
+
+
+/* Data filters */
+.filter {
+    display: block;
+    margin: 10px auto;
+    align-items: center;
+    color: #666;
 }

@@ -4,8 +4,6 @@ let timeout = null;
 let gizmo = null;
 
 $(document).ready(() => {
-    console.log(getParameters('runReport'));
-
     // show Login form
     $('.credentials-cover-toggle').click(() => {
         $('.credentials-form').removeClass('out-of-the-way');
@@ -17,39 +15,27 @@ $(document).ready(() => {
         // prevent redirection
         event.preventDefault();
         // stop any current event loops running
-        // if (timeout != null) {
-        //     clearTimeout(timeout);
-        // }
+        if (timeout != null) {
+            clearTimeout(timeout);
+        }
 
         // clear Five9 credentials box and update Login button text
         $('.credentials-form').addClass('out-of-the-way');
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        beginSession()
-            .then(async () => {
-                console.log('reports!');
-                getReportResults();
-            });
-
-        // Initiate a new session
-        // try {
-        //     const success = await beginSession();
-        // } catch (err) {
-        //     error(err);
-        //     return; // abort on failure
-        // }
-        // // begin updating data & page every few seconds
-        // try {
-        //     run();
-        // } catch (err) {
-        //     error(err, 'Full authenticated?');
-        // }
+        await beginSession();
+        await getReportResults();
+        console.log('finished getReportResults!');
     });
 });
 
 async function getReportResults() {
-    let runReport = await request(getParameters('runReport'), 'configuration');
+    let startTime = $('.filter.start-time').val();
+    let endTime = $('.filter.end-time').val();
+    let params = getParameters('runReport', null, startTime, endTime);
+    let runReport = await request(params, 'configuration');
+
     let reportId = jsonToReturnValue(await runReport.json(), 'runReport');
 
     async function awaitReport(id) {
@@ -58,16 +44,17 @@ async function getReportResults() {
         let stillRunning = jsonToReturnValue(await runResponse.json(), 'isReportRunning');
 
         if (stillRunning == 'true') {
+            console.log('Awaiting report result...');
             setTimeout(() => awaitReport(id), 5000);
         } else {
-            let reportResult = await request(getParameters('getReportResultCsv', id),
-                                             'configuration');
+            let params = getParameters('getReportResultCsv', id);
+            let reportResult = await request(params, 'configuration');
+
             let res = await reportResult.json();
-            console.log(res);
             let reportCsv = jsonToReturnValue(res, 'getReportResultCsv');
             console.log(reportCsv);
-            let data = d3.csvParse(reportCsv);
 
+            const data = d3.csvParse(reportCsv);
             data.forEach((d) => {
                 d.CALLS = +d.CALLS;
             });
@@ -75,7 +62,6 @@ async function getReportResults() {
             makeMap(process(data));
         }
     }
-
     awaitReport(reportId);
 }
 
@@ -227,8 +213,9 @@ async function request(parameters, url='statistics') {
 
 // Given a requestType, returns JSON to submit to server in POST request.
 // requestType should match Five9 API command.
-// additionalParameter used for report IDs in some commands.
-function getParameters(requestType, additionalParameter=null) {
+// Optional parameters used for some reporting commands.
+function getParameters(requestType, reportId=null, criteriaTimeStart=null,
+                       criteriaTimeEnd=null) {
     let params = {};
 
     // Initiate session
@@ -263,8 +250,8 @@ function getParameters(requestType, additionalParameter=null) {
                 { 'reportName': 'Calls by Zip' },
                 { 'criteria': [ {
                     'time': [
-                        { 'end': '2017-09-24T00:00:00' },
-                        { 'start': '2017-09-23T00:00:00' }
+                        { 'end': criteriaTimeEnd },
+                        { 'start': criteriaTimeStart }
                     ]
                 } ] }
             ]
@@ -274,7 +261,7 @@ function getParameters(requestType, additionalParameter=null) {
         params = {
             'service': 'isReportRunning',
             'settings': [
-                { 'identifier': additionalParameter },
+                { 'identifier': reportId },
                 { 'timeout': '5' }
             ]
         }
@@ -283,7 +270,7 @@ function getParameters(requestType, additionalParameter=null) {
         params = {
             'service': 'getReportResultCsv',
             'settings': [
-                { 'identifier': additionalParameter }
+                { 'identifier': reportId }
             ]
         }
     }
@@ -292,8 +279,7 @@ function getParameters(requestType, additionalParameter=null) {
     let user = $('.credentials.username').val();
     let pass = $('.credentials.password').val();
     let auth = user + ':' + pass;
-    auth = 'nclonts@risebroadband.com:Breathing1';
-    params['authorization'] = btoa(auth); // Base 64 encryption. Yum!
+    params['authorization'] = btoa(auth); // Base 64 encoding. Yum!
 
     return params;
 }

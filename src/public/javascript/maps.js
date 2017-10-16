@@ -5,7 +5,7 @@ function makeMap(callData) {
     let calls = d3.map(callData, (d) => d.key);
 
     let color = d3.scaleThreshold()
-        .domain(d3.range(1, 30, 2))
+        .domain(d3.range(1, 30, 4))
         .range(d3.schemeBlues[9]);
 
     let path = d3.geoPath();
@@ -14,11 +14,11 @@ function makeMap(callData) {
         .attr('width', width)
         .attr('height', height);
 
-    // Key / legend
     let x = d3.scaleLinear()
         .domain(d3.range(1, 30, 28))
         .rangeRound([600, 860]);
 
+        // Key / legend
     let g = svg.append('g')
         .attr('class', 'key')
         .attr('transform', 'translate(0,40)');
@@ -75,7 +75,6 @@ function makeMap(callData) {
                 let numCalls = calls.has(zip) ? calls.get(zip).value : 0;
                 return `ZIP3: ${zip}\nCalls: ${numCalls}`;
             });
-
 
         svg.append('g')
             .attr('class', 'states')

@@ -55,10 +55,13 @@ app.post('/api/configuration', async (req, res) => {
         const auth = req.body['authorization'];
 
         // Send request to Five9
+        console.log('sending five9 request...');
         let xmlData = await five9.configRequest(message, auth);
+        console.log('retreived xml response!');
 
         // On response, format as JSON and send back to client
         parseString(xmlData, (err, result) => {
+            console.log(result);
             res.set('Content-Type', 'text/csv');
             res.send(result);
         });

@@ -29,18 +29,17 @@
                 </div>
             </div>
 
-            <!-- Create new gizmo button -->
-            <button class="add-gizmo btn" title="Add new gizmo">+</button>
-
             <!-- Status message -->
             <p id="message" class="message">
-                Log in below, then add gizmos with the <em>+</em> on the right.
+                Log in below, then add filters in the panel on the left.
             </p>
 
             <div class="map-panel-wrapper">
                 <div class="stats-box filters-wrapper">
                     <h3>Filters</h3>
-
+                    <label>Date range</label>
+                    <input type="text" class="filter start-time" placeholder="start" value="2017-10-15T00:00:00" />
+                    <input type="text" class="filter end-time" placeholder="end" value="2017-10-15T23:59:59" />
                 </div>
 
                 <svg class="map" width="960" height="500"></svg>
