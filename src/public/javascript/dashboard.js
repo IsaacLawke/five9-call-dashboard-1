@@ -52,7 +52,7 @@ async function getReportResults() {
 
             let res = await reportResult.json();
             let reportCsv = jsonToReturnValue(res, 'getReportResultCsv');
-            console.log(reportCsv);
+            console.log(res);
 
             const data = d3.csvParse(reportCsv);
             data.forEach((d) => {

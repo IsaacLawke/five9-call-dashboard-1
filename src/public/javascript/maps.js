@@ -1,11 +1,16 @@
-function makeMap(callData) {
+function createMap(callData) {
     let width = 960,
         height = 500;
 
     let calls = d3.map(callData, (d) => d.key);
+    let maxValue = d3.max(callData, (d) => d.value);
+
+    let x = d3.scaleLinear()
+        .domain(d3.range(1, maxValue, maxValue-2))
+        .rangeRound([600, 860]);
 
     let color = d3.scaleThreshold()
-        .domain(d3.range(1, 30, 4))
+        .domain(d3.range(1, maxValue, maxValue / 9))
         .range(d3.schemeBlues[9]);
 
     let path = d3.geoPath();
@@ -13,10 +18,6 @@ function makeMap(callData) {
     let svg = d3.select('svg')
         .attr('width', width)
         .attr('height', height);
-
-    let x = d3.scaleLinear()
-        .domain(d3.range(1, 30, 28))
-        .rangeRound([600, 860]);
 
     // Key / legend
     let g = svg.append('g')
@@ -45,7 +46,7 @@ function makeMap(callData) {
         .text('Calls offered');
     g.call(d3.axisBottom(x)
         .tickSize(13)
-        .tickFormat((x, i) => x)
+        .tickFormat(d3.format('d'))   //(x, i) => x)
         .tickValues(color.domain()))
       .select('.domain')
         .remove();
@@ -85,10 +86,14 @@ function makeMap(callData) {
     }
 }
 
+function updateMap() {
+    
+}
+
 // Takes call data (by zip code), returns total calls by ZIP3
 function process(data) {
     let callsByZip = d3.nest()
-        .key((d) => d['Global.strSugarZipCode'].substring(0,3))
+        .key((d) => d[FIVE9_ZIP_FIELD].substring(0,3))
         .rollup((v) => v.length)
         .entries(data);
     return callsByZip;
