@@ -4,6 +4,8 @@ let timeout = null;
 let gizmo = null;
 
 $(document).ready(() => {
+    let callMap;
+
     // show Login form
     $('.credentials-cover-toggle').click(() => {
         $('.credentials-form').removeClass('out-of-the-way');
@@ -25,12 +27,22 @@ $(document).ready(() => {
         $('.credentials-cover-toggle').text('Logged In');
 
         await beginSession();
-        await getReportResults();
-        console.log('finished getReportResults!');
+        await updateMap(callMap);
+        console.log('finished updateMap()!');
+    });
+
+
+    d3.csv('http://localhost:3000/api/data', (data) => {
+        data.forEach((d) => {
+            d.CALLS = +d.CALLS;
+        });
+
+        callMap = new CallMap();
+        callMap.create(data);
     });
 });
 
-async function getReportResults() {
+async function updateMap(callMap) {
     let startTime = $('.filter.start-time').val();
     let endTime = $('.filter.end-time').val();
     let params = getParameters('runReport', null, startTime, endTime);
@@ -59,7 +71,7 @@ async function getReportResults() {
                 d.CALLS = +d.CALLS;
             });
 
-            updateMap(process(data));
+            callMap.update(data);
         }
     }
     awaitReport(reportId);
