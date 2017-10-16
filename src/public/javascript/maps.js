@@ -18,7 +18,7 @@ function makeMap(callData) {
         .domain(d3.range(1, 30, 28))
         .rangeRound([600, 860]);
 
-        // Key / legend
+    // Key / legend
     let g = svg.append('g')
         .attr('class', 'key')
         .attr('transform', 'translate(0,40)');
@@ -56,7 +56,7 @@ function makeMap(callData) {
         .await(ready);
 
     function ready(err, usa, zipData) {
-        svg.append('g')
+        svg.insert('g', '.key')
             .attr('class', 'zips')
           .selectAll('path')
           .data(zipData.features)
@@ -76,7 +76,7 @@ function makeMap(callData) {
                 return `ZIP3: ${zip}\nCalls: ${numCalls}`;
             });
 
-        svg.append('g')
+        svg.insert('g', '.key')
             .attr('class', 'states')
           .selectAll('path')
           .data(usa.features)
