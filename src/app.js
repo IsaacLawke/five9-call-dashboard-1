@@ -33,7 +33,7 @@ app.post('/api/statistics', async (req, res) => {
         const auth = req.body['authorization'];
 
         // Send request to Five9
-        let xmlData = await five9.statsRequest(message, auth);
+        let xmlData = await five9.sendRequest(message, auth, 'statistics');
 
         // On response, format as JSON and send back to client
         parseString(xmlData, (err, result) => {
@@ -54,7 +54,7 @@ app.post('/api/configuration', async (req, res) => {
         const auth = req.body['authorization'];
 
         // Send request to Five9
-        let xmlData = await five9.configRequest(message, auth);
+        let xmlData = await five9.sendRequest(message, auth, 'configuration');
 
         // On response, format as CSV and send back to client
         parseString(xmlData, (err, result) => {
