@@ -26,11 +26,10 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        await beginSession();
+        // await beginSession();
         await updateMap(callMap);
         console.log('finished updateMap()!');
     });
-
 });
 
 
@@ -350,6 +349,6 @@ function getFaultStringFromData(data) {
     try {
         return data['env:Envelope']['env:Body'][0]['env:Fault'][0]['faultstring'];
     } catch (err) {
-        return '[no fault string received from Five9]';
+        return '';
     }
 }
