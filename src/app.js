@@ -50,18 +50,14 @@ app.post('/api/statistics', async (req, res) => {
 app.post('/api/configuration', async (req, res) => {
     try {
         // Generate SOAP message for Five9
-        console.log('config api call!');
         const message = five9.jsonToSOAP(req.body);
         const auth = req.body['authorization'];
 
         // Send request to Five9
-        console.log('sending five9 request...');
         let xmlData = await five9.configRequest(message, auth);
-        console.log('retreived xml response!');
 
-        // On response, format as JSON and send back to client
+        // On response, format as CSV and send back to client
         parseString(xmlData, (err, result) => {
-            console.log(result);
             res.set('Content-Type', 'text/csv');
             res.send(result);
         });
@@ -71,16 +67,16 @@ app.post('/api/configuration', async (req, res) => {
     }
 });
 
-app.get('/api/data', async (req, res) => {
-    try {
-        // return CSV file
-        let dir = path.join(__dirname + '/public/zip-code-calls.csv');
-        res.sendFile(dir);
-    } catch (err) {
-        res.set('Content-Type', 'application/text');
-        res.send('An error occurred on the server during POST.');
-    }
-});
+// app.get('/api/data', async (req, res) => {
+//     try {
+//         // return CSV file
+//         let dir = path.join(__dirname + '/public/zip-code-calls.csv');
+//         res.sendFile(dir);
+//     } catch (err) {
+//         res.set('Content-Type', 'application/text');
+//         res.send('An error occurred on the server during POST.');
+//     }
+// });
 
 app.get('/api/zip3-data', async (req, res) => {
     try {
@@ -118,6 +114,7 @@ app.get('/maps', async (req, res) => {
 });
 
 
+// Fire up the server
 const server = app.listen(port, () => {
     console.log(`Express listening on port ${port}!`);
 });

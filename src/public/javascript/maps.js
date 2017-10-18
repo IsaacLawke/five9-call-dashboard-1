@@ -1,5 +1,6 @@
 class CallMap {
-    create(callData) {
+    // Create and draw map on initial run
+    async create(callData) {
         let width = 960,
             height = 500;
         let processedData = this.process(callData);
@@ -22,48 +23,48 @@ class CallMap {
             .attr('height', height);
 
         // Key / legend
-        this.g = this.svg.append('g')
-            .attr('class', 'key')
-            .attr('transform', 'translate(0,40)');
-        this.g.selectAll('rect')
-            .data(this.color.range().map((d) => {
-                d = this.color.invertExtent(d);
-                if (d[0] == null) d[0] = this.x.domain()[0];
-                if (d[1] == null) d[1] = this.x.domain()[1];
-                return d;
-            }))
-            .enter().append('rect')
-              .attr('height', 8)
-              .attr('x', (d) => this.x(d[0]))
-              .attr('width', (d) => this.x(d[1]) - this.x(d[0]))
-              .attr('fill', (d) => this.color(d[0]));
+        this.drawKey(this.x, this.color);
 
-        this.g.append('text')
-            .attr('class', 'caption')
-            .attr('x', this.x.range()[0])
-            .attr('y', -6)
-            .attr('fill', '#000')
-            .attr('text-anchor', 'start')
-            .attr('font-weight', 'bold')
-            .text('Calls offered');
-        this.g.call(d3.axisBottom(this.x)
-            .tickSize(13)
-            .tickFormat(d3.format('d'))
-            .tickValues(this.color.domain()))
-          .select('.domain')
-            .remove();
-
-        d3.queue()
+        return d3.queue()
             .defer(d3.json, 'http://localhost:3000/api/states')
             .defer(d3.json, 'http://localhost:3000/api/zip3-data')
             .await((err, usa, zipData) => this.onReady(err, usa, zipData));
     }
 
-    // draw initial map
+    // Update map with new data
+    async update(callData) {
+        // Check if this chart already exists. If not, create it.
+        if (!this.svg) return this.create(callData);
+
+        // format the data properly
+        let processedData = this.process(callData);
+        // match calls to keys (zip codes)
+        this.calls = d3.map(processedData, (d) => d.key);
+
+        // update domain and range
+        let maxValue = d3.max(processedData, (d) => d.value);
+        this.x.domain(d3.range(1, maxValue, maxValue-2));
+        this.color.domain(d3.range(1, maxValue, maxValue / 9));
+
+        // Key / legend
+        // remove then redraw the color key
+        this.g.remove().exit();
+        this.drawKey(this.x, this.color);
+
+        // data - paint the state lines and zip codes
+        // clear old states and zips
+        this.svg.selectAll('.zips, .states').remove().exit();
+        // then rebuild them
+        this.drawZips(this.zipData);
+        this.drawStates(this.usa);
+
+        console.log('update done!');
+    }
+
+    // assign initial variables
     onReady(err, usa, zipData) {
         this.zipData = zipData;
         this.usa = usa;
-
         this.drawZips(zipData);
         this.drawStates(usa);
     }
@@ -134,32 +135,6 @@ class CallMap {
             .tickValues(color.domain()))
           .select('.domain')
             .remove();
-    }
-
-    update(callData) {
-        // format the data properly
-        let processedData = this.process(callData);
-        // match calls to keys (zip codes)
-        this.calls = d3.map(processedData, (d) => d.key);
-
-        // update domain and range
-        let maxValue = d3.max(processedData, (d) => d.value);
-        this.x.domain(d3.range(1, maxValue, maxValue-2));
-        this.color.domain(d3.range(1, maxValue, maxValue / 9));
-
-        // Key / legend
-        // remove then redraw the color key
-        this.g.remove().exit();
-        this.drawKey(this.x, this.color);
-
-        // data - paint the state lines and zip codes
-        // clear old states and zips
-        this.svg.selectAll('.zips, .states').remove().exit();
-        // then rebuild them
-        this.drawZips(this.zipData);
-        this.drawStates(this.usa);
-
-        console.log('update done!');
     }
 
     // Takes call data (by zip code), returns total calls by ZIP3

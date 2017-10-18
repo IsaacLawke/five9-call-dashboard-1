@@ -4,7 +4,7 @@ let timeout = null;
 let gizmo = null;
 
 $(document).ready(() => {
-    let callMap;
+    let callMap = new CallMap();
 
     // show Login form
     $('.credentials-cover-toggle').click(() => {
@@ -31,15 +31,6 @@ $(document).ready(() => {
         console.log('finished updateMap()!');
     });
 
-    // initial data
-    d3.csv('http://localhost:3000/api/data', (data) => {
-        data.forEach((d) => {
-            d.CALLS = +d.CALLS;
-        });
-
-        callMap = new CallMap();
-        callMap.create(data);
-    });
 });
 
 
