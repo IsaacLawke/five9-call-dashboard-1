@@ -33,23 +33,6 @@ $(document).ready(() => {
 });
 
 
-// Update callMap (d3 map object) based on parameters in page
-async function updateMap(callMap) {
-    const startTime = $('.filter.start-time').val();
-    const endTime = $('.filter.end-time').val();
-
-    const params = getParameters('runReport', null, startTime, endTime);
-    const csvData = await getReportResults(params);
-
-    const data = d3.csvParse(csvData);
-    data.forEach((d) => {
-        d.CALLS = +d.CALLS;
-    });
-
-    callMap.update(data);
-}
-
-
 async function runQueueDashboard() {
     async function eventLoop(interval) {
         // Get the data
@@ -81,19 +64,6 @@ async function runQueueDashboard() {
     eventLoop(20000);
 }
 
-
-// Send out an error alert in console and on the page.
-function error(err, message='Uh oh.') {
-    $('#message').text(`Whoops! An error occurred. ${err.message}. ${message}`);
-    console.log('Error log:');
-    console.error(err);
-
-    // timestamp
-    var newDate = new Date();
-    newDate.setTime(Date.now());
-    dateString = newDate.toTimeString();
-    console.log(dateString);
-}
 
 
 // Takes nicely formatted data. Updates dashboard view.
@@ -182,17 +152,4 @@ function jsonToViewData(json,
         data.push(newRow);
     }
     return data;
-}
-
-function formatAMPM(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var seconds = date.getSeconds();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    seconds = seconds < 10 ? '0'+seconds : seconds;
-    var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
-    return strTime;
 }
