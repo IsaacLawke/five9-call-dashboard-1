@@ -1,5 +1,5 @@
 # Five9 Call Dashboard
-Real-time call dashboard using Five9's SOAP APIs, allowing you to groups skills and show current wait times, calls in queue, and agents staffed to handle the calls. The maps page is a D3-based [choropleth](https://bl.ocks.org/mbostock/4060606 example of a choropleth) showing calls by ZIP3 code.
+Real-time call dashboard using Five9's SOAP APIs, allowing you to groups skills and show current wait times, calls in queue, and agents staffed to handle the calls. The maps page is a D3-based [choropleth](https://bl.ocks.org/mbostock/4060606 "example of a choropleth") showing calls by ZIP3 code.
 
 This uses Express as an intermediate server to circumvent browser-side CORS requests directly to the Five9 API server. There's a bit of server-side translation of JSON to SOAP, as well. VanillaJS and jQuery are used on the client side for updating the view.
 
