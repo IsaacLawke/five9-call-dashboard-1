@@ -28,12 +28,22 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        // await beginSession();
-        await updateMap(callMap);
-        console.log('finished updateMap()!');
+        startUpdatingMap(callMap, 10);
     });
 });
 
+
+// Begins a loop of updating the map data every ${refreshRate} seconds
+async function startUpdatingMap(callMap, refreshRate) {
+    try {
+        await updateMap(callMap);
+    } catch (err) {
+        error(err);
+    }
+    timeout = setTimeout(() => startUpdatingMap(callMap, refreshRate),
+                         refreshRate * 1000);
+    console.log('finished startUpdatingMap()!');
+}
 
 // Update callMap (d3 map object) based on parameters in page
 async function updateMap(callMap) {
