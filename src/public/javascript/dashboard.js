@@ -31,7 +31,7 @@ $(document).ready(() => {
         console.log('finished updateMap()!');
     });
 
-
+    // initial data
     d3.csv('http://localhost:3000/api/data', (data) => {
         data.forEach((d) => {
             d.CALLS = +d.CALLS;
@@ -42,40 +42,47 @@ $(document).ready(() => {
     });
 });
 
+
+// Update callMap (d3 map object) based on parameters in page
 async function updateMap(callMap) {
-    let startTime = $('.filter.start-time').val();
-    let endTime = $('.filter.end-time').val();
-    let params = getParameters('runReport', null, startTime, endTime);
-    let runReport = await request(params, 'configuration');
+    const startTime = $('.filter.start-time').val();
+    const endTime = $('.filter.end-time').val();
 
-    let reportId = jsonToReturnValue(await runReport.json(), 'runReport');
+    const params = getParameters('runReport', null, startTime, endTime);
+    const csvData = await getReportResults(params);
 
-    async function awaitReport(id) {
+    const data = d3.csvParse(csvData);
+    data.forEach((d) => {
+        d.CALLS = +d.CALLS;
+    });
+
+    callMap.update(data);
+}
+
+// Get CSV string of report results from Five9
+async function getReportResults(params) {
+    var reportResults;
+    const runReport = await request(params, 'configuration');
+    const id = jsonToReturnValue(await runReport.json(), 'runReport');
+
+    // Wait til the report is finished running
+    let stillRunning = 'true';
+    while (stillRunning == 'true') {
         let runResponse = await request(getParameters('isReportRunning', id),
                                         'configuration');
-        let stillRunning = jsonToReturnValue(await runResponse.json(), 'isReportRunning');
-
-        if (stillRunning == 'true') {
-            console.log('Awaiting report result...');
-            setTimeout(() => awaitReport(id), 5000);
-        } else {
-            let params = getParameters('getReportResultCsv', id);
-            let reportResult = await request(params, 'configuration');
-
-            let res = await reportResult.json();
-            let reportCsv = jsonToReturnValue(res, 'getReportResultCsv');
-            console.log(res);
-
-            const data = d3.csvParse(reportCsv);
-            data.forEach((d) => {
-                d.CALLS = +d.CALLS;
-            });
-
-            callMap.update(data);
-        }
+        stillRunning = jsonToReturnValue(await runResponse.json(), 'isReportRunning');
     }
-    awaitReport(reportId);
+
+    // Then retrieve the results
+    let resultParams = getParameters('getReportResultCsv', id);
+    let reportResult = await request(resultParams, 'configuration');
+    let res = await reportResult.json();
+
+    // Return CSV string
+    let reportCsv = jsonToReturnValue(res, 'getReportResultCsv');
+    return reportCsv;
 }
+
 
 // Let's get started!
 // Authorize user to start pulling data.
