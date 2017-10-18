@@ -29,7 +29,7 @@ app.use(helmet());
 app.post('/api/statistics', async (req, res) => {
     try {
         // Generate SOAP message for Five9
-        const message = five9.jsonToSOAP(req.body);
+        const message = five9.jsonToSOAP(req.body, 'statistics');
         const auth = req.body['authorization'];
 
         // Send request to Five9
@@ -50,7 +50,7 @@ app.post('/api/statistics', async (req, res) => {
 app.post('/api/configuration', async (req, res) => {
     try {
         // Generate SOAP message for Five9
-        const message = five9.jsonToSOAP(req.body);
+        const message = five9.jsonToSOAP(req.body, 'configuration');
         const auth = req.body['authorization'];
 
         // Send request to Five9

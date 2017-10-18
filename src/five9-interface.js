@@ -4,7 +4,13 @@ const xml = require('xml');
 
 // Takes a JSON object specifying a Five9 API endpoint,
 // and returns a SOAP message to send to the Five9 API.
-function jsonToSOAP(json, adminOrSupervisor='admin') {
+// requestType: statistics or configuration API
+function jsonToSOAP(json, requestType) {
+    let adminOrSupervisor;
+    if (requestType == 'statistics') adminOrSupervisor = 'supervisor';
+    else if (requestType == 'configuration') adminOrSupervisor = 'admin';
+    else throw new Error(`requestType ${requestType} is not a valid type in jsonToSOAP!`);
+
     const service = json['service'];
     const settings = xml(json['settings']);
     const soapString =
@@ -28,6 +34,8 @@ function sendRequest(message, auth, requestType) {
         path = '/wssupervisor/v9_5/SupervisorWebService';
     } else if (requestType == 'configuration') {
         path = '/wsadmin/v9_5/AdminWebService';
+    } else {
+        throw new Error(`requestType ${requestType} is not a valid type in sendRequest!`);
     }
 
     // Options for HTTP requests
