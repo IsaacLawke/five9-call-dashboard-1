@@ -67,17 +67,7 @@ app.post('/api/configuration', async (req, res) => {
     }
 });
 
-// app.get('/api/data', async (req, res) => {
-//     try {
-//         // return CSV file
-//         let dir = path.join(__dirname + '/public/zip-code-calls.csv');
-//         res.sendFile(dir);
-//     } catch (err) {
-//         res.set('Content-Type', 'application/text');
-//         res.send('An error occurred on the server during POST.');
-//     }
-// });
-
+// Return ZIP3 JSON
 app.get('/api/zip3-data', async (req, res) => {
     try {
         // return JSON zip data
@@ -85,10 +75,11 @@ app.get('/api/zip3-data', async (req, res) => {
         res.sendFile(dir);
     } catch (err) {
         res.set('Content-Type', 'application/text');
-        res.send('An error occurred on the server during POST.');
+        res.send('An error occurred on the server when getting zip3 data.');
     }
 });
 
+// Return U.S. states JSON
 app.get('/api/states', async (req, res) => {
     try {
         // return JSON zip data
@@ -96,7 +87,7 @@ app.get('/api/states', async (req, res) => {
         res.sendFile(dir);
     } catch (err) {
         res.set('Content-Type', 'application/text');
-        res.send('An error occurred on the server during POST.');
+        res.send('An error occurred on the server when getting U.S. states data.');
     }
 });
 

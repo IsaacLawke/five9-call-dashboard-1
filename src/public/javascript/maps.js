@@ -26,8 +26,8 @@ class CallMap {
         this.drawKey(this.x, this.color);
 
         return d3.queue()
-            .defer(d3.json, 'http://localhost:3000/api/states')
-            .defer(d3.json, 'http://localhost:3000/api/zip3-data')
+            .defer(d3.json, API_URL + 'states')
+            .defer(d3.json, API_URL + 'zip3-data')
             .await((err, usa, zipData) => this.onReady(err, usa, zipData));
     }
 
