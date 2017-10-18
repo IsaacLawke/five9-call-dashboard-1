@@ -1,10 +1,11 @@
 // timeout to pause event loop when needed
 let timeout = null;
 
+// Object to manage the gizmos (queue widgets)
 let gizmo = null;
 
 $(document).ready(() => {
-    let callMap = new CallMap();
+    gizmo = gizmoManager();
 
     // show Login form
     $('.credentials-cover-toggle').click(() => {
@@ -26,9 +27,19 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        // await beginSession();
-        await updateMap(callMap);
-        console.log('finished updateMap()!');
+        // Initiate a new session
+        try {
+            const success = await beginSession();
+        } catch (err) {
+            error(err);
+            return; // abort on failure
+        }
+        // begin updating data & page every few seconds
+        try {
+            runQueueDashboard();
+        } catch (err) {
+            error(err, 'Full authenticated?');
+        }
     });
 });
 
