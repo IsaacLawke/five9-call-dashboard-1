@@ -28,7 +28,7 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        startUpdatingMap(callMap, 60);
+        startUpdatingMap(callMap, 2*60);
     });
 });
 
