@@ -57,8 +57,6 @@ class CallMap {
         // then rebuild them
         this.drawZips(this.zipData);
         this.drawStates(this.usa);
-
-        console.log('update done!');
     }
 
     // assign initial variables
@@ -88,7 +86,7 @@ class CallMap {
                 let val = this.calls.has(zip)
                     ? this.calls.get(zip).value
                     : 0;
-                if (val > 0) return 'hsla(208, 30%, 55%, 0.7)';
+                if (val > 0) return 'hsla(208, 30%, 60%, 0.5)';
             })
           .append('title')
             .text((d) => {

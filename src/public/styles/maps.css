@@ -19,7 +19,7 @@
 
 /* Data filters */
 .date-type-toggle, .date-filter-inputs, input.filter {
-    margin: 10px auto;
+    margin: 12px auto;
 }
 
 input.filter, .relative-date-selector {

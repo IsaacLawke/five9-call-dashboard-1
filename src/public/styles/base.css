@@ -39,6 +39,7 @@ body * {
                 0 1px 3px rgba(12,13,14,0.1),
                 0 4px 20px rgba(12,13,14,0.035),
                 0 1px 1px rgba(12,13,14,0.025);
+    color: #666;
 }
 
 /* Hidden elements */
@@ -74,7 +75,6 @@ body * {
     height: 2em;
     font-size: 1.2em;
     font-weight: normal;
-    color: #666;
 }
 
 .stats-box .metric-wrapper {
@@ -124,6 +124,7 @@ body * {
 }
 
 
+/* Login styles */
 .credentials-wrapper {
     width: 100%;
     height: 100%;
@@ -137,6 +138,10 @@ body * {
     top: 0;
     width: 100%;
     transition: all 1s ease;
+}
+
+.credentials-form input {
+    font-family: sans-serif;
 }
 
 .credentials-form.out-of-the-way {
