@@ -25,17 +25,36 @@
 }
 
 
-/* Toggle switch */
-
 
 /* Data filters */
 .filter {
     display: block;
     margin: 10px auto;
     align-items: center;
-    color: #666;
+    color: #333;
 }
 
 .icon .settings {
     fill: #888;
+}
+
+
+/* Toggle switch */
+.date-type-toggle {
+    margin: 2%;
+}
+.date-type-toggle button {
+    font-size: 0.8em;
+    width: 60px;
+    height: 1.5em;
+    text-transform: none;
+    letter-spacing: normal;
+    background-color: #f1f1f1;
+    color: #bbb;
+}
+.date-type-toggle button:hover {
+    background-color: #e5e5e5;
+}
+.date-type-toggle .checked {
+    color: #666;
 }
