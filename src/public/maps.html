@@ -37,37 +37,12 @@
             <div class="map-panel-wrapper">
                 <div class="stats-box filters-wrapper">
                     <h3>Filters</h3>
-                    <label>Date range</label>
+                    <label>Date Range</label>
                     <input type="text" class="filter start-time" placeholder="start" value="2017-10-16T00:00:00" />
                     <input type="text" class="filter end-time" placeholder="end" value="2017-10-16T23:59:59" />
                 </div>
 
                 <svg class="map" width="960" height="500"></svg>
-            </div>
-
-            <!-- Template for cloning new queue gizmos. Hidden by default. -->
-            <div class="stats-box template" id="gizmo-template">
-                <a class="skills-edit-toggle gizmo-control" href="#" title="Modify this gizmo widget">&#9776;</a>
-                <h3 class="department-name">
-                    Gizmo Widget Thing!
-                </h3>
-                <div class="metric-wrapper">
-                    <p class="descriptor">Calls in queue</p>
-                    <p class="metric calls-in-queue" title="Number of calls in queue">-</p>
-                </div>
-                <div class="metric-wrapper">
-                    <p class="descriptor">Max wait</p>
-                    <p class="metric max-wait" title="Current longest wait time">-:--</p>
-                </div>
-                <div class="metric-wrapper">
-                    <p class="descriptor">Skilled Staff</p>
-                    <p class="metric agents-logged-in" title="Agents with skill logged in">-</p>
-                    <div class="agent-states-wrapper">
-                        <p class="agents-ready-for-calls" title="Agents with skill available">-</p>
-                        <p class="agents-on-call" title="Agents with skill on calls">-</p>
-                        <p class="agents-not-ready-for-calls" title="Agents with skill unavailable">-</p>
-                    </div>
-                </div>
             </div>
 
 
@@ -102,6 +77,8 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="javascript/moment.js" type="text/javascript"></script>
+    
     <script src="javascript/local_settings.js" type="text/javascript"></script>
     <script src="javascript/five9.js" type="text/javascript"></script>
     <script src="javascript/utility.js" type="text/javascript"></script>

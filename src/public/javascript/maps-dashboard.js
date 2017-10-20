@@ -4,7 +4,6 @@
 // timeout to pause event loop when needed
 let timeout = null;
 
-
 $(document).ready(() => {
     let callMap = new CallMap();
 
@@ -28,7 +27,8 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        startUpdatingMap(callMap, 2*60);
+        // Update map every 3 minutes
+        startUpdatingMap(callMap, 3*60);
     });
 });
 
@@ -42,7 +42,8 @@ async function startUpdatingMap(callMap, refreshRate) {
     }
     timeout = setTimeout(() => startUpdatingMap(callMap, refreshRate),
                          refreshRate * 1000);
-    console.log('finished startUpdatingMap()!');
+
+    $('.message').text('Last updated ' + moment().format('h:mm:ss A') + '.');
 }
 
 // Update callMap (d3 map object) based on parameters in page
@@ -59,4 +60,5 @@ async function updateMap(callMap) {
     });
 
     callMap.update(data);
+    console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
 }
