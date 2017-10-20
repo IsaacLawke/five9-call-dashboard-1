@@ -12,6 +12,11 @@ body, html {
     font-family: 'Ubuntu', sans-serif;
 }
 
+input, button, select, textarea, optgroup, option {
+    font-family: inherit;
+}
+
+
 body * {
     box-sizing: border-box;
 }
@@ -46,20 +51,7 @@ body * {
     display: none;
 }
 
-.map-panel-wrapper {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    height: 500px;
-}
 
-.filters-wrapper {
-    flex: 1;
-    height: 100%;
-    max-width: 366px;
-}
 
 /* Live queue gizmos */
 .gizmo-wrapper {

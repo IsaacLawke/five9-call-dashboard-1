@@ -30,6 +30,25 @@ $(document).ready(() => {
         // Update map every 3 minutes
         startUpdatingMap(callMap, 3*60);
     });
+
+    // handle toggle for relative / absolute date filters
+    $('.date-type-toggle').children().click((event) => {
+        // Relative button was chosen
+        if ($(event.currentTarget).hasClass('relative')) {
+            // Update toggle buttons to show current selection
+            $('.date-type-toggle .relative').addClass('checked');
+            $('.date-type-toggle .absolute').removeClass('checked');
+            // Display the appropriate date selection
+            $('.date-filter-inputs.absolute').addClass('hidden');
+            $('.date-filter-inputs.relative').removeClass('hidden');
+        // Absolute button was clicked
+        } else {
+            $('.date-type-toggle .absolute').addClass('checked');
+            $('.date-type-toggle .relative').removeClass('checked');
+            $('.date-filter-inputs.relative').addClass('hidden');
+            $('.date-filter-inputs.absolute').removeClass('hidden');
+        }
+    })
 });
 
 
@@ -47,10 +66,9 @@ async function startUpdatingMap(callMap, refreshRate) {
 
 // Update callMap (d3 map object) based on parameters in page
 async function updateMap(callMap) {
-    const startTime = $('.filter.start-time').val();
-    const endTime = $('.filter.end-time').val();
+    const time = reportTimeRange();
 
-    const params = getParameters('runReport', null, startTime, endTime);
+    const params = getParameters('runReport', null, time.start, time.end);
     const csvData = await getReportResults(params);
 
     const data = d3.csvParse(csvData);
@@ -60,4 +78,27 @@ async function updateMap(callMap) {
 
     callMap.update(data);
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
+    console.log(time);
+}
+
+// Determines start/end times chosen by user
+// Return {start:'X',end:'Y'}
+function reportTimeRange() {
+    const time = {};
+    // Are we using absolute dates?
+    if ($('.date-type-toggle .absolute').hasClass('checked')) {
+        time.start = $('.filter.start-time').val();
+        time.end   = $('.filter.end-time').val();
+    // Using relative dates
+    } else {
+        const relativeSelector = $('.relative-date-selector').val();
+        if (relativeSelector == 'today') {
+            time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
+            time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
+        } else {
+            throw new Error('Relative date selector value is ' + relativeSelector +
+                            '. Value not recognized.');
+        }
+    }
+    return time;
 }

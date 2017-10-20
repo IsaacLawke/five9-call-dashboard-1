@@ -45,14 +45,15 @@
                         <button class="relative checked">Relative</span>
                         <button class="absolute">Absolute</span>
                     </div>
-                    <div class="date-filter-inputs absolute">
-                        <input type="text" class="filter start-time" placeholder="start" value="2017-10-16T00:00:00" />
-                        <input type="text" class="filter end-time" placeholder="end" value="2017-10-16T23:59:59" />
-                    </div>
-                    <div class="date-filter-inputs relative hidden">
-                        <select>
+
+                    <div class="date-filter-inputs relative">
+                        <select class="relative-date-selector">
                             <option value="today">Today</option>
                         </select>
+                    </div>
+                    <div class="date-filter-inputs absolute hidden">
+                        <input type="text" class="filter start-time" placeholder="start" value="2017-10-16T00:00:00" />
+                        <input type="text" class="filter end-time" placeholder="end" value="2017-10-16T23:59:59" />
                     </div>
                 </div>
 

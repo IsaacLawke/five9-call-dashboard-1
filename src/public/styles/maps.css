@@ -1,3 +1,43 @@
+/* Map controls */
+.map-panel-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 500px;
+}
+
+.filters-wrapper {
+    flex: 1;
+    height: 100%;
+    max-width: 300px;
+    min-width: 220px;
+}
+
+
+
+/* Data filters */
+.date-type-toggle, .date-filter-inputs, input.filter {
+    margin: 10px auto;
+}
+
+input.filter, .relative-date-selector {
+    width: 160px;
+    color: #666;
+    border: 1px solid #ddd;
+    background-color: inherit;
+}
+
+input.filter {
+    display: block;
+}
+
+
+.icon .settings {
+    fill: #888;
+}
+
 
 /* Styling for map */
 .map .background {
@@ -25,27 +65,10 @@
 }
 
 
-
-/* Data filters */
-.filter {
-    display: block;
-    margin: 10px auto;
-    align-items: center;
-    color: #333;
-}
-
-.icon .settings {
-    fill: #888;
-}
-
-
 /* Toggle switch */
-.date-type-toggle {
-    margin: 2%;
-}
 .date-type-toggle button {
     font-size: 0.8em;
-    width: 60px;
+    width: 80px;
     height: 1.5em;
     text-transform: none;
     letter-spacing: normal;
