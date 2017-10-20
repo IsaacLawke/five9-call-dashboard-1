@@ -37,13 +37,12 @@ $(document).ready(() => {
 async function startUpdatingMap(callMap, refreshRate) {
     try {
         await updateMap(callMap);
+        $('.message').text('Last updated ' + moment().format('h:mm:ss A') + '.');
     } catch (err) {
         error(err);
     }
     timeout = setTimeout(() => startUpdatingMap(callMap, refreshRate),
                          refreshRate * 1000);
-
-    $('.message').text('Last updated ' + moment().format('h:mm:ss A') + '.');
 }
 
 // Update callMap (d3 map object) based on parameters in page

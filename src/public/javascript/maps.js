@@ -83,6 +83,13 @@ class CallMap {
                     : 0;
                 return this.color(val);
             })
+            .attr('stroke', (d) => {
+                let zip = d.properties.ZIP;
+                let val = this.calls.has(zip)
+                    ? this.calls.get(zip).value
+                    : 0;
+                if (val > 0) return 'hsla(208, 30%, 55%, 0.7)';
+            })
           .append('title')
             .text((d) => {
                 let zip = d.properties.ZIP;
