@@ -1,3 +1,5 @@
+// Map of U.S. with ZIP3 areas colored by calls offered.
+// Offers methods to create/draw the map and update when new data is received.
 class CallMap {
     // Create and draw map on initial run
     async create(callData) {
@@ -31,6 +33,15 @@ class CallMap {
             .await((err, usa, zipData) => this.onReady(err, usa, zipData));
     }
 
+    // Assign initial variables when map is first created and topographic
+    // data is first loaded
+    onReady(err, usa, zipData) {
+        this.zipData = zipData;
+        this.usa = usa;
+        this.drawZips(zipData);
+        this.drawStates(usa);
+    }
+
     // Update map with new data
     async update(callData) {
         // Check if this chart already exists. If not, create it.
@@ -59,14 +70,10 @@ class CallMap {
         this.drawStates(this.usa);
     }
 
-    // assign initial variables
-    onReady(err, usa, zipData) {
-        this.zipData = zipData;
-        this.usa = usa;
-        this.drawZips(zipData);
-        this.drawStates(usa);
-    }
 
+
+    // Draw ZIP3 areas, colored by number of calls
+    // ${zipData} is GeoJSON describing the topography
     drawZips(zipData) {
         this.svg.insert('g', '.key')
             .attr('class', 'zips')
@@ -96,6 +103,7 @@ class CallMap {
             });
     }
 
+    // Draw the state outlines
     drawStates(usa) {
         this.svg.insert('g', '.key')
             .attr('class', 'states')
@@ -105,6 +113,7 @@ class CallMap {
             .attr('d', this.path);
     }
 
+    // Draw the key/legend
     drawKey(x, color) {
         this.g = this.svg.append('g')
             .attr('class', 'key')
