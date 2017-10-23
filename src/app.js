@@ -10,7 +10,12 @@ const parseString = require('xml2js').parseString; // parse XML to JSON
 const path = require('path');
 const port = parseInt(process.env.PORT, 10) || 3000;
 
+// Database handling
+const mongoose = require('mongoose');
+const Report = require('./database/report');
 
+
+// Initialize the app
 const app = express();
 
 // GZIP it up

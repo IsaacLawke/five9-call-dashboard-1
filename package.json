@@ -12,6 +12,7 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
+    "csvtojson": "^1.1.9",
     "express": "^4.15.4",
     "helmet": "^3.8.1",
     "mongoose": "^4.12.4",
