@@ -15,6 +15,7 @@
     "csvtojson": "^1.1.9",
     "express": "^4.15.4",
     "helmet": "^3.8.1",
+    "moment": "^2.19.1",
     "mongoose": "^4.12.4",
     "topojson": "^3.0.2",
     "xml": "^1.0.1",
