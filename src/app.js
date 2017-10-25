@@ -138,6 +138,7 @@ app.get('/maps', async (req, res) => {
 
 // Fire up the server
 let currentlyUpdatingData = false;
+let timeoutId = null;
 const server = app.listen(port, async () => {
     console.log(`Express listening on port ${port}!`);
     mongoose.connect('mongodb://localhost/five9-report-data');
@@ -150,9 +151,9 @@ const server = app.listen(port, async () => {
 
         // Schedule next update
         currentlyUpdatingData = false;
-        setInterval(() => scheduleUpdate(interval), interval);
+        timeoutId = setTimeout(() => scheduleUpdate(interval), interval);
     }
-    // scheduleUpdate(2.5 * 60 * 1000);
+    scheduleUpdate(0.25 * 60 * 1000);
 });
 
 
