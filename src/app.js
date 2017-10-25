@@ -8,6 +8,7 @@ const express = require('express');
 const five9 = require('./helpers/five9-interface'); // Five9 interface helper functions
 const fs = require('fs');
 const helmet = require('helmet'); // security
+const log = require('./helpers/log'); // recording updates
 const moment = require('moment'); // dates/times
 const parseString = require('xml2js').parseString; // parse XML to JSON
 const path = require('path');
@@ -101,10 +102,9 @@ app.get('/api/states', async (req, res) => {
 });
 
 // queue page
-app.get('/', async (req, res) => {
-    let dir = './public/index.html';
-    let str = fs.readFileSync(path, 'utf-8');
-    res.send(str);
+app.get('/queues', async (req, res) => {
+    let dir = path.join(__dirname + '/public/queues.html');
+    res.sendFile(dir);
 });
 
 // maps page
@@ -120,24 +120,22 @@ const server = app.listen(port, async () => {
     console.log(`Express listening on port ${port}!`);
     mongoose.connect('mongodb://localhost/five9-report-data');
 
-
     // Begin updating from Five9 every 2.5 minutes
     async function scheduleUpdate(interval) {
         currentlyUpdatingData = true;
         // update from Five9
-        console.log(`Updating database at ${moment()}`);
         await refreshDatabase();
 
         // Schedule next update
         currentlyUpdatingData = false;
         setInterval(() => scheduleUpdate(interval), interval);
     }
-    scheduleUpdate(2.5 * 60 * 1000);
+    // scheduleUpdate(2.5 * 60 * 1000);
 });
 
 // Update Five9 data
 async function refreshDatabase() {
-    // let data = five9.getReportResults();
+    log.record(`Updating report database at ${moment()}`);
     const time = {};
     time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
     time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
@@ -155,7 +153,6 @@ async function refreshDatabase() {
     const reportParameters = five9.getParameters('runReport', null,
                         criteriaTimeStart=time.start, criteriaTimeEnd=time.end);
     const csvData = await five9.getReportResults(reportParameters);
-    console.log(csvData.substr(0,100));
     const csvHeader = csvData.substr(0, csvData.indexOf('\n'));
 
 
