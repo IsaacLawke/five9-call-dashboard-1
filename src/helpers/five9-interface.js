@@ -1,5 +1,6 @@
 const secure_settings = require('../secure_settings.js');
 const https = require('https');
+const parseString = require('xml2js').parseString; // parse XML to JSON
 const xml = require('xml');
 
 
@@ -31,7 +32,6 @@ function jsonToSOAP(json, requestType) {
 // Returns promise.
 function sendRequest(message, auth, requestType) {
     let path;
-    console.log(message);
     if (requestType == 'statistics') {
         path = '/wssupervisor/v9_5/SupervisorWebService';
     } else if (requestType == 'configuration') {
@@ -86,32 +86,28 @@ function sendRequest(message, auth, requestType) {
 async function request(params, requestType) {
     const soap = jsonToSOAP(params, requestType);
     const xmlData = await sendRequest(soap, params.authorization, requestType);
-    return xmlData;
+    let jsonResult;
+    await parseString(xmlData, (err, result) => {
+        jsonResult = jsonToReturnValue(result, params.service);
+    });
+    return jsonResult;
 }
 
 // Get CSV string of report results from Five9
 async function getReportResults(params) {
     var reportResults;
-    const runReport = await request(params, 'configuration');
-    console.log(runReport);
-    const id = jsonToReturnValue(await runReport.json(), 'runReport');
+    const id = await request(params, 'configuration');
 
     // Wait til the report is finished running
     let stillRunning = 'true';
     while (stillRunning == 'true') {
-        let runResponse = await request(getParameters('isReportRunning', id),
-                                        'configuration');
-        stillRunning = jsonToReturnValue(await runResponse.json(), 'isReportRunning');
+        stillRunning = await request(getParameters('isReportRunning', id),
+                                     'configuration');
     }
-
     // Then retrieve the results
     let resultParams = getParameters('getReportResultCsv', id);
     let reportResult = await request(resultParams, 'configuration');
-    let res = await reportResult.json();
-
-    // Return CSV string
-    let reportCsv = jsonToReturnValue(res, 'getReportResultCsv');
-    return reportCsv;
+    return reportResult;
 }
 
 
@@ -136,7 +132,6 @@ function getFaultStringFromData(data) {
 function getParameters(requestType, reportId=null, criteriaTimeStart=null,
                        criteriaTimeEnd=null) {
     let params = {};
-console.log(criteriaTimeEnd);
     // Initiate session
     if (requestType == 'setSessionParameters') {
         params = {
