@@ -5,7 +5,7 @@ const csv = require('csvtojson');
 // Database schema & model definition
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const report = require('../src/database/report');
+const report = require('../src/models/report');
 
 const moment = require('moment');
 

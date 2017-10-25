@@ -5,7 +5,7 @@ const compression = require('compression'); // compress file to GZIP
 const cors = require('cors'); // CORS middleware
 const csv = require('csvtojson'); // CSV parsing
 const express = require('express');
-const five9 = require('./five9-interface'); // Five9 interface helper functions
+const five9 = require('./helpers/five9-interface'); // Five9 interface helper functions
 const fs = require('fs');
 const helmet = require('helmet'); // security
 const moment = require('moment'); // dates/times
@@ -17,7 +17,7 @@ const secure = require('./secure_settings.js');
 // Database handling
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const report = require('./database/report');
+const report = require('./models/report');
 
 // Initialize the app
 const app = express();
@@ -139,23 +139,33 @@ const server = app.listen(port, async () => {
 // Update Five9 data
 async function refreshDatabase(csvData) {
     // let data = five9.getReportResults();
-    const csvHeader = csvData.substr(0, csvData.indexOf('\n'));
+    const time = {};
+    time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
+    time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
+
     const data = [];
 
-    // let csvData = five9.getReportResults();
 
-    // Remove the old data
+    // Remove all old data
     await report.Report.remove({}, (err, success) => {
         console.log('delete err: ' + err);
         console.log('delete success: ' + success);
     });
+
+    // Get CSV data
+    const reportParameters = five9.getParameters('runReport', null,
+                        criteriaTimeStart=time.start, criteriaTimeEnd=time.end);
+    var csvData = five9.getReportResults(reportParameters);
+    console.log(csvData);
+    return;
+    const csvHeader = csvData.substr(0, csvData.indexOf('\n'));
+
 
     // Parse CSV data
     await new Promise((resolve, reject) => {
         csv( { delimiter: ',', headers: report.getHeadersFromCsv(csvHeader) } )
             .fromString(csvData)
             .on('json', (res) => {
-                // console.log(res);
                 res.date = moment(res.date, 'YYYY/MM/DD').toDate();
                 data.push(res);
                 return resolve(data);
@@ -165,7 +175,6 @@ async function refreshDatabase(csvData) {
     // Insert the new data
     return report.Report.collection.insert(data, (err, docs) => {
         console.log('insert err: ' + err);
-        // console.log(docs);
         return report.Report.collection.stats((err, results) => {
             console.log('stats err: ' + err);
             console.log('count: ' + results.count + '. size: ' + results.size + 'b');

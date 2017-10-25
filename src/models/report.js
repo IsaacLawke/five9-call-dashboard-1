@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Schema for report data
 const reportSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     skill: String,
@@ -7,6 +8,10 @@ const reportSchema = mongoose.Schema({
     date: Date,
     calls: { type: Number, default: 0 }
 });
+
+// Model to represent report data
+const Report = mongoose.model('Report', reportSchema);
+
 
 // Returns array with nice field names, from Five9 CSV report header string.
 function getHeadersFromCsv(csvHeaderLine) {
@@ -29,7 +34,6 @@ function getHeadersFromCsv(csvHeaderLine) {
     return newHeaders;
 }
 
-const Report = mongoose.model('Report', reportSchema);
 
 module.exports.Report = Report;
 module.exports.getHeadersFromCsv = getHeadersFromCsv;
