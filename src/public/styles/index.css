@@ -1,0 +1,17 @@
+h1 {
+    font-weight: lighter;
+}
+
+.dashboard-link-wrapper {
+    margin: 50px;
+}
+
+.dashboard-link-wrapper a,
+.dashboard-link-wrapper a:visited {
+    color: #444;
+    transition: 0.15s all;
+}
+
+.dashboard-link-wrapper a:hover {
+    color: #777;
+}

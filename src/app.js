@@ -101,6 +101,12 @@ app.get('/api/states', async (req, res) => {
     }
 });
 
+// root index page
+app.get('/', async (req, res) => {
+    let dir = path.join(__dirname + '/public/index.html');
+    res.sendFile(dir);
+});
+
 // queue page
 app.get('/queues', async (req, res) => {
     let dir = path.join(__dirname + '/public/queues.html');
