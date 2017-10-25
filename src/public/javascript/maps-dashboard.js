@@ -27,8 +27,8 @@ $(document).ready(() => {
         $('.credentials-cover').removeClass('out-of-the-way');
         $('.credentials-cover-toggle').text('Logged In');
 
-        // Update map every 2.5 minutes
-        startUpdatingMap(callMap, 2.5*60);
+        // Update map every 3 minutes
+        startUpdatingMap(callMap, 3*60);
     });
 
     // handle toggle for relative / absolute date filters

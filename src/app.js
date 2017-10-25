@@ -77,6 +77,22 @@ app.post('/api/configuration', async (req, res) => {
     }
 });
 
+// Request data to update maps page
+app.get('/api/reports/maps', async (req, res) => {
+    try {
+        // Authenticate user
+        //
+        ////////////////////
+
+        // Get data
+        res.set('Content-Type', 'application/json');
+        res.send(await getData());
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.send(`An error occurred on the server when retrieving report information: ${err}`);
+    }
+});
+
 // Return ZIP3 JSON
 app.get('/api/zip3-data', async (req, res) => {
     try {
@@ -138,6 +154,14 @@ const server = app.listen(port, async () => {
     }
     // scheduleUpdate(2.5 * 60 * 1000);
 });
+
+
+async function getData() {
+    const results = await report.Report.find({}, (err, data) => {
+        return JSON.stringify(data);
+    });
+    return results;
+}
 
 // Update Five9 data
 async function refreshDatabase() {
