@@ -78,7 +78,8 @@ app.post('/api/configuration', async (req, res) => {
 });
 
 // Request data to update maps page
-app.get('/api/reports/maps', async (req, res) => {
+// Takes parameters to pass in for start time and end time
+app.post('/api/reports/maps', async (req, res) => {
     try {
         // Authenticate user
         //
@@ -86,7 +87,7 @@ app.get('/api/reports/maps', async (req, res) => {
 
         async function sendResponse() {
             console.log('sendResponse called!');
-            const data = await getData();
+            const data = await getData(req.body);
             res.set('Content-Type', 'application/json');
             res.send(data);
         }
@@ -177,8 +178,13 @@ const server = app.listen(port, async () => {
 });
 
 
-async function getData() {
-    const results = await report.Report.find({}, (err, data) => {
+async function getData(time) {
+    const results = await report.Report.find({
+        date: {
+            $gte: moment(time.start, 'YYYY-MM-DD[T]HH:mm:ss'),
+            $lt: moment(time.end, 'YYYY-MM-DD[T]HH:mm:ss')
+        }
+    }, (err, data) => {
         return JSON.stringify(data);
     });
     return results;

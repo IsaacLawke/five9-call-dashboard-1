@@ -68,12 +68,10 @@ async function startUpdatingMap(callMap, refreshRate) {
 async function updateMap(callMap) {
     const time = reportTimeRange();
 
-    // const params = getParameters('runReport', null, time.start, time.end);
-    const data = await getReportResults();
+    const data = await getReportResults(time);
 
     callMap.update(data);
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
-    console.log(time);
 }
 
 // Determines start/end times chosen by user

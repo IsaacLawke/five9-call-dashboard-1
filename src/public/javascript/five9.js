@@ -6,11 +6,8 @@
 
 // Get CSV string of report results from Five9
 async function getReportResults(params) {
-    console.log(`sending report request at ${moment()}`);
-    const response = await getReportData();
-    console.log(`received report data at ${moment()}`);
+    const response = await getReportData(params);
     const data = await response.json();
-    console.log(data[0]);
     return data;
 }
 
@@ -34,11 +31,16 @@ async function beginSession() {
     }
 }
 
-async function getReportData() {
+async function getReportData(parameters) {
     const apiURL = API_URL + 'reports/maps'; // defined in api_url.js
 
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(parameters)
     }
 
     return fetch(apiURL, requestOptions)
