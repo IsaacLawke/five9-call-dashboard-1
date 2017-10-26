@@ -1,5 +1,6 @@
 const secure_settings = require('../secure_settings.js');
 const https = require('https');
+const log = require('../helpers/log');
 const parseString = require('xml2js').parseString; // parse XML to JSON
 const xml = require('xml');
 
@@ -82,7 +83,7 @@ function sendRequest(message, auth, requestType) {
 }
 
 
-// Request - utility function for Five9 requests
+// Request - utility function for Five9 requests. Returns JSON object.
 async function request(params, requestType) {
     const soap = jsonToSOAP(params, requestType);
     const xmlData = await sendRequest(soap, params.authorization, requestType);
@@ -90,6 +91,14 @@ async function request(params, requestType) {
     await parseString(xmlData, (err, result) => {
         jsonResult = jsonToReturnValue(result, params.service);
     });
+
+    let fault = getFaultStringFromData(jsonResult);
+    if (fault != '') {
+        const msg = `Request issue for ${requestType}: ${fault}`;
+        log.error(msg);
+        throw new Error(msg);
+    }
+
     return jsonResult;
 }
 
@@ -107,6 +116,7 @@ async function getReportResults(params) {
     // Then retrieve the results
     let resultParams = getParameters('getReportResultCsv', id);
     let reportResult = await request(resultParams, 'configuration');
+
     return reportResult;
 }
 

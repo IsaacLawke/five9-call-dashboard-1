@@ -190,7 +190,9 @@ async function addDatabaseUpdateListener(fun) {
 
 async function callbackDatabaseUpdateListeners() {
     for (var i=0; i < databaseUpdateListeners.length; i++) {
-        databaseUpdateListeners[i]();
+        console.log('calling listener');
+        let listenerFunction = databaseUpdateListeners.pop();
+        listenerFunction();
     }
 }
 
@@ -207,7 +209,6 @@ async function refreshDatabase() {
     // Remove all old data
     await report.Report.remove({}, (err, success) => {
         console.log('delete err: ' + err);
-        console.log('delete success: ' + success);
     });
 
     // Get CSV data

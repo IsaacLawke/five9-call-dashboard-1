@@ -70,9 +70,6 @@ async function updateMap(callMap) {
 
     // const params = getParameters('runReport', null, time.start, time.end);
     const data = await getReportResults();
-    data.forEach((d) => {
-        d.CALLS = +d.CALLS;
-    });
 
     callMap.update(data);
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
