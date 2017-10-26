@@ -154,7 +154,7 @@ class CallMap {
     // Takes call data (by zip code), returns total calls by ZIP3
     process(data) {
         let callsByZip = d3.nest()
-            .key((d) => d[FIVE9_ZIP_FIELD].substring(0,3))
+            .key((d) => d['zipCode'].substring(0,3))
             .rollup((v) => v.length)
             .entries(data);
         return callsByZip;

@@ -84,9 +84,21 @@ app.get('/api/reports/maps', async (req, res) => {
         //
         ////////////////////
 
+        async function sendResponse() {
+            console.log('sendResponse called!');
+            const data = await getData();
+            res.set('Content-Type', 'application/json');
+            res.send(data);
+        }
+
         // Get data
-        res.set('Content-Type', 'application/json');
-        res.send(await getData());
+        if (currentlyUpdatingData) {
+            log.message(`Maps API request arrived while updating database. Adding databaseUpdateListener.`);
+            addDatabaseUpdateListener(sendResponse);
+        } else {
+            sendResponse();
+        }
+
     } catch (err) {
         res.set('Content-Type', 'application/text');
         res.send(`An error occurred on the server when retrieving report information: ${err}`);
@@ -139,10 +151,11 @@ app.get('/maps', async (req, res) => {
 // Fire up the server
 let currentlyUpdatingData = false;
 let timeoutId = null;
+let databaseUpdateListeners = [];
 const server = app.listen(port, async () => {
     log.message(`Express listening on port ${port}!`);
 
-    // Begin updating from Five9 every 2.5 minutes
+    // Update from Five9 every ${interval} seconds
     async function scheduleUpdate(interval) {
         currentlyUpdatingData = true;
         // update from Five9
@@ -153,6 +166,7 @@ const server = app.listen(port, async () => {
         timeoutId = setTimeout(() => scheduleUpdate(interval), interval);
     }
 
+    // Connect and begin updating every 2.5 minutes
     try {
         await mongoose.connect('mongodb://localhost/five9-report-data');
         scheduleUpdate(2.5 * 60 * 1000);
@@ -168,6 +182,16 @@ async function getData() {
         return JSON.stringify(data);
     });
     return results;
+}
+
+async function addDatabaseUpdateListener(fun) {
+    databaseUpdateListeners.push(fun);
+}
+
+async function callbackDatabaseUpdateListeners() {
+    for (var i=0; i < databaseUpdateListeners.length; i++) {
+        databaseUpdateListeners[i]();
+    }
 }
 
 // Update Five9 data
@@ -207,6 +231,7 @@ async function refreshDatabase() {
     // Insert the new data
     return report.Report.collection.insert(data, (err, docs) => {
         console.log('insert err: ' + err);
+        callbackDatabaseUpdateListeners();
         return report.Report.collection.stats((err, results) => {
             console.log('stats err: ' + err);
             console.log('count: ' + results.count + '. size: ' + results.size + 'b');

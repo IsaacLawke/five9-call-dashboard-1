@@ -68,10 +68,8 @@ async function startUpdatingMap(callMap, refreshRate) {
 async function updateMap(callMap) {
     const time = reportTimeRange();
 
-    const params = getParameters('runReport', null, time.start, time.end);
-    const csvData = await getReportResults(params);
-
-    const data = d3.csvParse(csvData);
+    // const params = getParameters('runReport', null, time.start, time.end);
+    const data = await getReportResults();
     data.forEach((d) => {
         d.CALLS = +d.CALLS;
     });
