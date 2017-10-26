@@ -140,8 +140,7 @@ app.get('/maps', async (req, res) => {
 let currentlyUpdatingData = false;
 let timeoutId = null;
 const server = app.listen(port, async () => {
-    console.log(`Express listening on port ${port}!`);
-    mongoose.connect('mongodb://localhost/five9-report-data');
+    log.message(`Express listening on port ${port}!`);
 
     // Begin updating from Five9 every 2.5 minutes
     async function scheduleUpdate(interval) {
@@ -153,7 +152,14 @@ const server = app.listen(port, async () => {
         currentlyUpdatingData = false;
         timeoutId = setTimeout(() => scheduleUpdate(interval), interval);
     }
-    scheduleUpdate(0.25 * 60 * 1000);
+
+    try {
+        await mongoose.connect('mongodb://localhost/five9-report-data');
+        scheduleUpdate(2.5 * 60 * 1000);
+    } catch (err) {
+        log.message(`Error occurred on server: ${err}`);
+    }
+
 });
 
 
@@ -166,7 +172,7 @@ async function getData() {
 
 // Update Five9 data
 async function refreshDatabase() {
-    log.record(`Updating report database at ${moment()}`);
+    log.message(`Updating report database at ${moment()}`);
     const time = {};
     time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
     time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';

@@ -1,6 +1,6 @@
 // Utility functions for logging and recording updates
-function record(message) {
-    console.log(message);
+function message(text) {
+    console.log(text);
 }
 
-module.exports.record = record;
+module.exports.message = message;
