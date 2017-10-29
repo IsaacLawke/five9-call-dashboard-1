@@ -93,3 +93,39 @@ function getFaultStringFromData(data) {
         return '';
     }
 }
+
+// Given a requestType, returns JSON to submit to server in POST request.
+// requestType should match Five9 API command.
+function getParameters(requestType) {
+    let params = {};
+    // Initiate session
+    if (requestType == 'setSessionParameters') {
+        params = {
+            'service': 'setSessionParameters',
+            'settings': [ {
+                'viewSettings': [
+                    { 'idleTimeOut': 1800 },
+                    { 'statisticsRange': 'CurrentDay' },
+                    { 'rollingPeriod': 'Minutes10' }
+                ] }
+            ]
+        }
+    }
+    // Get real-time call stats
+    if (requestType == 'ACDStatus') {
+        params = {
+            'service': 'getStatistics',
+            'settings': [ {
+                'statisticType': 'ACDStatus'
+            } ]
+        }
+    }
+
+    // Credentials
+    let user = $('.username').val();
+    let pass = $('.password').val();
+    let auth = user + ':' + pass;
+    params['authorization'] = btoa(auth); // Base 64 encoding. Yum!
+
+    return params;
+}
