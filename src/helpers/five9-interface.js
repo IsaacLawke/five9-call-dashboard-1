@@ -9,17 +9,25 @@ const xml = require('xml');
 // Returns true if user has permissions; otherwise false.
 // ${auth} should be base64 encoded 'username:password' string
 async function canAuthenticate(auth) {
-    // See if supervisor request returns 401 Not Authorized status
+    // See if supervisor request •••returns 401 Not Authorized status
     const params = {
         'service': 'getMyPermissions'
     }
     const requestMessage = jsonToSOAP(params, 'statistics');
-    console.log(requestMessage);
     let response = await sendRequest(requestMessage, auth, 'statistics');
     console.log(response);
-    if (response.statusCode == 200 || response.statusCode == 500) {
+
+    // If Five9 server was able to authenticate user but the user just doesn't
+    // have a session open, they're good.
+    if (response.statusCode == 500 && response.body.search('Session was closed') > -1) {
         return true;
     }
+    // If server responded with success, we're good
+    if (response.statusCode == 200) {
+        return true;
+    }
+    // Otherwise, you shall not pass!
+    return false;
 }
 
 
