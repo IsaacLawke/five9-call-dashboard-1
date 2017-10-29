@@ -179,10 +179,12 @@ const server = app.listen(port, async () => {
 
 
 async function getData(time) {
+    console.log(moment(time.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate());
+    console.log(moment(time.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate());
     const results = await report.Report.find({
         date: {
-            $gte: moment(time.start, 'YYYY-MM-DD[T]HH:mm:ss'),
-            $lt: moment(time.end, 'YYYY-MM-DD[T]HH:mm:ss')
+            $gte: moment(time.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
+            $lte: moment(time.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
         }
     }, (err, data) => {
         return JSON.stringify(data);
@@ -229,7 +231,9 @@ async function refreshDatabase() {
         csv( { delimiter: ',', headers: report.getHeadersFromCsv(csvHeader) } )
             .fromString(csvData)
             .on('json', (res) => {
-                res.date = moment(res.date, 'YYYY/MM/DD').toDate();
+                let datestring = res.date + ' ' + res['HALF HOUR'];
+                delete res['HALF HOUR'];
+                res.date = moment(datestring, 'YYYY/MM/DD HH:mm').toDate();
                 data.push(res);
                 return resolve(data);
             }).on('error', reject);

@@ -171,7 +171,7 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
             'service': 'runReport',
             'settings': [
                 { 'folderName': 'Contact Center Reports' },
-                { 'reportName': 'Calls by Zip' },
+                { 'reportName': 'Dashboard - Calls by Zip' },
                 { 'criteria': [ {
                     'time': [
                         { 'end': criteriaTimeEnd },
