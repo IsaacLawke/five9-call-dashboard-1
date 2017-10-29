@@ -42,10 +42,10 @@ app.post('/api/statistics', async (req, res) => {
         const auth = req.body['authorization'];
 
         // Send request to Five9
-        let xmlData = await five9.sendRequest(message, auth, 'statistics');
+        let response = await five9.sendRequest(message, auth, 'statistics');
 
         // On response, format as JSON and send back to client
-        parseString(xmlData, (err, result) => {
+        parseString(response.body, (err, result) => {
             res.set('Content-Type', 'application/json');
             res.send(result);
         });
@@ -56,34 +56,40 @@ app.post('/api/statistics', async (req, res) => {
 });
 
 // Five9 Configuration API requests
-app.post('/api/configuration', async (req, res) => {
-    try {
-        // Generate SOAP message for Five9
-        const message = five9.jsonToSOAP(req.body, 'configuration');
-        const auth = req.body['authorization'];
-
-        // Send request to Five9
-        let xmlData = await five9.sendRequest(message, auth, 'configuration');
-
-        // On response, format as CSV and send back to client
-        parseString(xmlData, (err, result) => {
-            res.set('Content-Type', 'text/csv');
-            res.send(result);
-        });
-    } catch (err) {
-        res.set('Content-Type', 'application/text');
-        res.send('An error occurred on the server during POST.');
-    }
-});
+// TODO: add authentication step
+// app.post('/api/configuration', async (req, res) => {
+//     try {
+//         // Generate SOAP message for Five9
+//         const message = five9.jsonToSOAP(req.body, 'configuration');
+//         const auth = req.body['authorization'];
+//
+//         // Send request to Five9
+//         let response = await five9.sendRequest(message, auth, 'configuration');
+//
+//         // On response, format as CSV and send back to client
+//         parseString(response.body, (err, result) => {
+//             res.set('Content-Type', 'text/csv');
+//             res.send(result);
+//         });
+//     } catch (err) {
+//         res.set('Content-Type', 'application/text');
+//         res.send('An error occurred on the server during POST.');
+//     }
+// });
 
 // Request data to update maps page
 // Takes parameters to pass in for start time and end time
 app.post('/api/reports/maps', async (req, res) => {
     try {
         // Authenticate user
-        //
-        ////////////////////
+        const hasPermission = await five9.canAuthenticate(req.body['authorization']);
+        if (!hasPermission) {
+            res.set('Content-Type', 'application/text');
+            res.status(401).send('Could not authenticate your user.');
+            return;
+        }
 
+        // Send data as response when loaded
         async function sendResponse() {
             console.log('sendResponse called!');
             const data = await report.getData(req.body);
@@ -94,7 +100,7 @@ app.post('/api/reports/maps', async (req, res) => {
 
     } catch (err) {
         res.set('Content-Type', 'application/text');
-        res.send(`An error occurred on the server when retrieving report information: ${err}`);
+        res.status(500).send(`An error occurred on the server when retrieving report information: ${err}`);
     }
 });
 

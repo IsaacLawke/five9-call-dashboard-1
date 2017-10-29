@@ -6,6 +6,9 @@
 
 // Get CSV string of report results from Five9
 async function getReportResults(params) {
+    const auth = getAuthString($('.username').val(), $('.password').val());
+    params['authorization'] = auth;
+
     const response = await getReportData(params);
     const data = await response.json();
     return data;
@@ -44,13 +47,12 @@ async function getReportData(parameters) {
     }
 
     return fetch(apiURL, requestOptions)
-        .then((response) => {
-            if (!response.ok) error(response.status);
+        .then(async (response) => {
+            if (!response.ok) {
+                let bodyText = await response.text();
+                throw new Error(`Server responded with ${response.status} ${response.statusText}: ${bodyText}`);
+            }
             return response;
-        }).then((response) => {
-            return response;
-        }).catch((err) => {
-            error(err);
         });
 }
 
@@ -124,8 +126,14 @@ function getParameters(requestType) {
     // Credentials
     let user = $('.username').val();
     let pass = $('.password').val();
-    let auth = user + ':' + pass;
-    params['authorization'] = btoa(auth); // Base 64 encoding. Yum!
+    params['authorization'] = getAuthString(user, pass);
 
     return params;
+}
+
+
+ // Combines username and password, then encodes in Base 64. Yum!
+function getAuthString(username, password) {
+    let auth = username + ':' + password;
+    return btoa(auth);
 }

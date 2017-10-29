@@ -69,8 +69,8 @@ async function updateMap(callMap) {
     const time = reportTimeRange();
 
     const data = await getReportResults(time);
-
     callMap.update(data);
+
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
 }
 

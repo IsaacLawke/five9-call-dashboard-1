@@ -5,6 +5,24 @@ const parseString = require('xml2js').parseString; // parse XML to JSON
 const xml = require('xml');
 
 
+// See if user is authorized before pulling reports.
+// Returns true if user has permissions; otherwise false.
+// ${auth} should be base64 encoded 'username:password' string
+async function canAuthenticate(auth) {
+    // See if supervisor request returns 401 Not Authorized status
+    const params = {
+        'service': 'getMyPermissions'
+    }
+    const requestMessage = jsonToSOAP(params, 'statistics');
+    console.log(requestMessage);
+    let response = await sendRequest(requestMessage, auth, 'statistics');
+    console.log(response);
+    if (response.statusCode == 200 || response.statusCode == 500) {
+        return true;
+    }
+}
+
+
 // Takes a JSON object specifying a Five9 API endpoint,
 // and returns a SOAP message to send to the Five9 API.
 // requestType: statistics or configuration API
@@ -68,7 +86,7 @@ function sendRequest(message, auth, requestType) {
             });
             res.on('end', () => {
                 var dataString = data.join('');
-                resolve(dataString);
+                resolve({ body: dataString, statusCode: res.statusCode });
             });
         });
 
@@ -86,9 +104,9 @@ function sendRequest(message, auth, requestType) {
 // Request - utility function for Five9 requests. Returns JSON object.
 async function request(params, requestType) {
     const soap = jsonToSOAP(params, requestType);
-    const xmlData = await sendRequest(soap, params.authorization, requestType);
+    const response = await sendRequest(soap, params.authorization, requestType);
     let jsonResult;
-    await parseString(xmlData, (err, result) => {
+    await parseString(response.body, (err, result) => {
         jsonResult = jsonToReturnValue(result, params.service);
     });
 
@@ -155,15 +173,6 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
             ]
         }
     }
-    // Get real-time call stats
-    if (requestType == 'ACDStatus') {
-        params = {
-            'service': 'getStatistics',
-            'settings': [ {
-                'statisticType': 'ACDStatus'
-            } ]
-        }
-    }
 
     // Report running params
     if (requestType == 'runReport') {
@@ -209,6 +218,7 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
 
 
 
+module.exports.canAuthenticate = canAuthenticate;
 module.exports.jsonToSOAP = jsonToSOAP;
 module.exports.sendRequest = sendRequest;
 module.exports.getParameters = getParameters;
