@@ -3,7 +3,6 @@
 const bodyParser = require('body-parser'); // parse JSON requests
 const compression = require('compression'); // compress file to GZIP
 const cors = require('cors'); // CORS middleware
-const csv = require('csvtojson'); // CSV parsing
 const express = require('express');
 const five9 = require('./helpers/five9-interface'); // Five9 interface helper functions
 const fs = require('fs');
@@ -87,18 +86,11 @@ app.post('/api/reports/maps', async (req, res) => {
 
         async function sendResponse() {
             console.log('sendResponse called!');
-            const data = await getData(req.body);
+            const data = await report.getData(req.body);
             res.set('Content-Type', 'application/json');
             res.send(data);
         }
-
-        // Get data
-        if (currentlyUpdatingData) {
-            log.message(`Maps API request arrived while updating database. Adding databaseUpdateListener.`);
-            addDatabaseUpdateListener(sendResponse);
-        } else {
-            sendResponse();
-        }
+        report.addUpdateListener(sendResponse);
 
     } catch (err) {
         res.set('Content-Type', 'application/text');
@@ -150,27 +142,15 @@ app.get('/maps', async (req, res) => {
 
 
 // Fire up the server
-let currentlyUpdatingData = false;
 let timeoutId = null;
-let databaseUpdateListeners = [];
+
 const server = app.listen(port, async () => {
     log.message(`Express listening on port ${port}!`);
-
-    // Update from Five9 every ${interval} seconds
-    async function scheduleUpdate(interval) {
-        currentlyUpdatingData = true;
-        // update from Five9
-        await refreshDatabase();
-
-        // Schedule next update
-        currentlyUpdatingData = false;
-        timeoutId = setTimeout(() => scheduleUpdate(interval), interval);
-    }
 
     // Connect and begin updating every 2.5 minutes
     try {
         await mongoose.connect('mongodb://localhost/five9-report-data');
-        scheduleUpdate(2.5 * 60 * 1000);
+        timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
     }
@@ -178,76 +158,7 @@ const server = app.listen(port, async () => {
 });
 
 
-async function getData(time) {
-    console.log(moment(time.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate());
-    console.log(moment(time.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate());
-    const results = await report.Report.find({
-        date: {
-            $gte: moment(time.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
-            $lte: moment(time.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
-        }
-    }, (err, data) => {
-        return JSON.stringify(data);
-    });
-    return results;
-}
-
-async function addDatabaseUpdateListener(fun) {
-    databaseUpdateListeners.push(fun);
-}
-
-async function callbackDatabaseUpdateListeners() {
-    for (var i=0; i < databaseUpdateListeners.length; i++) {
-        console.log('calling listener');
-        let listenerFunction = databaseUpdateListeners.pop();
-        listenerFunction();
-    }
-}
-
-// Update Five9 data
-async function refreshDatabase() {
-    log.message(`Updating report database at ${moment()}`);
-    const time = {};
-    time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
-    time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
-
-    const data = [];
 
 
-    // Remove all old data
-    await report.Report.remove({}, (err, success) => {
-        console.log('delete err: ' + err);
-    });
-
-    // Get CSV data
-    const reportParameters = five9.getParameters('runReport', null,
-                        criteriaTimeStart=time.start, criteriaTimeEnd=time.end);
-    const csvData = await five9.getReportResults(reportParameters);
-    const csvHeader = csvData.substr(0, csvData.indexOf('\n'));
-
-
-    // Parse CSV data
-    await new Promise((resolve, reject) => {
-        csv( { delimiter: ',', headers: report.getHeadersFromCsv(csvHeader) } )
-            .fromString(csvData)
-            .on('json', (res) => {
-                let datestring = res.date + ' ' + res['HALF HOUR'];
-                delete res['HALF HOUR'];
-                res.date = moment(datestring, 'YYYY/MM/DD HH:mm').toDate();
-                data.push(res);
-                return resolve(data);
-            }).on('error', reject);
-        });
-
-    // Insert the new data
-    return report.Report.collection.insert(data, (err, docs) => {
-        console.log('insert err: ' + err);
-        callbackDatabaseUpdateListeners();
-        return report.Report.collection.stats((err, results) => {
-            console.log('stats err: ' + err);
-            console.log('count: ' + results.count + '. size: ' + results.size + 'b');
-        });
-    });
-}
 
 module.exports = server;
