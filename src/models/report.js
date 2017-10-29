@@ -49,8 +49,12 @@ let updateListeners = [];
 // Update from Five9 every ${interval} seconds
 async function scheduleUpdate(interval) {
     currentlyUpdatingData = true;
+    const time = {};
+    time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
+    time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
+
     // update from Five9
-    await refreshDatabase();
+    await refreshDatabase(time);
 
     // Schedule next update
     currentlyUpdatingData = false;
@@ -90,18 +94,20 @@ async function callbackUpdateListeners() {
 
 
 // Update Five9 data
-async function refreshDatabase() {
+async function refreshDatabase(time) {
     log.message(`Updating report database at ${moment()}`);
-    const time = {};
-    time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
-    time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
 
     const data = [];
 
-    // Remove all old data
-    await Report.remove({}, (err, success) => {
-        console.log('delete err: ' + err);
-    });
+    // Remove today's old data
+    await Report.remove({
+            date: {
+                $gte: time.start,
+                $lte: time.end
+            }
+        }, (err, success) => {
+            console.log('delete err: ' + err);
+        });
 
     // Get CSV data
     const reportParameters = five9.getParameters('runReport', null,
