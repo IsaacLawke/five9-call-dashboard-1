@@ -15,15 +15,14 @@ async function canAuthenticate(auth) {
     }
     const requestMessage = jsonToSOAP(params, 'statistics');
     let response = await sendRequest(requestMessage, auth, 'statistics');
-    console.log(response);
 
+    // If server responded with success, we're good
+    if (response.statusCode == 200) {
+        return true;
+    }
     // If Five9 server was able to authenticate user but the user just doesn't
     // have a session open, they're good.
     if (response.statusCode == 500 && response.body.search('Session was closed') > -1) {
-        return true;
-    }
-    // If server responded with success, we're good
-    if (response.statusCode == 200) {
         return true;
     }
     // Otherwise, you shall not pass!

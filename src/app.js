@@ -34,6 +34,33 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 
+//////////////////////////////////////////////
+// Page view routes
+//////////////////////////////////////////////
+
+// root index page
+app.get('/', async (req, res) => {
+    let dir = path.join(__dirname + '/public/index.html');
+    res.sendFile(dir);
+});
+
+// queue page
+app.get('/queues', async (req, res) => {
+    let dir = path.join(__dirname + '/public/queues.html');
+    res.sendFile(dir);
+});
+
+// maps page
+app.get('/maps', async (req, res) => {
+    let dir = path.join(__dirname + '/public/maps.html');
+    res.sendFile(dir);
+});
+
+
+//////////////////////////////////////////////
+// API routes to get data
+//////////////////////////////////////////////
+
 // Five9 Statistics API request
 app.post('/api/statistics', async (req, res) => {
     try {
@@ -128,24 +155,6 @@ app.get('/api/states', async (req, res) => {
     }
 });
 
-// root index page
-app.get('/', async (req, res) => {
-    let dir = path.join(__dirname + '/public/index.html');
-    res.sendFile(dir);
-});
-
-// queue page
-app.get('/queues', async (req, res) => {
-    let dir = path.join(__dirname + '/public/queues.html');
-    res.sendFile(dir);
-});
-
-// maps page
-app.get('/maps', async (req, res) => {
-    let dir = path.join(__dirname + '/public/maps.html');
-    res.sendFile(dir);
-});
-
 
 // Fire up the server
 let timeoutId = null;
@@ -160,11 +169,7 @@ const server = app.listen(port, async () => {
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
     }
-
 });
-
-
-
 
 
 module.exports = server;

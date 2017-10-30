@@ -5,6 +5,11 @@ const moment = require('moment'); // dates/times
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
+
+
+//////////////////////////////////////////
+// MongoDB database definitions
+//////////////////////////////////////////
 // Schema for report data
 const reportSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -40,13 +45,14 @@ function getHeadersFromCsv(csvHeaderLine) {
 }
 
 
-///////////////////////////////////////
-// Database updating functions
-///////////////////////////////////////
+//////////////////////////////////////////
+// Database updating and access functions
+//////////////////////////////////////////
 let currentlyUpdatingData = false;
 let updateListeners = [];
 
 // Update from Five9 every ${interval} seconds
+// Returns ID for setTimeout timer
 async function scheduleUpdate(interval) {
     currentlyUpdatingData = true;
     const time = {};
@@ -86,7 +92,6 @@ async function addUpdateListener(fun) {
 
 async function callbackUpdateListeners() {
     for (var i=0; i < updateListeners.length; i++) {
-        console.log('calling listener');
         let listenerFunction = updateListeners.pop();
         listenerFunction();
     }
