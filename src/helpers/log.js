@@ -4,7 +4,7 @@ function message(text) {
 }
 
 function error(text) {
-    console.log(text);
+    console.error(text);
 }
 
 module.exports.message = message;
