@@ -56,6 +56,11 @@ app.get('/maps', async (req, res) => {
     res.sendFile(dir);
 });
 
+// admin panel
+app.get('/admin', async (req, res) => {
+    let dir = path.join(__dirname + '/public/admin.html');
+    res.sendFile(dir);
+});
 
 //////////////////////////////////////////////
 // API routes to get data

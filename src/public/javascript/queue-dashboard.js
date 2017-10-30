@@ -7,12 +7,6 @@ let gizmo = null;
 $(document).ready(() => {
     gizmo = gizmoManager();
 
-    // show Login form
-    $('.credentials-cover-toggle').click(() => {
-        $('.credentials-form').removeClass('out-of-the-way');
-        $('.credentials-cover').addClass('out-of-the-way');
-    });
-
     // listen for sign-in button press
     $('.begin-session').click(async (event) => {
         // prevent redirection
@@ -21,11 +15,6 @@ $(document).ready(() => {
         if (timeout != null) {
             clearTimeout(timeout);
         }
-
-        // clear Five9 credentials box and update Login button text
-        $('.credentials-form').addClass('out-of-the-way');
-        $('.credentials-cover').removeClass('out-of-the-way');
-        $('.credentials-cover-toggle').text('Logged In');
 
         // Initiate a new session
         try {
