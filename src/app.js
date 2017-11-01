@@ -164,7 +164,10 @@ const server = app.listen(port, async () => {
 
     // Connect and begin updating every 2.5 minutes
     try {
-        await mongoose.connect('mongodb://localhost/five9-report-data');
+        await mongoose.connect('mongodb://localhost/five9-report-data', {
+	    useMongoClient: true,
+	    keepAlive: true
+	});
         timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
