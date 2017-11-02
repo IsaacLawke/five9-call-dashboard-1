@@ -8,23 +8,10 @@
         <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
         <link href="styles/base.css" rel="stylesheet" type="text/css">
         <link href="styles/modal.css" rel="stylesheet" type="text/css">
+        <link href="styles/admin.css" rel="stylesheet" type="text/css">
     </head>
     <body>
         <div class="content-wrapper">
-
-            <div class="stats-box">
-                <h1>Captain's Log</h1>
-                <div class="wrapper">
-                    <div>
-                        <input type="text" class="filter start-time" placeholder="YYYY-MM-DDTHH:mm:ss" value="2017-10-16T00:00:00" />
-                        <input type="text" class="filter end-time" placeholder="YYYY-MM-DDTHH:mm:ss" value="2017-10-16T23:59:59" />
-                    </div>
-                    <button class="btn begin-session">Reload Data</button>
-                </div>
-
-            </div>
-
-
             <!-- Login forms -->
             <div class="credentials-wrapper">
                 <form class="stats-box credentials-form" action="#">
@@ -42,6 +29,20 @@
                     <button class="btn credentials-cover-toggle">Login</button>
                 </div>
             </div>
+
+
+            <div class="main-wrapper stats-box slidable out-of-the-way">
+                <h1>Captain's Log</h1>
+                <div class="wrapper">
+                    <div>
+                        <input type="text" class="filter start-time" placeholder="YYYY-MM-DDTHH:mm:ss" value="2017-10-16T00:00:00" />
+                        <input type="text" class="filter end-time" placeholder="YYYY-MM-DDTHH:mm:ss" value="2017-10-16T23:59:59" />
+                    </div>
+                    <button class="btn begin-session">Reload Data</button>
+                </div>
+
+            </div>
+
         </div>
     </body>
 

@@ -1,0 +1,8 @@
+.main-wrapper {
+    transition: all 1s ease;
+}
+
+
+.out-of-the-way {
+    transform: translate(100vw);
+}
