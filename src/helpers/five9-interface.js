@@ -114,15 +114,15 @@ async function request(params, requestType) {
     const response = await sendRequest(soap, params.authorization, requestType);
     let jsonResult;
     await parseString(response.body, (err, result) => {
+        let fault = getFaultStringFromData(result);
+        if (fault != '') {
+            const msg = `Request issue for ${requestType}: ${fault}`;
+            log.error(msg);
+            throw new Error(msg);
+        }
+
         jsonResult = jsonToReturnValue(result, params.service);
     });
-
-    let fault = getFaultStringFromData(jsonResult);
-    if (fault != '') {
-        const msg = `Request issue for ${requestType}: ${fault}`;
-        log.error(msg);
-        throw new Error(msg);
-    }
 
     return jsonResult;
 }

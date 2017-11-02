@@ -119,7 +119,13 @@ app.post('/api/reports/maps', async (req, res) => {
         // Send data as response when loaded
         async function sendResponse() {
             console.log('sendResponse called!');
-            const data = await report.getData(req.body);
+            let data;
+            try {
+                data = await report.getData(req.body);
+            } catch (err) {
+                res.set('Content-Type', 'application/text');
+                res.status(500).send(`An error occurred on the server while getting report data: ${err}`);
+            }
             res.set('Content-Type', 'application/json');
             res.send(data);
         }
