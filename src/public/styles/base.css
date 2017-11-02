@@ -133,7 +133,7 @@ body * {
     overflow-x: hidden;
 }
 
-.credentials-form, .credentials-cover {
+.credentials-form, .credentials-cover, .slidable {
     position: absolute;
     top: 0;
     width: 100%;
@@ -142,10 +142,6 @@ body * {
 
 .credentials-form input {
     font-family: sans-serif;
-}
-
-.credentials-form.out-of-the-way {
-    transform: translate(-100vw);
 }
 
 .credentials-form label {
@@ -158,6 +154,10 @@ body * {
     color: #444;
     letter-spacing: 2px;
     padding: 0;
+}
+
+.credentials-form.out-of-the-way {
+    transform: translate(-100vw);
 }
 .credentials-cover.out-of-the-way {
     transform: translate(100vw);
@@ -241,4 +241,28 @@ button {
     .stats-box.gizmo {
         width: 180px;
     }
+}
+
+
+
+
+/* Data filters */
+.date-type-toggle, .date-filter-inputs, input.filter {
+    margin: 12px auto;
+}
+
+input.filter, .relative-date-selector {
+    width: 160px;
+    color: #666;
+    border: 1px solid #ddd;
+    background-color: inherit;
+}
+
+input.filter {
+    display: block;
+}
+
+
+.icon .settings {
+    fill: #888;
 }

@@ -56,6 +56,11 @@ app.get('/maps', async (req, res) => {
     res.sendFile(dir);
 });
 
+// admin panel
+app.get('/admin', async (req, res) => {
+    let dir = path.join(__dirname + '/public/admin.html');
+    res.sendFile(dir);
+});
 
 //////////////////////////////////////////////
 // API routes to get data
@@ -64,6 +69,8 @@ app.get('/maps', async (req, res) => {
 // Five9 Statistics API request
 app.post('/api/statistics', async (req, res) => {
     try {
+        log.message(`API - Statistics request from ${req.connection.remoteAddress}`);
+
         // Generate SOAP message for Five9
         const message = five9.jsonToSOAP(req.body, 'statistics');
         const auth = req.body['authorization'];
@@ -82,32 +89,12 @@ app.post('/api/statistics', async (req, res) => {
     }
 });
 
-// Five9 Configuration API requests
-// TODO: add authentication step
-// app.post('/api/configuration', async (req, res) => {
-//     try {
-//         // Generate SOAP message for Five9
-//         const message = five9.jsonToSOAP(req.body, 'configuration');
-//         const auth = req.body['authorization'];
-//
-//         // Send request to Five9
-//         let response = await five9.sendRequest(message, auth, 'configuration');
-//
-//         // On response, format as CSV and send back to client
-//         parseString(response.body, (err, result) => {
-//             res.set('Content-Type', 'text/csv');
-//             res.send(result);
-//         });
-//     } catch (err) {
-//         res.set('Content-Type', 'application/text');
-//         res.send('An error occurred on the server during POST.');
-//     }
-// });
-
 // Request data to update maps page
 // Takes parameters to pass in for start time and end time
 app.post('/api/reports/maps', async (req, res) => {
     try {
+        log.message(`API - Maps request from ${req.connection.remoteAddress}`);
+
         // Authenticate user
         const hasPermission = await five9.canAuthenticate(req.body['authorization']);
         if (!hasPermission) {
@@ -140,6 +127,8 @@ app.post('/api/reports/maps', async (req, res) => {
 // Return ZIP3 JSON
 app.get('/api/zip3-data', async (req, res) => {
     try {
+        log.message(`API - ZIP3 data request from ${req.connection.remoteAddress}`);
+
         // return JSON zip data
         let dir = path.join(__dirname + '/public/zip3-albers.json');
         res.sendFile(dir);
@@ -152,6 +141,8 @@ app.get('/api/zip3-data', async (req, res) => {
 // Return U.S. states JSON
 app.get('/api/states', async (req, res) => {
     try {
+        log.message(`API - States geo data request from ${req.connection.remoteAddress}`);
+
         // return JSON zip data
         let dir = path.join(__dirname + '/public/states-albers.json');
         res.sendFile(dir);
@@ -171,9 +162,9 @@ const server = app.listen(port, async () => {
     // Connect and begin updating every 2.5 minutes
     try {
         await mongoose.connect('mongodb://localhost/five9-report-data', {
-	    useMongoClient: true,
-	    keepAlive: true
-	});
+    	    useMongoClient: true,
+    	    keepAlive: true
+    	});
         timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
