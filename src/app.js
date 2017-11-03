@@ -161,7 +161,7 @@ const server = app.listen(port, async () => {
 
     // Connect and begin updating every 2.5 minutes
     try {
-        await mongoose.connect('mongodb://localhost/five9-report-data', {
+        await mongoose.connect(secure.MONGODB_URI, {
     	    useMongoClient: true,
     	    keepAlive: true
     	});
