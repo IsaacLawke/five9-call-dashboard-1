@@ -90,7 +90,7 @@ body * {
     margin: 0.5em auto;
 }
 
-.stats-box .agent-states-wrapper {
+.stats-box .sub-metric-wrapper {
     display: flex;
     justify-content: space-around;
     width: 100%;
@@ -98,13 +98,19 @@ body * {
     font-size: 1.3em;
 }
 
-.stats-box .agent-states-wrapper p {
+.stats-box .sub-metric-wrapper p {
     margin: 0.25em;
 }
 
-.stats-box .agent-states-wrapper .agents-ready-for-calls { color: hsl(120, 35%, 50%); }
-.stats-box .agent-states-wrapper .agents-on-call         { color: #888; }
-.stats-box .agent-states-wrapper .agents-not-ready-for-calls { color: hsl(0, 55%, 60%); }
+.stats-box .sub-metric-wrapper .agents-ready-for-calls,
+.stats-box .sub-metric-wrapper .calls-in-sl {
+    color: hsl(120, 35%, 50%);
+}
+.stats-box .sub-metric-wrapper .agents-on-call { color: #888; }
+.stats-box .sub-metric-wrapper .agents-not-ready-for-calls,
+.stats-box .sub-metric-wrapper .calls-out-of-sl {
+    color: hsl(0, 55%, 60%);
+}
 
 
 /* Hamburger menu to open skill editor and X to remove */

@@ -5,11 +5,12 @@
 ////////////////////////////////////////////////////////////////
 
 // Get CSV string of report results from Five9
-async function getReportResults(params) {
+// ${type}: 'maps' or 'service-level'
+async function getReportResults(params, type) {
     const auth = getAuthString($('.username').val(), $('.password').val());
     params['authorization'] = auth;
 
-    const response = await getReportData(params);
+    const response = await getReportData(params, type);
     const data = await response.json();
     return data;
 }
@@ -34,8 +35,10 @@ async function beginSession() {
     }
 }
 
-async function getReportData(parameters) {
-    const apiURL = API_URL + 'reports/maps'; // defined in api_url.js
+
+// ${reportType} : either 'maps' or 'service-level'
+async function getReportData(parameters, reportType) {
+    const apiURL = API_URL + 'reports/' + reportType; // defined in api_url.js
 
     const requestOptions = {
         method: 'POST',

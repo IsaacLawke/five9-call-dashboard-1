@@ -90,7 +90,7 @@ app.post('/api/statistics', async (req, res) => {
 });
 
 // Request data to update maps page
-// Takes parameters to pass in for start time and end time
+// Takes parameters for start time and end time from request body.
 app.post('/api/reports/maps', async (req, res) => {
     try {
         log.message(`API - Maps request from ${req.connection.remoteAddress}`);
@@ -105,16 +105,50 @@ app.post('/api/reports/maps', async (req, res) => {
 
         // Send data as response when loaded
         async function sendResponse() {
-            console.log('sendResponse called!');
             let data;
             try {
                 data = await report.getData(req.body, report.CallsByZip);
+                res.set('Content-Type', 'application/json');
+                res.send(data);
             } catch (err) {
                 res.set('Content-Type', 'application/text');
                 res.status(500).send(`An error occurred on the server while getting report data: ${err}`);
             }
-            res.set('Content-Type', 'application/json');
-            res.send(data);
+        }
+        report.addUpdateListener(sendResponse);
+
+    } catch (err) {
+        res.set('Content-Type', 'application/text');
+        res.status(500).send(`An error occurred on the server when retrieving report information: ${err}`);
+    }
+});
+
+// Request data to update service level metrics
+// Takes parameters for start time and end time from request body.
+app.post('/api/reports/service-level', async (req, res) => {
+    try {
+        log.message(`API - Service Level request from ${req.connection.remoteAddress}`);
+
+        // Authenticate user
+        const hasPermission = await five9.canAuthenticate(req.body['authorization']);
+        if (!hasPermission) {
+            res.set('Content-Type', 'application/text');
+            res.status(401).send('Could not authenticate your user.');
+            return;
+        }
+
+        // Send data as response when loaded
+        async function sendResponse() {
+            console.log('sendresponse called!');
+            let data;
+            try {
+                data = await report.getData(req.body, report.ServiceLevel);
+                res.set('Content-Type', 'application/json');
+                res.send(data);
+            } catch (err) {
+                res.set('Content-Type', 'application/text');
+                res.status(500).send(`An error occurred on the server while getting report data: ${err}`);
+            }
         }
         report.addUpdateListener(sendResponse);
 

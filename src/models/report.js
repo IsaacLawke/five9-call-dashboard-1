@@ -161,6 +161,7 @@ async function refreshDatabase(time, reportModel, reportName) {
 
 
 module.exports.CallsByZip = CallsByZip;
+module.exports.ServiceLevel = ServiceLevel;
 module.exports.getHeadersFromCsv = getHeadersFromCsv;
 module.exports.addUpdateListener = addUpdateListener;
 module.exports.getData = getData;

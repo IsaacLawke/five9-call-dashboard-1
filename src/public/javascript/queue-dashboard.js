@@ -35,17 +35,22 @@ $(document).ready(() => {
 
 async function runQueueDashboard() {
     async function eventLoop(interval) {
-        // Get the data
+        // Get the current queue data
         let params = getParameters('ACDStatus');
         let response = await request(params);
-        let data;
+        let data, slData;
 
         try {
             data = await response.json();
             data = data['env:Envelope']['env:Body'][0]
                        ['ns2:getStatisticsResponse'][0]['return'][0];
+
+            // Get SL stats
+            let time = { start: '2017-11-03T00:00:00', end: '2017-11-04T00:00:00' };
+            slData = await getReportResults(time, 'service-level');
+
             // Parse the data and pass it to the view updater
-            refreshView(jsonToViewData(data));
+            refreshView(jsonToViewData(data), slData);
         } catch (err) {
             // try to get <message> tag, if it exists
             let msg = getFaultStringFromData(data);
@@ -67,7 +72,9 @@ async function runQueueDashboard() {
 
 
 // Takes nicely formatted data. Updates dashboard view.
-function refreshView(data) {
+// ${data} : ACD stats (current queue info)
+// ${serviceLevel} : service level report
+function refreshView(data, serviceLevelData) {
     // update each gizmo on the screen
     $('.gizmo').each((i, gizmoElement) => {
         let name = gizmo.gizmos[gizmoElement.id].name;
@@ -79,7 +86,9 @@ function refreshView(data) {
             agentsLoggedIn = 0,
             agentsNotReady = 0,
             agentsOnCall = 0,
-            agentsReady = 0;
+            agentsReady = 0,
+            serviceLevel = 0,
+            callsOffered = 0;
 
         for (let i=0; i < data.length; i++) {
             let queue = data[i];
@@ -92,6 +101,17 @@ function refreshView(data) {
                 agentsNotReady = Math.max(agentsNotReady, queue['Agents Not Ready For Calls']*1);
                 agentsOnCall = Math.max(agentsOnCall, queue['Agents On Call']*1);
                 agentsReady = Math.max(agentsReady, queue['Agents Ready For Calls']*1);
+
+                // SL metrics
+                let metrics = serviceLevelData.reduce((totals, current) => {
+                    if (current.skill == queue['Skill Name']) {
+                        totals.serviceLevel += current.serviceLevel;
+                        totals.calls += current.calls;
+                    }
+                    return totals;
+                }, { serviceLevel: 0, calls: 0 });
+                serviceLevel += metrics.serviceLevel;
+                callsOffered += metrics.calls;
             }
         }
         // Format wait time from seconds to MM:SS or HH:MM:SS
@@ -105,6 +125,11 @@ function refreshView(data) {
         }
 
         // Update view
+        let SLpercent = Math.round(100 * serviceLevel / callsOffered) + '%';
+        $(gizmoElement).find('.metric.service-level').text(SLpercent);
+        $(gizmoElement).find('.calls-in-sl').text(serviceLevel);
+        $(gizmoElement).find('.calls-out-of-sl').text(callsOffered - serviceLevel);
+
         $(gizmoElement).find('.metric.calls-in-queue').text(callsInQueue);
         $(gizmoElement).find('.metric.max-wait').text(waitString);
         $(gizmoElement).find('.agents-logged-in').text(agentsLoggedIn);
