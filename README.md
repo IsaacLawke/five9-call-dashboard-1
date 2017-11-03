@@ -16,7 +16,7 @@ Fire up the server:
 npm start
 ```
 
-Finally, create a file `src/public/javascript/local_settings.js` that looks like this:
+Create a file `src/public/javascript/local_settings.js` that looks like this:
 
 ```
 // Express API URL - development setting
@@ -24,6 +24,18 @@ const API_URL = 'http://localhost:3000/api/';
 
 // Name of Five9 field that provides callers' zip codes for the map functionality
 const FIVE9_ZIP_FIELD = 'CallersZipCodeForExample';
+```
+
+For SL and zipcode data, create a file `src/secure_settings.js`:
+
+```
+const FIVE9_USERNAME = 'admin_username';
+const FIVE9_PASSWORD = 'admin_password';
+
+// MongoDB URI
+const MONGODB_URI = 'mongodb://localhost/five9-report-data-collection';
+
+// ...then export these constants
 ```
 
 Then travel to `localhost:3000` in your browser. Polyfills haven't been implemented yet, so you'll need a modern browser.

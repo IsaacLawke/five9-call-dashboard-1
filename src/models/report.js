@@ -72,7 +72,8 @@ async function scheduleUpdate(interval) {
     time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
 
     // update from Five9
-    await refreshDatabase(time, CallsByZip, 'Dashboard - Calls by Zip');
+    await Promise.all([refreshDatabase(time, CallsByZip, 'Dashboard - Calls by Zip'),
+                       refreshDatabase(time, ServiceLevel, 'Dashboard - SL Threshold 120sec')]);
 
     // Schedule next update
     currentlyUpdatingData = false;
@@ -112,7 +113,7 @@ async function callbackUpdateListeners() {
 
 // Update Five9 data
 async function refreshDatabase(time, reportModel, reportName) {
-    log.message(`Updating report database at ${moment()}`);
+    log.message(`Updating report database at ${moment()} with ${reportName}`);
 
     const data = [];
 
