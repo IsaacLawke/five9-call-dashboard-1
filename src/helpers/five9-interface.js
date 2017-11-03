@@ -114,15 +114,15 @@ async function request(params, requestType) {
     const response = await sendRequest(soap, params.authorization, requestType);
     let jsonResult;
     await parseString(response.body, (err, result) => {
-        let fault = getFaultStringFromData(result);
-        if (fault != '') {
-            const msg = `Request issue for ${requestType}: ${fault}`;
-            log.error(msg);
-            throw new Error(msg);
-        }
-
         jsonResult = jsonToReturnValue(result, params.service);
     });
+
+    let fault = getFaultStringFromData(jsonResult);
+    if (fault != '') {
+        const msg = `Request issue for ${requestType}: ${fault}`;
+        log.error(msg);
+        throw new Error(msg);
+    }
 
     return jsonResult;
 }
@@ -165,7 +165,7 @@ function getFaultStringFromData(data) {
 // requestType should match Five9 API command.
 // Optional parameters used for some reporting commands.
 function getParameters(requestType, reportId=null, criteriaTimeStart=null,
-                       criteriaTimeEnd=null) {
+                       criteriaTimeEnd=null, reportName=null) {
     let params = {};
     // Initiate session
     if (requestType == 'setSessionParameters') {
@@ -180,14 +180,13 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
             ]
         }
     }
-
     // Report running params
     if (requestType == 'runReport') {
         params = {
             'service': 'runReport',
             'settings': [
                 { 'folderName': 'Contact Center Reports' },
-                { 'reportName': 'Dashboard - Calls by Zip' },
+                { 'reportName': reportName },
                 { 'criteria': [ {
                     'time': [
                         { 'end': criteriaTimeEnd },

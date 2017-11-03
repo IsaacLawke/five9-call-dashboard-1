@@ -11,7 +11,7 @@ mongoose.Promise = global.Promise;
 // MongoDB database definitions
 //////////////////////////////////////////
 // Schema for report data
-const reportSchema = mongoose.Schema({
+const callsByZipSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     skill: String,
     zipCode: String,
@@ -19,8 +19,18 @@ const reportSchema = mongoose.Schema({
     calls: { type: Number, default: 0 }
 });
 
-// Model to represent report data
-const Report = mongoose.model('Report', reportSchema);
+const serviceLevelSchema = mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    skill: String,
+    date: Date,
+    calls: { type: Number, default: 0 },
+    serviceLevel: { type: Number, default: 0 }
+});
+
+
+// Models to represent report data
+const CallsByZip   = mongoose.model('CallsByZip', callsByZipSchema);
+const ServiceLevel = mongoose.model('ServiceLevel', serviceLevelSchema);
 
 
 // Returns array with nice field names, from Five9 CSV report header string.
@@ -30,11 +40,13 @@ function getHeadersFromCsv(csvHeaderLine) {
     const lookup = {
         'SKILL':    'skill',
         'DATE':     'date',
-        'Global.strSugarZipCode': 'zipCode',
-        'CALLS':    'calls'
+        'Global.strSugarZipCode':   'zipCode',
+        'CALLS':    'calls',
+        'SERVICE LEVEL count':      'serviceLevel'
     }
     for (let i=0; i < oldHeaders.length; i++) {
         let header = oldHeaders[i];
+        // Assign the lookup value if this header is found; otherwise, leave it as is
         if (lookup.hasOwnProperty(header)) {
             newHeaders.push(lookup[header]);
         } else {
@@ -60,7 +72,7 @@ async function scheduleUpdate(interval) {
     time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
 
     // update from Five9
-    await refreshDatabase(time);
+    await refreshDatabase(time, CallsByZip, 'Dashboard - Calls by Zip');
 
     // Schedule next update
     currentlyUpdatingData = false;
@@ -68,8 +80,8 @@ async function scheduleUpdate(interval) {
 }
 
 // Get report data within timeFilter.start and timeFilter.stop
-async function getData(timeFilter) {
-    const results = await Report.find({
+async function getData(timeFilter, reportModel) {
+    const results = await reportModel.find({
         date: {
             $gte: moment(timeFilter.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
             $lte: moment(timeFilter.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
@@ -99,13 +111,13 @@ async function callbackUpdateListeners() {
 
 
 // Update Five9 data
-async function refreshDatabase(time) {
+async function refreshDatabase(time, reportModel, reportName) {
     log.message(`Updating report database at ${moment()}`);
 
     const data = [];
 
     // Remove today's old data
-    await Report.remove({
+    await reportModel.remove({
             date: {
                 $gte: time.start,
                 $lte: time.end
@@ -115,14 +127,15 @@ async function refreshDatabase(time) {
         });
 
     // Get CSV data
+    // Calls by zips data
     const reportParameters = five9.getParameters('runReport', null,
-                        criteriaTimeStart=time.start, criteriaTimeEnd=time.end);
+                        criteriaTimeStart=time.start, criteriaTimeEnd=time.end, reportName);
     const csvData = await five9.getReportResults(reportParameters);
     const csvHeader = csvData.substr(0, csvData.indexOf('\n'));
 
 
     // Parse CSV data
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => { // wrap in promise to allow await
         csv( { delimiter: ',', headers: getHeadersFromCsv(csvHeader) } )
             .fromString(csvData)
             .on('json', (res) => {
@@ -135,10 +148,10 @@ async function refreshDatabase(time) {
         });
 
     // Insert the new data
-    return Report.collection.insert(data, (err, docs) => {
+    return reportModel.collection.insert(data, (err, docs) => {
         console.log('insert err: ' + err);
-        callbackUpdateListeners();
-        return Report.collection.stats((err, results) => {
+        callbackUpdateListeners(); // TODO: call back when _all_ updates are done
+        return reportModel.collection.stats((err, results) => {
             console.log('stats err: ' + err);
             console.log('count: ' + results.count + '. size: ' + results.size + 'b');
         });
@@ -146,7 +159,7 @@ async function refreshDatabase(time) {
 }
 
 
-module.exports.Report = Report;
+module.exports.CallsByZip = CallsByZip;
 module.exports.getHeadersFromCsv = getHeadersFromCsv;
 module.exports.addUpdateListener = addUpdateListener;
 module.exports.getData = getData;

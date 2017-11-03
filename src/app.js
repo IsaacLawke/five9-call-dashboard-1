@@ -108,7 +108,7 @@ app.post('/api/reports/maps', async (req, res) => {
             console.log('sendResponse called!');
             let data;
             try {
-                data = await report.getData(req.body);
+                data = await report.getData(req.body, report.CallsByZip);
             } catch (err) {
                 res.set('Content-Type', 'application/text');
                 res.status(500).send(`An error occurred on the server while getting report data: ${err}`);
