@@ -14,7 +14,9 @@
     max-width: 300px;
     min-width: 220px;
 }
-
+.filter-type-wrapper {
+    margin: 2.5em auto;
+}
 
 
 /* Styling for map */

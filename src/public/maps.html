@@ -37,23 +37,30 @@
             <div class="map-panel-wrapper">
                 <div class="stats-box filters-wrapper">
                     <h3>Filters</h3>
-                    <label>Date Range</label>
-                    <!-- <img class="icon settings" height="16px" width="16px"
-                         src="media/settings.svg" alt="Date range settings"
-                         title="Date range settings" /> -->
-                    <div class="date-type-toggle">
-                        <button class="relative checked">Relative</span>
-                        <button class="absolute">Absolute</span>
+                    <div class="filter-type-wrapper">
+                        <label>Date Range</label>
+                        <!-- <img class="icon settings" height="16px" width="16px"
+                             src="media/settings.svg" alt="Date range settings"
+                             title="Date range settings" /> -->
+                        <div class="date-type-toggle">
+                            <button class="relative checked">Relative</span>
+                            <button class="absolute">Absolute</span>
+                        </div>
+
+                        <div class="date-filter-inputs relative">
+                            <select class="relative-date-selector">
+                                <option value="today">Today</option>
+                            </select>
+                        </div>
+                        <div class="date-filter-inputs absolute hidden">
+                            <input type="text" class="filter start-time" placeholder="start" value="2017-10-16T00:00:00" />
+                            <input type="text" class="filter end-time" placeholder="end" value="2017-10-16T23:59:59" />
+                        </div>
                     </div>
 
-                    <div class="date-filter-inputs relative">
-                        <select class="relative-date-selector">
-                            <option value="today">Today</option>
-                        </select>
-                    </div>
-                    <div class="date-filter-inputs absolute hidden">
-                        <input type="text" class="filter start-time" placeholder="start" value="2017-10-16T00:00:00" />
-                        <input type="text" class="filter end-time" placeholder="end" value="2017-10-16T23:59:59" />
+                    <div class="filter-type-wrapper">
+                        <label>Skills</label>
+                        <input type="text" class="filter skills" placeholder="Select the skills to view" value="TS, TECH" />
                     </div>
                 </div>
 
