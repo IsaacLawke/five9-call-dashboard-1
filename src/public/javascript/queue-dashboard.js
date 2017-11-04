@@ -46,7 +46,7 @@ async function runQueueDashboard() {
                        ['ns2:getStatisticsResponse'][0]['return'][0];
 
             // Get SL stats
-            let time = { start: '2017-11-03T00:00:00', end: '2017-11-04T00:00:00' };
+            let time = { start: '2017-11-04T00:00:00', end: '2017-11-05T00:00:00' };
             slData = await getReportResults(time, 'service-level');
 
             // Parse the data and pass it to the view updater
@@ -75,6 +75,7 @@ async function runQueueDashboard() {
 // ${data} : ACD stats (current queue info)
 // ${serviceLevel} : service level report
 function refreshView(data, serviceLevelData) {
+    console.log(serviceLevelData);
     // update each gizmo on the screen
     $('.gizmo').each((i, gizmoElement) => {
         let name = gizmo.gizmos[gizmoElement.id].name;

@@ -109,7 +109,7 @@ app.post('/api/reports/maps', async (req, res) => {
             try {
                 data = await report.getData(req.body, report.CallsByZip);
                 res.set('Content-Type', 'application/json');
-                res.send(data);
+                res.send(JSON.stringify(data));
             } catch (err) {
                 res.set('Content-Type', 'application/text');
                 res.status(500).send(`An error occurred on the server while getting report data: ${err}`);
@@ -142,9 +142,9 @@ app.post('/api/reports/service-level', async (req, res) => {
             console.log('sendresponse called!');
             let data;
             try {
-                data = await report.getData(req.body, report.ServiceLevel);
+                data = await report.getServiceLevelData(req.body);
                 res.set('Content-Type', 'application/json');
-                res.send(data);
+                res.send(JSON.stringify(data));
             } catch (err) {
                 res.set('Content-Type', 'application/text');
                 res.status(500).send(`An error occurred on the server while getting report data: ${err}`);
