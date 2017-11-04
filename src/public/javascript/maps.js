@@ -60,7 +60,7 @@ class CallMap {
         // Key / legend
         // remove then redraw the color key
         this.g.remove().exit();
-        this.drawKey(this.x, this.color);max
+        this.drawKey(this.x, this.color);
 
         // data - paint the state lines and zip codes
         // clear old states and zips

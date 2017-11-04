@@ -94,7 +94,7 @@ app.post('/api/statistics', async (req, res) => {
 app.post('/api/reports/maps', async (req, res) => {
     try {
         log.message(`API - Maps request from ${req.connection.remoteAddress}`);
-
+        console.log(req.body);
         // Authenticate user
         const hasPermission = await five9.canAuthenticate(req.body['authorization']);
         if (!hasPermission) {
@@ -107,7 +107,7 @@ app.post('/api/reports/maps', async (req, res) => {
         async function sendResponse() {
             let data;
             try {
-                data = await report.getData(req.body, report.CallsByZip);
+                data = await report.getZipCodeData(req.body);
                 res.set('Content-Type', 'application/json');
                 res.send(JSON.stringify(data));
             } catch (err) {

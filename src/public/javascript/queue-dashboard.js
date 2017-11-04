@@ -75,7 +75,6 @@ async function runQueueDashboard() {
 // ${data} : ACD stats (current queue info)
 // ${serviceLevel} : service level report
 function refreshView(data, serviceLevelData) {
-    console.log(serviceLevelData);
     // update each gizmo on the screen
     $('.gizmo').each((i, gizmoElement) => {
         let name = gizmo.gizmos[gizmoElement.id].name;

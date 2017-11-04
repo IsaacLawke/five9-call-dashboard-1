@@ -103,6 +103,42 @@ async function getServiceLevelData(timeFilter, reportModel) {
 }
 
 // Get report data within timeFilter.start and timeFilter.stop
+async function getZipCodeData(params, reportModel) {
+    let skillFilter = params.skills.split(',').map((skillName) => {
+        return { 'skill': { '$regex': skillName.trim(), '$options': 'i' } };
+    });
+    console.log(skillFilter);
+
+    const results = await new Promise((resolve, reject) => {
+        DataFeed.aggregate( [
+            // Filter for the selected date and skills
+            { $match: { $and: [
+                { date: {
+                    $gte: moment(params.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
+                    $lte: moment(params.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
+                } }, //date
+                { $or: skillFilter } // skills
+            ] } },
+            // Summarize by zip code
+            { $group: {
+                _id: '$zipCode',
+                calls: { $sum: 1 }
+            } },
+            { $project: { // name key as `zipCode` instead of `_id`
+                _id: 0,
+                zipCode: '$_id',
+                calls: '$calls'
+            } }
+        // Respond with the data
+        ], (err, data) => {
+            if (err) reject(err);
+            resolve(data);
+        })
+    });
+    return results;
+}
+
+// Get report data within timeFilter.start and timeFilter.stop
 async function getData(timeFilter, reportModel) {
     const results = await reportModel.find({
         date: {
@@ -235,4 +271,4 @@ module.exports.getHeadersFromCsv = getHeadersFromCsv;
 module.exports.addUpdateListener = addUpdateListener;
 module.exports.scheduleUpdate = scheduleUpdate;
 module.exports.getServiceLevelData = getServiceLevelData;
-// module.exports.getZipCodeData = getZipCodeData;
+module.exports.getZipCodeData = getZipCodeData;

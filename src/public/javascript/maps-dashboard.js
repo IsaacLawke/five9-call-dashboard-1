@@ -53,9 +53,11 @@ async function startUpdatingMap(callMap, refreshRate) {
 
 // Update callMap (d3 map object) based on parameters in page
 async function updateMap(callMap) {
-    const time = reportTimeRange();
+    const params = reportTimeRange();
+    params.skills = 'TS,TECH';
 
-    const data = await getReportResults(time, 'maps');
+    const data = await getReportResults(params, 'maps');
+    console.log(data);
     callMap.update(data);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
