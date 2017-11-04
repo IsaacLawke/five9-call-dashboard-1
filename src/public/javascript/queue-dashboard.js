@@ -125,7 +125,9 @@ function refreshView(data, serviceLevelData) {
         }
 
         // Update view
-        let SLpercent = Math.round(100 * serviceLevel / callsOffered) + '%';
+        let SLpercent = callsOffered == 0
+            ? 'N/A'
+            : Math.round(100 * serviceLevel / callsOffered) + '%';
         $(gizmoElement).find('.metric.service-level').text(SLpercent);
         $(gizmoElement).find('.calls-in-sl').text(serviceLevel);
         $(gizmoElement).find('.calls-out-of-sl').text(callsOffered - serviceLevel);
