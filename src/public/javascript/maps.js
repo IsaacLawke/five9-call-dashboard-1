@@ -155,7 +155,7 @@ class CallMap {
     process(data) {
         let callsByZip = d3.nest()
             .key((d) => d['zipCode'].substring(0,3))
-            .rollup((v) => v.length)
+            .rollup((d) => d3.sum(d, (x) => x.calls))
             .entries(data)
             .filter((d) => d.key != ''); // remove calls with no zipcode assigned
         return callsByZip;
