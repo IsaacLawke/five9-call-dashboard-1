@@ -60,7 +60,7 @@ class CallMap {
         // Key / legend
         // remove then redraw the color key
         this.g.remove().exit();
-        this.drawKey(this.x, this.color);
+        this.drawKey(this.x, this.color);max
 
         // data - paint the state lines and zip codes
         // clear old states and zips
@@ -156,7 +156,8 @@ class CallMap {
         let callsByZip = d3.nest()
             .key((d) => d['zipCode'].substring(0,3))
             .rollup((v) => v.length)
-            .entries(data);
+            .entries(data)
+            .filter((d) => d.key != ''); // remove calls with no zipcode assigned
         return callsByZip;
     }
 }
