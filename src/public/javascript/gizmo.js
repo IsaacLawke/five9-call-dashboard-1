@@ -55,6 +55,7 @@ function gizmoManager() {
     function setupInteractions(id) {
         let gizmo = $('#' + id);
 
+        // Skills menu
         gizmo.find('.skills-edit-toggle').click(function (event) {
             // Show the modal...
             $('.modal').css('display', 'block');
@@ -63,6 +64,12 @@ function gizmoManager() {
             // And set modal values to match this gizmo
             $('.modal').find('.gizmo-name').val(gizmos[id].name);
             $('.modal').find('.skills').val(gizmos[id].skillFilter);
+        });
+
+        // Show/hide queue list
+        gizmo.find('.show-skills-list').click(function (event) {
+            gizmo.find('.queue-list').toggleClass('hidden');
+            gizmos[id].showQueueList = !gizmos[id].showQueueList;
         });
     }
 

@@ -77,8 +77,11 @@ async function runQueueDashboard() {
 function refreshView(data, serviceLevelData) {
     // update each gizmo on the screen
     $('.gizmo').each((i, gizmoElement) => {
-        let name = gizmo.gizmos[gizmoElement.id].name;
-        let skills = gizmo.gizmos[gizmoElement.id].skillFilter;
+        const thisGizmo = gizmo.gizmos[gizmoElement.id];
+        let name = thisGizmo.name;
+        let skills = thisGizmo.skillFilter;
+        // Clear old queue list from gizmo
+        thisGizmo.queueList = [];
 
         // Determine calls and agent stats for this gizmo's skills
         let callsInQueue = 0,
@@ -94,6 +97,7 @@ function refreshView(data, serviceLevelData) {
             let queue = data[i];
             // Include skills in gizmo filter, or all skills if none are in filter
             if (skills.includes(queue['Skill Name']) || skills.length == 0) {
+                // Real-time queue metrics
                 callsInQueue += queue['Calls In Queue']*1;
                 if (queue['Calls In Queue']*1 > 0) console.log(queue);
                 maxWait = Math.max(maxWait, queue['Current Longest Queue Time']*1);
@@ -112,19 +116,21 @@ function refreshView(data, serviceLevelData) {
                 }, { serviceLevel: 0, calls: 0 });
                 serviceLevel += metrics.serviceLevel;
                 callsOffered += metrics.calls;
+
+                // Add to list of skills in queue
+                if (queue['Calls In Queue']*1 > 0) {
+                    thisGizmo.queueList.push({
+                        skillName: queue['Skill Name'],
+                        callsInQueue: queue['Calls In Queue']*1,
+                        maxWait: queue['Current Longest Queue Time']*1
+                    });
+                }
             }
         }
         // Format wait time from seconds to MM:SS or HH:MM:SS
-        let waitString;
-        const wait = new Date(null);
-        wait.setSeconds(maxWait);
-        if (maxWait < 3600) {
-            waitString = wait.toISOString().substr(14, 5);
-        } else {
-            waitString = wait.toISOString().substr(11, 8);
-        }
+        let waitString = formatWaitTime(maxWait);
 
-        // Update view
+        // Update metrics
         let SLpercent = callsOffered == 0
             ? 'N/A'
             : Math.round(100 * serviceLevel / callsOffered) + '%';
@@ -138,13 +144,46 @@ function refreshView(data, serviceLevelData) {
         $(gizmoElement).find('.agents-not-ready-for-calls').text(agentsNotReady);
         $(gizmoElement).find('.agents-on-call').text(agentsOnCall);
         $(gizmoElement).find('.agents-ready-for-calls').text(agentsReady);
-    });
+
+        // Update queue list, if showing
+        if (thisGizmo.showQueueList) {
+            const table = $(gizmoElement).find('.queue-list');
+            table.empty(); // clear old list
+            // Add headers
+            this.gizmo.unshift({ skillName: 'Skill Name',
+                                 callsInQueue: 'Calls',
+                                 maxWait: 'Max Wait' });
+            // List skills in queue
+            thisGizmo.queueList.forEach((queue) => {
+                const tr = document.createElement('tr');
+                const td1 = document.createElement('td').appendChild(
+                    document.createTextNode(queue.skillName));
+                const td2 = document.createElement('td').appendChild(
+                    document.createTextNode(queue.callsInQueue));
+                const td3 = document.createElement('td').appendChild(
+                    document.createTextNode(formatWaitTime(queue.maxWait)));
+                tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+                table.append(tr);
+            });
+        }
+    }); // gizmo.forEach
 
     // Clear old messages
     $('#message').text(' ');
 
     // Update clock
     $('.clock').text(formatAMPM(new Date()));
+}
+
+
+// Turns seconds into nicely formatted MM:SS or HH:MM:SS
+function formatWaitTime(seconds) {
+    const wait = new Date(null);
+    wait.setSeconds(seconds);
+    if (seconds < 3600) { // MM:SS
+        return wait.toISOString().substr(14, 5);
+    }
+    return wait.toISOString().substr(11, 8); // HH:MM:SS
 }
 
 

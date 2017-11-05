@@ -172,7 +172,7 @@ async function getData(timeFilter, reportModel) {
 
 async function addUpdateListener(fun) {
     if (currentlyUpdatingData) {
-        log.message(`Maps API request arrived while updating database. Adding updateListener.`);
+        log.message(`API request arrived while updating database. Adding updateListener.`);
         updateListeners.push(fun);
     } else {
         fun();

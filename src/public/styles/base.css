@@ -132,6 +132,17 @@ body * {
     color: #444;
 }
 
+.stats-box .show-skills-list {
+    height: 1.5em;
+    margin: 0.5em auto;
+    color: #888;
+    background-color: rgba(250, 250, 250, 0.5);
+    border-radius: 4px;
+}
+.stats-box .show-skills-list:hover {
+    background-color: rgba(200, 200, 200, 0.65);
+}
+
 
 /* Login styles */
 .credentials-wrapper {
@@ -179,7 +190,6 @@ button {
     border: none;
     width: 100%;
     height: 50px;
-    text-transform: uppercase;
     letter-spacing: 3px;
     transition: all 200ms linear;
 }
