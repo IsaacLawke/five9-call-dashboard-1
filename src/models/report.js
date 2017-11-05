@@ -83,23 +83,15 @@ async function scheduleUpdate(interval) {
 
     // update from Five9
     await refreshDatabase(time, DataFeed, 'Dashboard - Data Feed');
-    // await Promise.all([refreshDatabase(time, CallsByZip, 'Dashboard - Calls by Zip'),
-    //                    refreshDatabase(time, ServiceLevel, 'Dashboard - SL Threshold 120sec')]);
 
     // Schedule next update
     currentlyUpdatingData = false;
     return setTimeout(() => scheduleUpdate(interval), interval);
 }
 
-// Get report data within timeFilter.start and timeFilter.stop
+// Summarize call and service level data by skill. Params should give start
+// and end time for data.
 async function getServiceLevelData(params) {
-    // const results = await DataFeed.find({
-    //     date: {
-    //         $gte: moment(timeFilter.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
-    //         $lte: moment(timeFilter.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
-    //     },
-    // }, (err, data) => data);
-
     const results = await new Promise((resolve, reject) => {
         DataFeed.aggregate( [
             // Filter for the selected date and skills
@@ -130,7 +122,8 @@ async function getServiceLevelData(params) {
     return results;
 }
 
-// Get report data within timeFilter.start and timeFilter.stop
+// Summarize data by zip code. Params should give start time, end time, and
+// skills to filter for.
 async function getZipCodeData(params) {
     let skillFilter = params.skills.split(',').map((skillName) => {
         return { 'skill': { '$regex': skillName.trim(), '$options': 'i' } };
@@ -165,7 +158,7 @@ async function getZipCodeData(params) {
     return results;
 }
 
-// Get report data within timeFilter.start and timeFilter.stop
+// Get all report data within timeFilter.start and timeFilter.stop
 async function getData(timeFilter, reportModel) {
     const results = await reportModel.find({
         date: {
