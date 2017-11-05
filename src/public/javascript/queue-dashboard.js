@@ -122,7 +122,7 @@ function refreshView(data, serviceLevelData) {
                     thisGizmo.queueList.push({
                         skillName: queue['Skill Name'],
                         callsInQueue: queue['Calls In Queue']*1,
-                        maxWait: queue['Current Longest Queue Time']*1
+                        maxWait: formatWaitTime(queue['Current Longest Queue Time']*1)
                     });
                 }
             }
@@ -150,18 +150,18 @@ function refreshView(data, serviceLevelData) {
             const table = $(gizmoElement).find('.queue-list');
             table.empty(); // clear old list
             // Add headers
-            this.gizmo.unshift({ skillName: 'Skill Name',
-                                 callsInQueue: 'Calls',
-                                 maxWait: 'Max Wait' });
+            thisGizmo.queueList.unshift({ skillName: 'Skill Name',
+                                callsInQueue: 'Calls',
+                                maxWait: 'Max Wait' });
             // List skills in queue
             thisGizmo.queueList.forEach((queue) => {
                 const tr = document.createElement('tr');
-                const td1 = document.createElement('td').appendChild(
-                    document.createTextNode(queue.skillName));
-                const td2 = document.createElement('td').appendChild(
-                    document.createTextNode(queue.callsInQueue));
-                const td3 = document.createElement('td').appendChild(
-                    document.createTextNode(formatWaitTime(queue.maxWait)));
+                const td1 = document.createElement('td');
+                td1.appendChild(document.createTextNode(queue.skillName));
+                const td2 = document.createElement('td');
+                td2.appendChild(document.createTextNode(queue.callsInQueue));
+                const td3 = document.createElement('td');
+                td3.appendChild(document.createTextNode(queue.maxWait));
                 tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
                 table.append(tr);
             });
