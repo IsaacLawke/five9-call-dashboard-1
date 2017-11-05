@@ -8,7 +8,7 @@ $(document).ready(() => {
     let callMap = new CallMap();
 
     // listen for sign-in button press
-    $('.begin-session').click(async (event) => {
+    $('.begin-session, .filters-wrapper .update').click(async (event) => {
         // stop any current event loops running
         if (timeout != null) {
             clearTimeout(timeout);

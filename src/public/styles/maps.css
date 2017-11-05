@@ -17,6 +17,38 @@
 .filter-type-wrapper {
     margin: 2em auto;
 }
+.filters-wrapper .update {
+    position: absolute;
+    bottom: 0;
+    margin: 2em auto;
+    left: 0;
+    right: 0;
+    width: 160px;
+    color: #666;
+}
+
+.date-type-toggle button,
+.filters-wrapper .update  {
+    background-color: #f1f1f1;
+    letter-spacing: normal;
+    height: 1.5em;
+}
+
+.date-type-toggle button:hover,
+.filters-wrapper .update:hover {
+    background-color: #e5e5e5;
+}
+
+/* Toggle switch */
+.date-type-toggle button {
+    font-size: 0.8em;
+    width: 80px;
+    text-transform: none;
+    color: #bbb;
+}
+.date-type-toggle .checked {
+    color: #666;
+}
 
 
 /* Styling for map */
@@ -42,22 +74,4 @@
 
 .map .key {
     z-index: 500;
-}
-
-
-/* Toggle switch */
-.date-type-toggle button {
-    font-size: 0.8em;
-    width: 80px;
-    height: 1.5em;
-    text-transform: none;
-    letter-spacing: normal;
-    background-color: #f1f1f1;
-    color: #bbb;
-}
-.date-type-toggle button:hover {
-    background-color: #e5e5e5;
-}
-.date-type-toggle .checked {
-    color: #666;
 }

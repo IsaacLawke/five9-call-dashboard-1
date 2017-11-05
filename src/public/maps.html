@@ -39,9 +39,6 @@
                     <h3>Filters</h3>
                     <div class="filter-type-wrapper">
                         <label>Date Range</label>
-                        <!-- <img class="icon settings" height="16px" width="16px"
-                             src="media/settings.svg" alt="Date range settings"
-                             title="Date range settings" /> -->
                         <div class="date-type-toggle">
                             <button class="relative checked">Relative</span>
                             <button class="absolute">Absolute</span>
@@ -59,9 +56,11 @@
                     </div>
 
                     <div class="filter-type-wrapper">
-                        <label>Skills</label>
+                        <label title="Calls in map will include all skills with names similar to what you enter here. Separate multiple values with commas.">Skills</label>
                         <input type="text" class="filter skills" placeholder="Select the skills to view" value="TS, TECH" />
                     </div>
+
+                    <button class="update">Update</button>
                 </div>
 
                 <svg class="map" width="960" height="500"></svg>
