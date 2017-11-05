@@ -115,7 +115,6 @@ body * {
     color: hsl(0, 55%, 60%);
 }
 
-
 /* Hamburger menu to open skill editor and X to remove */
 .gizmo-control {
     text-decoration: none;
@@ -142,6 +141,11 @@ body * {
 .stats-box .show-skills-list:hover {
     background-color: rgba(200, 200, 200, 0.65);
 }
+.stats-box .show-skills-list.selected {
+    color: #000;
+    filter: invert(100%);
+}
+
 
 
 /* Login styles */
