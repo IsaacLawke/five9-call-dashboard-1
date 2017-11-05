@@ -30,6 +30,14 @@ $(document).ready(() => {
             error(err, 'Full authenticated?');
         }
     });
+
+    // Update displayed queue list when user clicks button
+    $('.show-skills-list').click(function (event) {
+        const id = $(this).closest('.gizmo').attr('id');
+        const thisgizmo = gizmo.gizmos[id];
+        const table = $(this).next('.queue-list');
+        createQueueList(thisgizmo, table);
+    });
 });
 
 
@@ -150,25 +158,7 @@ function refreshView(data, serviceLevelData) {
         // Update queue list, if showing
         if (thisGizmo.showQueueList) {
             const table = $(gizmoElement).find('.queue-list');
-            table.empty(); // clear old list
-            // Sort by max wait time
-            thisGizmo.queueList.sort((a, b) => a.maxWait > b.maxWait ? -1 : 1);
-            // Add headers
-            thisGizmo.queueList.unshift({ skillName: 'Skill Name',
-                                callsInQueue: 'Calls',
-                                maxWait: 'Max Wait' });
-            // List skills in queue
-            thisGizmo.queueList.forEach((queue) => {
-                const tr = document.createElement('tr');
-                const td1 = document.createElement('td');
-                td1.appendChild(document.createTextNode(queue.skillName));
-                const td2 = document.createElement('td');
-                td2.appendChild(document.createTextNode(queue.callsInQueue));
-                const td3 = document.createElement('td');
-                td3.appendChild(document.createTextNode(queue.maxWait));
-                tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
-                table.append(tr);
-            });
+            createQueueList(thisGizmo, table);
         }
     }); // gizmo.forEach
 
@@ -179,6 +169,30 @@ function refreshView(data, serviceLevelData) {
     $('.clock').text(formatAMPM(new Date()));
 }
 
+
+// Update queue list in DOM
+// ${gizmo} object to build list on. ${table} element storing list.
+function createQueueList(thisGizmo, table) {
+    table.empty(); // clear old list
+    // Sort by max wait time
+    thisGizmo.queueList.sort((a, b) => a.maxWait > b.maxWait ? -1 : 1);
+    // Add headers
+    thisGizmo.queueList.unshift({ skillName: 'Skill Name',
+                        callsInQueue: 'Calls',
+                        maxWait: 'Max Wait' });
+    // List skills in queue
+    thisGizmo.queueList.forEach((queue) => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        td1.appendChild(document.createTextNode(queue.skillName));
+        const td2 = document.createElement('td');
+        td2.appendChild(document.createTextNode(queue.callsInQueue));
+        const td3 = document.createElement('td');
+        td3.appendChild(document.createTextNode(queue.maxWait));
+        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+        table.append(tr);
+    });
+}
 
 // Turns seconds into nicely formatted MM:SS or HH:MM:SS
 function formatWaitTime(seconds) {
