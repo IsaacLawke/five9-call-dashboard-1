@@ -1,5 +1,6 @@
 table {
-    width: 200px;
-    font-size: 0.6em;
-
+    width: 215px;
+    font-size: 0.67em;
+    display: block;
+    overflow-x: scroll;
 }
