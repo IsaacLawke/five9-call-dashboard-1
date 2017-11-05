@@ -92,22 +92,49 @@ async function scheduleUpdate(interval) {
 }
 
 // Get report data within timeFilter.start and timeFilter.stop
-async function getServiceLevelData(timeFilter, reportModel) {
-    const results = await DataFeed.find({
-        date: {
-            $gte: moment(timeFilter.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
-            $lte: moment(timeFilter.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
-        },
-    }, (err, data) => data);
+async function getServiceLevelData(params) {
+    // const results = await DataFeed.find({
+    //     date: {
+    //         $gte: moment(timeFilter.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
+    //         $lte: moment(timeFilter.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
+    //     },
+    // }, (err, data) => data);
+
+    const results = await new Promise((resolve, reject) => {
+        DataFeed.aggregate( [
+            // Filter for the selected date and skills
+            { $match:
+                { date: {
+                    $gte: moment(params.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
+                    $lte: moment(params.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
+                } }
+            },
+            // Summarize by skill
+            { $group: {
+                _id: '$skill',
+                calls: { $sum: '$calls' },
+                serviceLevel: { $sum: '$serviceLevel' }
+            } },
+            { $project: { // name key as `skill` instead of `_id`
+                _id: 0,
+                skill: '$_id',
+                calls: '$calls',
+                serviceLevel: '$serviceLevel'
+            } }
+        // Respond with the data
+        ], (err, data) => {
+            if (err) reject(err);
+            resolve(data);
+        })
+    });
     return results;
 }
 
 // Get report data within timeFilter.start and timeFilter.stop
-async function getZipCodeData(params, reportModel) {
+async function getZipCodeData(params) {
     let skillFilter = params.skills.split(',').map((skillName) => {
         return { 'skill': { '$regex': skillName.trim(), '$options': 'i' } };
     });
-    console.log(skillFilter);
 
     const results = await new Promise((resolve, reject) => {
         DataFeed.aggregate( [
@@ -122,7 +149,7 @@ async function getZipCodeData(params, reportModel) {
             // Summarize by zip code
             { $group: {
                 _id: '$zipCode',
-                calls: { $sum: 1 }
+                calls: { $sum: '$calls' }
             } },
             { $project: { // name key as `zipCode` instead of `_id`
                 _id: 0,
@@ -196,6 +223,11 @@ async function refreshDatabase(time, reportModel, reportName) {
         csv( { delimiter: ',', headers: getHeadersFromCsv(csvHeader) } )
             .fromString(csvData)
             .on('json', (res) => {
+                // cast calls and SL as numbers
+                res['calls'] *= 1;
+                res['serviceLevel'] *= 1;
+
+                // Set interval in Date format
                 let datestring = res.date + ' ' + res['HALF HOUR'];
                 delete res['HALF HOUR'];
                 res.date = moment(datestring, 'YYYY/MM/DD HH:mm').toDate();
