@@ -39,6 +39,7 @@ async function runQueueDashboard() {
         let params = getParameters('ACDStatus');
         let response = await request(params);
         let data, slData;
+        let time = {};
 
         try {
             data = await response.json();
@@ -46,7 +47,8 @@ async function runQueueDashboard() {
                        ['ns2:getStatisticsResponse'][0]['return'][0];
 
             // Get SL stats
-            let time = { start: '2017-11-04T00:00:00', end: '2017-11-05T00:00:00' };
+            time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
+            time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
             slData = await getReportResults(time, 'service-level');
 
             // Parse the data and pass it to the view updater
@@ -149,6 +151,8 @@ function refreshView(data, serviceLevelData) {
         if (thisGizmo.showQueueList) {
             const table = $(gizmoElement).find('.queue-list');
             table.empty(); // clear old list
+            // Sort by max wait time
+            thisGizmo.queueList.sort((a, b) => a.maxWait > b.maxWait ? -1 : 1);
             // Add headers
             thisGizmo.queueList.unshift({ skillName: 'Skill Name',
                                 callsInQueue: 'Calls',

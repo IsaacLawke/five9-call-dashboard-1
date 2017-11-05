@@ -31,7 +31,7 @@ body * {
 
 .stats-box {
     position: relative;
-    padding: 2%;
+    padding: 0.5em;
     margin-bottom: 0.5em;
     text-align: center;
     background-color: #fffffe;
@@ -64,7 +64,7 @@ body * {
 }
 
 .stats-box.gizmo {
-    width: 200px;
+    width: 220px;
 }
 
 .stats-box h3 {
@@ -77,6 +77,7 @@ body * {
 }
 
 .stats-box .department-name {
+    margin: auto 1em;
     height: 2em;
 }
 
@@ -198,6 +199,9 @@ button {
     transition: all 200ms linear;
 }
 
+.btn {
+    background-color: #e6e6e6;
+}
 .btn.add-gizmo {
     width: 40px;
     height: 40px;
@@ -249,8 +253,11 @@ button {
     background-position:left bottom;
 }
 
-.btn:hover {
+.btn.credentials-cover-toggle:hover {
     background: linear-gradient(to right, #fffefe, hsl(240, 90%, 99%));
+}
+
+.btn:hover {
     color: #444;
     letter-spacing: 5px;
     background-position: right bottom;

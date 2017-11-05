@@ -59,8 +59,8 @@
 }
 .modal .remove:hover {
     color: white;
-    background-color: hsl(21, 92%, 42%)
+    background-color: hsl(21, 92%, 42%);
 }
 .modal .cancel:hover {
-    background-color: hsl(21, 42%, 69%)
+    background-color: hsl(21, 42%, 85%);
 }
