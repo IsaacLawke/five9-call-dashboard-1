@@ -10,12 +10,14 @@
 
 .filters-wrapper {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     max-width: 300px;
     min-width: 220px;
 }
 .filter-type-wrapper {
-    margin: 2em auto;
+    margin: 1em auto;
 }
 .filters-wrapper .update {
     position: absolute;
@@ -25,6 +27,30 @@
     right: 0;
     width: 160px;
     color: #666;
+}
+
+/* Data filters */
+.date-type-toggle, .date-filter-inputs, input.filter {
+    margin: 12px auto;
+}
+
+input.filter, .relative-date-selector {
+    width: 160px;
+    color: #666;
+    border: 1px solid #ddd;
+    background-color: inherit;
+}
+input.filter {
+    display: block;
+}
+input.filter.relative-minutes {
+    width: 2em;
+    display: inline-block;
+    text-align: center;
+}
+.date-filter-inputs.relative p {
+    font-size: 0.75em;
+    text-align: left;
 }
 
 .date-type-toggle button,

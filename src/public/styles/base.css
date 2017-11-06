@@ -273,27 +273,3 @@ button {
         width: 180px;
     }
 }
-
-
-
-
-/* Data filters */
-.date-type-toggle, .date-filter-inputs, input.filter {
-    margin: 12px auto;
-}
-
-input.filter, .relative-date-selector {
-    width: 160px;
-    color: #666;
-    border: 1px solid #ddd;
-    background-color: inherit;
-}
-
-input.filter {
-    display: block;
-}
-
-
-.icon .settings {
-    fill: #888;
-}
