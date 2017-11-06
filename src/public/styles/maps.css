@@ -45,6 +45,7 @@ input.filter {
 }
 input.filter.relative-minutes {
     width: 2em;
+    margin: 0;
     display: inline-block;
     text-align: center;
 }

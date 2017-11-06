@@ -70,11 +70,25 @@ function reportTimeRange() {
     if ($('.date-type-toggle .absolute').hasClass('checked')) {
         time.start = $('.filter.start-time').val();
         time.end   = $('.filter.end-time').val();
+
     // Using relative dates
     } else {
         const relativeSelector = $('.relative-date-selector').val();
         if (relativeSelector == 'today') {
             time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
+            time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
+        // If user specified a certain number of minutes, subtract the minutes,
+        // convert to Eastern Time, and round down to nearest 30-minute interval
+        } else if (relativeSelector == 'last-x-minutes') {
+            const minutes = $('.filter.relative-minutes').val();
+            if (isNaN(minutes)) throw new Error(`Relative minute value ${minutes} is not a number.`);
+            // Convert to server's timezone
+            let start = moment().subtract(minutes, 'm').tz('America/Los_Angeles');
+            // round down to nearest interval
+            start.subtract(start.minutes() % 30, 'minutes');
+            start.seconds(0);
+            time.start = start.format('YYYY-MM-DD[T]HH:mm:ss');
+            console.log(time.start);
             time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
         } else {
             throw new Error('Relative date selector value is ' + relativeSelector +

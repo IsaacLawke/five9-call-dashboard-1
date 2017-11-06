@@ -47,8 +47,7 @@ async function getReportData(parameters, reportType) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(parameters)
-    }
-
+    };
     return fetch(apiURL, requestOptions)
         .then(async (response) => {
             if (!response.ok) {

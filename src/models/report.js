@@ -1,7 +1,7 @@
 const csv = require('csvtojson'); // CSV parsing
 const five9 = require('../helpers/five9-interface'); // Five9 interface helper functions
 const log = require('../helpers/log'); // recording updates
-const moment = require('moment'); // dates/times
+const moment = require('moment-timezone'); // dates/times
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
@@ -11,22 +11,6 @@ mongoose.Promise = global.Promise;
 // MongoDB database definitions
 //////////////////////////////////////////
 // Schema for report data
-const callsByZipSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    skill: String,
-    zipCode: String,
-    date: Date,
-    calls: { type: Number, default: 0 }
-});
-
-const serviceLevelSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    skill: String,
-    date: Date,
-    calls: { type: Number, default: 0 },
-    serviceLevel: { type: Number, default: 0 }
-});
-
 const dataFeedSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     skill: String,
@@ -37,10 +21,8 @@ const dataFeedSchema = mongoose.Schema({
 });
 
 
-// Models to represent report data
-const CallsByZip   = mongoose.model('CallsByZip', callsByZipSchema);
-const ServiceLevel = mongoose.model('ServiceLevel', serviceLevelSchema);
-const DataFeed = mongoose.model('DataFeed', serviceLevelSchema);
+// Model to represent report data
+const DataFeed = mongoose.model('DataFeed', dataFeedSchema);
 
 // Returns array with nice field names, from Five9 CSV report header string.
 function getHeadersFromCsv(csvHeaderLine) {
@@ -223,7 +205,7 @@ async function refreshDatabase(time, reportModel, reportName) {
                 // Set interval in Date format
                 let datestring = res.date + ' ' + res['HALF HOUR'];
                 delete res['HALF HOUR'];
-                res.date = moment(datestring, 'YYYY/MM/DD HH:mm').toDate();
+                res.date = moment.tz(moment(datestring, 'YYYY/MM/DD HH:mm'), 'America/Los_Angeles').toDate();
                 data.push(res);
                 return resolve(data);
             }).on('error', reject);
@@ -290,8 +272,6 @@ async function refreshDatabase_OLD(time, reportModel, reportName) {
 }
 
 
-module.exports.CallsByZip = CallsByZip;
-module.exports.ServiceLevel = ServiceLevel;
 module.exports.getHeadersFromCsv = getHeadersFromCsv;
 module.exports.addUpdateListener = addUpdateListener;
 module.exports.scheduleUpdate = scheduleUpdate;
