@@ -180,12 +180,22 @@ let timeoutId = null;
 const server = app.listen(port, async () => {
     log.message(`Express listening on port ${port}!`);
 
-    // Connect and begin updating every 2.5 minutes
     try {
-        await mongoose.connect(secure.MONGODB_URI, {
-    	    useMongoClient: true,
-    	    keepAlive: true
-    	});
+        // Connect and reconnect if disconnected.
+        let connect = async function() {
+            await mongoose.connect(secure.MONGODB_URI, {
+    	           useMongoClient: true,
+    	           keepAlive: true,
+                   connectTimeoutMS: 10000
+    	    })
+        };
+        connect();
+        mongoose.connection.on('disconnected', () => {
+            log.message('DB Disconnected: reconnecting.');
+            log.error('DB Disconnected: reconnecting.');
+            connect();
+        });
+        // Start updating every 2.5 minutes
         timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
