@@ -20,14 +20,14 @@ $(document).ready(() => {
         try {
             const success = await beginSession();
         } catch (err) {
-            error(err);
+            error(err, 'Not able to sign in to Five9. Check yo credentials!');
             return; // abort on failure
         }
         // begin updating data & page every few seconds
         try {
             runQueueDashboard();
         } catch (err) {
-            error(err, 'Full authenticated?');
+            error(err, 'Error occurred while queue dashboard was running.');
         }
     });
 

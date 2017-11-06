@@ -57,7 +57,6 @@ async function updateMap(callMap) {
     params.skills = $('.skills.filter').val();
 
     const data = await getReportResults(params, 'maps');
-    console.log(data);
     callMap.update(data);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
