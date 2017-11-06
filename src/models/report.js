@@ -228,3 +228,5 @@ module.exports.addUpdateListener = addUpdateListener;
 module.exports.scheduleUpdate = scheduleUpdate;
 module.exports.getServiceLevelData = getServiceLevelData;
 module.exports.getZipCodeData = getZipCodeData;
+module.exports.DataFeed = DataFeed;
+module.exports.refreshDatabase = refreshDatabase;
