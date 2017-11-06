@@ -36,6 +36,15 @@ $(document).ready(() => {
             $('.date-filter-inputs.absolute').removeClass('hidden');
         }
     })
+
+    // Handle selection of Today vs Last X Minutes for relative filters
+    $('.relative-date-selector').change(() => {
+        if ($('.relative-date-selector').val() == 'last-x-minutes') {
+            $('.relative-parameters-wrapper').removeClass('hidden');
+        } else {
+            $('.relative-parameters-wrapper').addClass('hidden');
+        }
+    });
 });
 
 
@@ -68,9 +77,12 @@ function reportTimeRange() {
     const time = {};
     // Are we using absolute dates?
     if ($('.date-type-toggle .absolute').hasClass('checked')) {
-        time.start = $('.filter.start-time').val();
-        time.end   = $('.filter.end-time').val();
-
+        time.start = moment($('.filter.start-time').val())
+                        .tz('America/Los_Angeles')
+                        .format('YYYY-MM-DD[T]HH:mm:ss');
+        time.end   = moment($('.filter.end-time'  ).val())
+                        .tz('America/Los_Angeles')
+                        .format('YYYY-MM-DD[T]HH:mm:ss');
     // Using relative dates
     } else {
         const relativeSelector = $('.relative-date-selector').val();

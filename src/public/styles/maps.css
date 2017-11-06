@@ -49,7 +49,7 @@ input.filter.relative-minutes {
     display: inline-block;
     text-align: center;
 }
-.date-filter-inputs.relative p {
+.relative-parameters-wrapper p {
     font-size: 0.75em;
     text-align: left;
 }
