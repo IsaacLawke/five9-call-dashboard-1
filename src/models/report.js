@@ -223,55 +223,6 @@ async function refreshDatabase(time, reportModel, reportName) {
 }
 
 
-// Update Five9 data
-async function refreshDatabase_OLD(time, reportModel, reportName) {
-    log.message(`Updating report database at ${moment()} with ${reportName}`);
-
-    const data = [];
-
-    // Remove today's old data
-    await reportModel.remove({
-            date: {
-                $gte: time.start,
-                $lte: time.end
-            }
-        }, (err, success) => {
-            console.log('delete err: ' + err);
-        });
-
-    // Get CSV data
-    // Calls by zips data
-    const reportParameters = five9.getParameters('runReport', null,
-                        criteriaTimeStart=time.start, criteriaTimeEnd=time.end, reportName);
-    const csvData = await five9.getReportResults(reportParameters);
-    const csvHeader = csvData.substr(0, csvData.indexOf('\n'));
-
-
-    // Parse CSV data
-    await new Promise((resolve, reject) => { // wrap in promise to allow await
-        csv( { delimiter: ',', headers: getHeadersFromCsv(csvHeader) } )
-            .fromString(csvData)
-            .on('json', (res) => {
-                let datestring = res.date + ' ' + res['HALF HOUR'];
-                delete res['HALF HOUR'];
-                res.date = moment(datestring, 'YYYY/MM/DD HH:mm').toDate();
-                data.push(res);
-                return resolve(data);
-            }).on('error', reject);
-        });
-
-    // Insert the new data
-    return reportModel.collection.insert(data, (err, docs) => {
-        console.log('insert err: ' + err);
-        callbackUpdateListeners(); // TODO: call back when _all_ updates are done
-        return reportModel.collection.stats((err, results) => {
-            console.log('stats err: ' + err);
-            console.log('count: ' + results.count + '. size: ' + results.size + 'b');
-        });
-    });
-}
-
-
 module.exports.getHeadersFromCsv = getHeadersFromCsv;
 module.exports.addUpdateListener = addUpdateListener;
 module.exports.scheduleUpdate = scheduleUpdate;
