@@ -177,8 +177,8 @@ app.get('/api/states', async (req, res) => {
 app.get('/api/notify-504', async (req, res) => {
     res.set('Content-Type', 'application/text');
     try {
-        console.log(`--------LOGGER: 504 reported by client at ${moment()}`);
-        console.error(`--------LOGGER: 504 reported by client at ${moment()}`);
+        log.message(`--------LOGGER: 504 reported by client at ${moment()}`);
+        log.error(`--------LOGGER: 504 reported by client at ${moment()}`);
         res.status(200).send('Thanks for the message!');
     } catch (err) {
         res.status(500).send('An error occurred on the server when getting U.S. states data.');
@@ -194,7 +194,7 @@ const server = app.listen(port, async () => {
 
     try {
         // Connect and reconnect if disconnected.
-        let connect = async function() {
+        let connect = async () => {
             await mongoose.connect(secure.MONGODB_URI, {
     	           useMongoClient: true,
     	           keepAlive: true,
@@ -208,8 +208,16 @@ const server = app.listen(port, async () => {
             log.error('DB Disconnected: reconnecting.');
             connect();
         });
-        // Start updating every 2.5 minutes
+        // Refresh DB connection every 2 hours to prevent 504 & 502 responses
+        // TODO: find connection parameters that can make this unnecessary
+        setInterval(() => {
+            log.message('Hourly reconnect for database');
+            connect();
+        }, 1000 * 60 * 60);
+
+        // Start updating database every 2.5 minutes
         timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
+
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
     }
