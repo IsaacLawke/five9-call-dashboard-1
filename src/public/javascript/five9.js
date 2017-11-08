@@ -74,6 +74,7 @@ async function request(parameters, url='statistics') {
 
     return fetch(apiURL, requestOptions)
         .then((response) => {
+            if (response.status == 502) notifyServer502(parameters, url);
             if (!response.ok) error(response.status);
             return response;
         }).then((response) => {
@@ -81,6 +82,10 @@ async function request(parameters, url='statistics') {
         }).catch((err) => {
             error(err);
         });
+}
+
+async function notifyServer502() {
+    return fetch(API_URL + 'notify-502');
 }
 
 

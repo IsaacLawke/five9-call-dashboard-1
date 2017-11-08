@@ -155,7 +155,7 @@ app.get('/api/zip3-data', async (req, res) => {
         res.sendFile(dir);
     } catch (err) {
         res.set('Content-Type', 'application/text');
-        res.send('An error occurred on the server when getting zip3 data.');
+        res.status(500).send('An error occurred on the server when getting zip3 data.');
     }
 });
 
@@ -169,7 +169,19 @@ app.get('/api/states', async (req, res) => {
         res.sendFile(dir);
     } catch (err) {
         res.set('Content-Type', 'application/text');
-        res.send('An error occurred on the server when getting U.S. states data.');
+        res.status(500).send('An error occurred on the server when getting U.S. states data.');
+    }
+});
+
+// Notify server that a 502 has occurred
+app.get('/api/notify-502', async (req, res) => {
+    res.set('Content-Type', 'application/text');
+    try {
+        console.log('--------LOGGER: 502 reported by client at ${moment()}');
+        console.error('--------LOGGER: 502 reported by client at ${moment()}');
+        res.status(500).send('An error occurred on the server when getting U.S. states data.');
+    } catch err {
+        res.status(500).send('An error occurred on the server when getting U.S. states data.');
     }
 });
 
@@ -186,7 +198,8 @@ const server = app.listen(port, async () => {
             await mongoose.connect(secure.MONGODB_URI, {
     	           useMongoClient: true,
     	           keepAlive: true,
-                   connectTimeoutMS: 10000
+                   connectTimeoutMS: 10000,
+                   reconnectTries: Number.MAX_VALUE
     	    })
         };
         connect();
