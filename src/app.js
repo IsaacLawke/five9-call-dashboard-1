@@ -177,9 +177,9 @@ app.get('/api/states', async (req, res) => {
 app.get('/api/notify-502', async (req, res) => {
     res.set('Content-Type', 'application/text');
     try {
-        console.log('--------LOGGER: 502 reported by client at ${moment()}');
-        console.error('--------LOGGER: 502 reported by client at ${moment()}');
-        res.status(500).send('An error occurred on the server when getting U.S. states data.');
+        console.log(`--------LOGGER: 502 reported by client at ${moment()}`);
+        console.error(`--------LOGGER: 502 reported by client at ${moment()}`);
+        res.status(200).send('Thanks for the message!');
     } catch (err) {
         res.status(500).send('An error occurred on the server when getting U.S. states data.');
     }
