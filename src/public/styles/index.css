@@ -10,8 +10,11 @@ h1 {
 .dashboard-link-wrapper a:visited {
     color: #444;
     transition: 0.15s all;
+    text-decoration: none;
+    border-bottom: 1px solid #444;
 }
 
 .dashboard-link-wrapper a:hover {
     color: #777;
+    border-bottom: none;
 }
