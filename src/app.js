@@ -180,7 +180,7 @@ app.get('/api/notify-502', async (req, res) => {
         console.log('--------LOGGER: 502 reported by client at ${moment()}');
         console.error('--------LOGGER: 502 reported by client at ${moment()}');
         res.status(500).send('An error occurred on the server when getting U.S. states data.');
-    } catch err {
+    } catch (err) {
         res.status(500).send('An error occurred on the server when getting U.S. states data.');
     }
 });
