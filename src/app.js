@@ -206,7 +206,7 @@ const server = app.listen(port, async () => {
         mongoose.connection.on('disconnected', () => {
             log.message('DB Disconnected: reconnecting.');
             log.error('DB Disconnected: reconnecting.');
-            connect();
+            setTimeout(connect, 1000);
         });
         // Refresh DB connection every 2 hours to prevent 504 & 502 responses
         // TODO: find connection parameters that can make this unnecessary
