@@ -174,11 +174,11 @@ app.get('/api/states', async (req, res) => {
 });
 
 // Notify server that a 502 has occurred
-app.get('/api/notify-502', async (req, res) => {
+app.get('/api/notify-504', async (req, res) => {
     res.set('Content-Type', 'application/text');
     try {
-        console.log(`--------LOGGER: 502 reported by client at ${moment()}`);
-        console.error(`--------LOGGER: 502 reported by client at ${moment()}`);
+        console.log(`--------LOGGER: 504 reported by client at ${moment()}`);
+        console.error(`--------LOGGER: 504 reported by client at ${moment()}`);
         res.status(200).send('Thanks for the message!');
     } catch (err) {
         res.status(500).send('An error occurred on the server when getting U.S. states data.');
@@ -200,7 +200,7 @@ const server = app.listen(port, async () => {
     	           keepAlive: true,
                    connectTimeoutMS: 10000,
                    reconnectTries: Number.MAX_VALUE
-    	    })
+    	    });
         };
         connect();
         mongoose.connection.on('disconnected', () => {
@@ -213,6 +213,7 @@ const server = app.listen(port, async () => {
     } catch (err) {
         log.message(`Error occurred on server: ${err}`);
     }
+
 });
 
 
