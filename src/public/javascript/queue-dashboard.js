@@ -176,10 +176,12 @@ function createQueueList(thisGizmo, table) {
     // Sort by max wait time
     thisGizmo.queueList.sort((a, b) => a.maxWait > b.maxWait ? -1 : 1);
     // Add headers if not yet created
-    if (thisGizmo.queueList[0].skillName != 'Skill Name')
+    if ('skillName' in thisGizmo.queueList[0] &&
+        thisGizmo.queueList[0].skillName != 'Skill Name') {
         thisGizmo.queueList.unshift({ skillName: 'Skill Name',
                             callsInQueue: 'Calls',
                             maxWait: 'Max Wait' });
+    }
     // Update DOM from queueList
     thisGizmo.queueList.forEach((queue) => {
         const tr = document.createElement('tr');
