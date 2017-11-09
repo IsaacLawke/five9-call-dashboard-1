@@ -176,7 +176,7 @@ function createQueueList(thisGizmo, table) {
     // Sort by max wait time
     thisGizmo.queueList.sort((a, b) => a.maxWait > b.maxWait ? -1 : 1);
     // Add headers if not yet created
-    if ('skillName' in thisGizmo.queueList[0] &&
+    if (thisGizmo.queueList[0] !== undefined &&
         thisGizmo.queueList[0].skillName != 'Skill Name') {
         thisGizmo.queueList.unshift({ skillName: 'Skill Name',
                             callsInQueue: 'Calls',
