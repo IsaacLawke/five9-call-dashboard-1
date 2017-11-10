@@ -197,7 +197,7 @@ const server = app.listen(port, async () => {
         let connect = async () => {
             await mongoose.connect(secure.MONGODB_URI, {
     	           useMongoClient: true,
-    	           keepAlive: true,
+    	           keepAlive: 1000,
                    connectTimeoutMS: 10000,
                    reconnectTries: Number.MAX_VALUE
     	    });
@@ -208,20 +208,13 @@ const server = app.listen(port, async () => {
             log.error('DB Disconnected: reconnecting.');
             setTimeout(connect, 1000);
         });
-        // Refresh DB connection every 2 hours to prevent 504 & 502 responses
-        // TODO: find connection parameters that can make this unnecessary
-        setInterval(() => {
-            log.message('Hourly reconnect for database');
-            connect();
-        }, 1000 * 60 * 60);
 
         // Start updating database every 2.5 minutes
         timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
 
     } catch (err) {
-        log.message(`Error occurred on server: ${err}`);
+        log.error(`Error occurred on server:`, err);
     }
-
 });
 
 
