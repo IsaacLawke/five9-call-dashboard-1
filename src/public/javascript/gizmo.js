@@ -67,10 +67,10 @@ function gizmoManager() {
         });
 
         // Show/hide queue list
+        gizmos[id].showQueueList = false;
         gizmo.find('.show-skills-list').click(function (event) {
             gizmo.find('.show-skills-list').toggleClass('selected');
             gizmo.find('.queue-list').toggleClass('hidden');
-            gizmos[id].showQueueList = !gizmos[id].showQueueList;
         });
     }
 

@@ -81,7 +81,7 @@ app.get('/admin', async (req, res) => {
 // Five9 Statistics API request
 app.post('/api/statistics', async (req, res) => {
     try {
-        log.message(`API - Statistics request from ${req.connection.remoteAddress}`);
+        log.message(`API - Statistics request from ${req.get('host')}`);
 
         // Generate SOAP message for Five9
         const message = five9.jsonToSOAP(req.body, 'statistics');
@@ -103,13 +103,13 @@ app.post('/api/statistics', async (req, res) => {
 
 // Request data to update maps page
 app.post('/api/reports/maps', async (req, res) => {
-    log.message(`API - Maps request from ${req.connection.remoteAddress}`);
+    log.message(`API - Maps request from ${req.get('host')}`);
     handleReportRequest(req, res, report.getZipCodeData);
 });
 
 // Request data to update service level metrics
 app.post('/api/reports/service-level', (req, res) => {
-    log.message(`API - Service Level request from ${req.connection.remoteAddress}`);
+    log.message(`API - Service Level request from ${req.get('host')}`);
     handleReportRequest(req, res, report.getServiceLevelData);
 });
 

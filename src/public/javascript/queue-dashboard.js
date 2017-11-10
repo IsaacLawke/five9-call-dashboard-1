@@ -35,6 +35,7 @@ $(document).ready(() => {
     $('.show-skills-list').click(function (event) {
         const id = $(this).closest('.gizmo').attr('id');
         const thisgizmo = gizmo.gizmos[id];
+        thisgizmo.showQueueList = !thisgizmo.showQueueList;
         const table = $(this).next('.queue-list');
         createQueueList(thisgizmo, table);
     });
