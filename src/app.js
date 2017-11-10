@@ -11,6 +11,7 @@ const log = require('./helpers/log'); // recording updates
 const moment = require('moment'); // dates/times
 const parseString = require('xml2js').parseString; // parse XML to JSON
 const path = require('path');
+const pm2 = require('pm2'); // for server restart when requested
 const port = parseInt(process.env.PORT, 10) || 3000;
 const secure = require('./secure_settings.js');
 
@@ -200,10 +201,11 @@ app.post('/api/reboot-server', async (req, res) => {
         } else { // continue if permission
             res.status(200).send('About to reboot! Closing Express server -- should be restarted by PM2 :)');
             // Close server -- will restart via PM2
-            server.close(() => {
-                log.message(`Server closed.`);
-                log.error(`Server closed at ${moment()}`);
-            });
+            //server.close(() => {
+            //    log.message(`Server closed.`);
+            //    log.error(`Server closed at ${moment()}`);
+            //});
+            pm2.restart('app', (err) => log.error(`pm2 restart error ${err}`));
         }
     } catch (err) {
         res.status(500).send('An error occurred on the server while attempting reboot.');
@@ -215,7 +217,7 @@ app.post('/api/reboot-server', async (req, res) => {
 let timeoutId = null;
 
 const server = app.listen(port, async () => {
-    log.message(`Express listening on port ${port}!`);
+    log.message(`Express listening on port ${port} at ${moment()}!`);
 
     try {
         // Connect and reconnect if disconnected.
