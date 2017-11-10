@@ -83,9 +83,9 @@ function sendRequest(message, auth, requestType) {
     return new Promise((resolve, reject) => {
         // Create the HTTP request
         var req = https.request(options, (res) => {
-            console.log('\n---------------------------------------');
-            console.log('---- Status:', res.statusCode, res.statusMessage);
-            console.log('---- Headers:', res.headers);
+            //console.log('\n---------------------------------------');
+            //console.log('---- Status:', res.statusCode, res.statusMessage);
+            //console.log('---- Headers:', res.headers);
 
             var data = [];
             res.on('data', (d) => {
