@@ -1,8 +1,20 @@
-.main-wrapper {
-    transition: all 1s ease;
+h1 {
+    font-weight: lighter;
+}
+.admin-panel-wrapper {
+    position: absolute;
 }
 
+.admin-panel-wrapper div {
+    position: relative;
+}
 
 .out-of-the-way {
     transform: translate(100vw);
+}
+.btn.reboot-server {
+    background-color: #f1e9d3;
+}
+.btn.reboot-server:hover {
+    background-color: #ffa442;
 }

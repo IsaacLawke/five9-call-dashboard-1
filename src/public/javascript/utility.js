@@ -12,7 +12,7 @@ function error(err, message='Uh oh.') {
     console.log(dateString);
 }
 
-
+// Nicely formatted time
 function formatAMPM(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -24,4 +24,11 @@ function formatAMPM(date) {
     seconds = seconds < 10 ? '0'+seconds : seconds;
     var strTime = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
     return strTime;
+}
+
+
+// Combines username and password, then encodes in Base 64. Yum!
+function getAuthString(username, password) {
+   let auth = username + ':' + password;
+   return btoa(auth);
 }

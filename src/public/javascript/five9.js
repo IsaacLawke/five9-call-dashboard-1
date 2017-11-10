@@ -137,10 +137,3 @@ function getParameters(requestType) {
 
     return params;
 }
-
-
- // Combines username and password, then encodes in Base 64. Yum!
-function getAuthString(username, password) {
-    let auth = username + ':' + password;
-    return btoa(auth);
-}

@@ -185,6 +185,31 @@ app.get('/api/notify-504', async (req, res) => {
     }
 });
 
+// Reboot the server
+app.post('/api/reboot-server', async (req, res) => {
+    res.set('Content-Type', 'application/text');
+    try {
+        log.message(`--------LOGGER: reboot requested by client at ${moment()}.`);
+        log.error(`--------LOGGER: reboot requested by client at ${moment()}.`);
+        // Authenticate user. TODO: allow admin level only.
+        const hasPermission = await five9.canAuthenticate(req.body['authorization']);
+        if (!hasPermission) { // exit if no permission
+            res.set('Content-Type', 'application/text');
+            res.status(401).send('Could not authenticate your user.');
+            return;
+        } else { // continue if permission
+            res.status(200).send('About to reboot! Closing Express server -- should be restarted by PM2 :)');
+            // Close server -- will restart via PM2
+            server.close(() => {
+                log.message(`Server closed.`);
+                log.error(`Server closed at ${moment()}`);
+            });
+        }
+    } catch (err) {
+        res.status(500).send('An error occurred on the server while attempting reboot.');
+    }
+});
+
 
 // Fire up the server
 let timeoutId = null;
