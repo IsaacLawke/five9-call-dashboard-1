@@ -1,5 +1,13 @@
+/*
+** Helper to authenticate users before returning data to them.
+**
+**
+**
+*/
+
 const five9 = require('../helpers/five9-interface');
 const log = require('../helpers/log');
+const users = require('./users');
 
 
 // See if user is authorized before pulling reports.

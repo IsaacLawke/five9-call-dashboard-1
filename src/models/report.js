@@ -1,3 +1,9 @@
+/*
+** Intermediate storage of Five9 data in MongoDB, to allow data cacheing and
+** reduce the number of direct Five9 API requests / licenses required.
+**
+*/
+
 const csv = require('csvtojson'); // CSV parsing
 const five9 = require('../helpers/five9-interface'); // Five9 interface helper functions
 const log = require('../helpers/log'); // recording updates
