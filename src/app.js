@@ -13,7 +13,8 @@ const parseString = require('xml2js').parseString; // parse XML to JSON
 const path = require('path');
 const pm2 = require('pm2'); // for server restart when requested
 const port = parseInt(process.env.PORT, 10) || 3000;
-const secure = require('./secure_settings.js');
+const secure = require('./secure_settings.js'); // local/secure settings
+const verify = require('./authentication/verify'); // check user permissions
 
 // Database handling
 const mongoose = require('mongoose');
@@ -119,7 +120,7 @@ app.post('/api/reports/service-level', (req, res) => {
 async function handleReportRequest(req, res, dataGetter) {
     try {
         // Authenticate user
-        const hasPermission = await five9.canAuthenticate(req.body['authorization']);
+        const hasPermission = await verify.hasPermission(req.body['authorization']);
         if (!hasPermission) {
             res.set('Content-Type', 'application/text');
             res.status(401).send('Could not authenticate your user.');
@@ -193,18 +194,13 @@ app.post('/api/reboot-server', async (req, res) => {
         log.message(`--------LOGGER: reboot requested by client at ${moment()}.`);
         log.error(`--------LOGGER: reboot requested by client at ${moment()}.`);
         // Authenticate user. TODO: allow admin level only.
-        const hasPermission = await five9.canAuthenticate(req.body['authorization']);
+        const hasPermission = await verify.hasPermission(req.body['authorization']);
         if (!hasPermission) { // exit if no permission
             res.set('Content-Type', 'application/text');
             res.status(401).send('Could not authenticate your user.');
             return;
         } else { // continue if permission
             res.status(200).send('About to reboot! Closing Express server -- should be restarted by PM2 :)');
-            // Close server -- will restart via PM2
-            //server.close(() => {
-            //    log.message(`Server closed.`);
-            //    log.error(`Server closed at ${moment()}`);
-            //});
             pm2.restart('app', (err) => log.error(`pm2 restart error ${err}`));
         }
     } catch (err) {

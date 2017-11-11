@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 const server = require('../src/app');
 
 describe('testing security', function() {
-    this.timeout(20000);
+    this.timeout(60000); // allow 60 seconds to complete test
     let auth = {
         allGood: secure.goodUsername + ':' + secure.goodPassword,
         userBad: secure.badUsername + ':' + secure.goodPassword,

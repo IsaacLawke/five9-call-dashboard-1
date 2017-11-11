@@ -5,31 +5,6 @@ const parseString = require('xml2js').parseString; // parse XML to JSON
 const xml = require('xml');
 
 
-// See if user is authorized before pulling reports.
-// Returns true if user has permissions; otherwise false.
-// ${auth} should be base64 encoded 'username:password' string
-async function canAuthenticate(auth) {
-    // See if supervisor request •••returns 401 Not Authorized status
-    const params = {
-        'service': 'getMyPermissions'
-    }
-    const requestMessage = jsonToSOAP(params, 'statistics');
-    let response = await sendRequest(requestMessage, auth, 'statistics');
-
-    // If server responded with success, we're good
-    if (response.statusCode == 200) {
-        return true;
-    }
-    // If Five9 server was able to authenticate user but the user just doesn't
-    // have a session open, they're good.
-    if (response.statusCode == 500 && response.body.search('Session was closed') > -1) {
-        return true;
-    }
-    // Otherwise, you shall not pass!
-    return false;
-}
-
-
 // Takes a JSON object specifying a Five9 API endpoint,
 // and returns a SOAP message to send to the Five9 API.
 // requestType: statistics or configuration API
@@ -223,8 +198,6 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
 }
 
 
-
-module.exports.canAuthenticate = canAuthenticate;
 module.exports.jsonToSOAP = jsonToSOAP;
 module.exports.sendRequest = sendRequest;
 module.exports.getParameters = getParameters;
