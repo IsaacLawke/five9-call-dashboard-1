@@ -5,28 +5,6 @@ const parseString = require('xml2js').parseString; // parse XML to JSON
 const xml = require('xml');
 
 
-// Takes a JSON object specifying a Five9 API endpoint,
-// and returns a SOAP message to send to the Five9 API.
-// requestType: statistics or configuration API
-function jsonToSOAP(json, requestType) {
-    let adminOrSupervisor;
-    if (requestType == 'statistics') adminOrSupervisor = 'supervisor';
-    else if (requestType == 'configuration') adminOrSupervisor = 'admin';
-    else throw new Error(`requestType ${requestType} is not a valid type in jsonToSOAP!`);
-
-    const service = json['service'];
-    const settings = json['settings'] ? xml(json['settings']) : '';
-    const soapString =
-        `<x:Envelope xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.${adminOrSupervisor}.ws.five9.com/">
-            <x:Header/>
-            <x:Body>
-                <ser:${service}>
-                    ${settings}
-                </ser:${service}>
-            </x:Body>
-        </x:Envelope>`;
-    return soapString;
-}
 
 
 // Create a request to the Five9 Statistics API.
@@ -102,6 +80,22 @@ async function request(params, requestType, multipleReturns) {
     return jsonResult;
 }
 
+//
+async function openStatisticsSession() {
+    const params = getParameters('setSessionParameters');
+    const soap = jsonToSOAP(params, 'statistics');
+    const response = await sendRequest(soap, params.authorization, 'statistics');
+    if (response.statusCode == 200) {
+        log.message('Beginning session - 200 response');
+        let fault = getFaultStringFromData(response.body);
+        if (fault != '') throw new Error('Set Session Parameters issue: ' + fault);
+        return response;
+    }
+
+    log.message('getSessionParameters status != 200, response:' + JSON.stringify(response));
+    throw new Error('Set sessions parameters HTTP status code: ' + response.statusCode);
+}
+
 // Get CSV string of report results from Five9
 async function getReportResults(params) {
     var reportResults;
@@ -152,6 +146,8 @@ function getFaultStringFromData(data) {
 }
 
 // Given a requestType, returns JSON to submit to server in POST request.
+// Builds in authorization, so this should only be used after authenticating
+//    the client as needed.
 // requestType should match Five9 API command.
 // Optional parameters used for some reporting commands.
 function getParameters(requestType, reportId=null, criteriaTimeStart=null,
@@ -168,6 +164,15 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
                     { 'rollingPeriod': 'Minutes10' }
                 ] }
             ]
+        }
+    }
+    // Get real-time call stats
+    if (requestType == 'ACDStatus') {
+        params = {
+            'service': 'getStatistics',
+            'settings': [ {
+                'statisticType': 'ACDStatus'
+            } ]
         }
     }
     // Get user list w/ basic info
@@ -219,8 +224,34 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
 }
 
 
+// Takes a JSON object specifying a Five9 API endpoint,
+// and returns a SOAP message to send to the Five9 API.
+// requestType: statistics or configuration API
+function jsonToSOAP(json, requestType) {
+    let adminOrSupervisor;
+    if (requestType == 'statistics') adminOrSupervisor = 'supervisor';
+    else if (requestType == 'configuration') adminOrSupervisor = 'admin';
+    else throw new Error(`requestType ${requestType} is not a valid type in jsonToSOAP!`);
+
+    const service = json['service'];
+    const settings = json['settings'] ? xml(json['settings']) : '';
+    const soapString =
+        `<x:Envelope xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.${adminOrSupervisor}.ws.five9.com/">
+            <x:Header/>
+            <x:Body>
+                <ser:${service}>
+                    ${settings}
+                </ser:${service}>
+            </x:Body>
+        </x:Envelope>`;
+    return soapString;
+}
+
+
 module.exports.jsonToSOAP = jsonToSOAP;
+module.exports.request = request;
 module.exports.sendRequest = sendRequest;
 module.exports.getParameters = getParameters;
 module.exports.getReportResults = getReportResults;
 module.exports.getUsersGeneralInfo = getUsersGeneralInfo;
+module.exports.openStatisticsSession = openStatisticsSession;

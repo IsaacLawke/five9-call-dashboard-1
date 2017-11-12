@@ -1,4 +1,5 @@
 #!/usr/bin/env nodejs
+///////////////////////////
 // Import libraries
 const bodyParser = require('body-parser'); // parse JSON requests
 const compression = require('compression'); // compress file to GZIP
@@ -14,17 +15,21 @@ const path = require('path');
 const pm2 = require('pm2'); // for server restart when requested
 const port = parseInt(process.env.PORT, 10) || 3000;
 const secure = require('./secure_settings.js'); // local/secure settings
-const users = require('./authentication/users'); // store usernames to check against
-const verify = require('./authentication/verify'); // check user permissions
 
-// Database handling
+///////////////////////////
+// Data management
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-const report = require('./models/report');
+const report = require('./models/report'); // data feeds for SL & calls
+const queue  = require('./models/queue-stats'); // real-time queue feeds
 
-// Initialize the app
+const users = require('./authentication/users'); // stores usernames to check auth
+const verify = require('./authentication/verify'); // check user permissions
+
+
+///////////////////////////
+// Define the app
 const app = express();
-
 // GZIP it up
 app.use(compression());
 // Allow CORS
@@ -37,9 +42,9 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 
-//////////////////////////////////////////////
+///////////////////////////
 // Page view routes
-//////////////////////////////////////////////
+///////////////////////////
 
 // root index page
 app.get('/', async (req, res) => {
@@ -66,7 +71,7 @@ app.get('/admin', async (req, res) => {
 });
 
 
-///////////////////////////////////////////////////////////////////
+///////////////////////////
 // API routes to get data
 // All routes need to include these parameters in the POST body:
 //      - auth  : Base64 'username:password' Five9 credentials
@@ -78,7 +83,7 @@ app.get('/admin', async (req, res) => {
 //      - end   : end time for data range (YYYY-MM-DD[T]HH:mm:ss)
 //      - skills : in maps/zip code endpoint, which skill names to filter
 //                 for, comma-separated. Matches "like" Five9 skill names.
-///////////////////////////////////////////////////////////////////
+///////////////////////////
 
 // Five9 Statistics API request
 app.post('/api/statistics', async (req, res) => {
@@ -218,7 +223,9 @@ app.post('/api/reboot-server', async (req, res) => {
 });
 
 
+///////////////////////////
 // Fire up the server
+///////////////////////////
 let timeoutId = null;
 
 const server = app.listen(port, async () => {
@@ -241,8 +248,10 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 1000);
         });
 
+        // Update queue stats every 20 seconds
+        queue.scheduleUpdate(20 * 1000);
         // Start updating call database every 2.5 minutes
-        timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
+        report.scheduleUpdate(2.5 * 60 * 1000);
         // Update user list every 12 hours
         users.scheduleUpdate(12 * 60 * 60 * 1000);
 

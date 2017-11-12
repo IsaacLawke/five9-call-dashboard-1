@@ -2,11 +2,11 @@ const moment = require('moment');
 
 // Utility functions for logging and recording updates
 function message(text) {
-    console.log(`${text} at ${moment()}`);
+    console.log(`[${moment()}] ${text}`);
 }
 
 function error(text) {
-    console.error(`${text} at ${moment()}`);
+    console.error(`[${moment()}] ${text}`);
 }
 
 module.exports.message = message;

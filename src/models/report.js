@@ -23,7 +23,7 @@ const dataFeedSchema = mongoose.Schema({
     zipCode: String,
     date: Date,
     calls: { type: Number, default: 0 },
-    serviceLevel: { type: Number, default: 0 }
+    serviceLevel: { type: Number, default: 0 },
 });
 
 
@@ -59,7 +59,6 @@ function getHeadersFromCsv(csvHeaderLine) {
 // Database updating and access functions
 //////////////////////////////////////////
 let currentlyUpdatingData = false;
-let updateListeners = [];
 
 // Update from Five9 every ${interval} seconds
 // Returns ID for setTimeout timer
@@ -158,26 +157,9 @@ async function getData(timeFilter, reportModel) {
 }
 
 
-async function addUpdateListener(fun) {
-    if (currentlyUpdatingData) {
-        log.message(`API request arrived while updating database. Adding updateListener.`);
-        updateListeners.push(fun);
-    } else {
-        fun();
-    }
-}
-
-async function callbackUpdateListeners() {
-    for (var i=0; i < updateListeners.length; i++) {
-        let listenerFunction = updateListeners.pop();
-        listenerFunction();
-    }
-}
-
-
-// Update Five9 data
+// Update Five9 data in MongoDB
 async function refreshDatabase(time, reportModel, reportName) {
-    log.message(`Updating report database at ${moment()} with ${reportName}`);
+    log.message(`Updating Report database with ${reportName}`);
     const data = [];
 
     // Remove today's old data
@@ -218,8 +200,29 @@ async function refreshDatabase(time, reportModel, reportName) {
     // Insert the new data
     return reportModel.collection.insert(data, (err, docs) => {
         if (err) log.error(`Error inserting data in report model: ${err}`);
-        callbackUpdateListeners(); // TODO: call back when _all_ updates are done
+        callbackUpdateListeners();
     });
+}
+
+
+
+// Store callbacks that come in while the database is updating
+// Once DB update's finished, call them back in refreshDatabase()
+let updateListeners = [];
+async function addUpdateListener(fun) {
+    if (currentlyUpdatingData) {
+        log.message(`API request arrived while updating Report database. Adding updateListener.`);
+        updateListeners.push(fun);
+    } else {
+        fun();
+    }
+}
+
+async function callbackUpdateListeners() {
+    for (var i=0; i < updateListeners.length; i++) {
+        let listenerFunction = updateListeners.pop();
+        listenerFunction();
+    }
 }
 
 
