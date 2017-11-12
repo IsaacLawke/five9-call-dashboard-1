@@ -19,6 +19,12 @@ async function hasPermission(auth) {
     const username = decoded.split(':')[0];
     log.message(`Authenticating user ${username} with Five9`);
 
+    // Is this an active user in our Five9 instance? If not, no go.
+    let activeUser = await users.isActive(username);
+    if (!activeUser) {
+        return false;
+    }
+
     // Create a statistics request with these credentials
     const params = { 'service': 'getMyPermissions' };
     const requestMessage = five9.jsonToSOAP(params, 'statistics');

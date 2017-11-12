@@ -14,6 +14,7 @@ const path = require('path');
 const pm2 = require('pm2'); // for server restart when requested
 const port = parseInt(process.env.PORT, 10) || 3000;
 const secure = require('./secure_settings.js'); // local/secure settings
+const users = require('./authentication/users'); // store usernames to check against
 const verify = require('./authentication/verify'); // check user permissions
 
 // Database handling
@@ -232,8 +233,10 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 1000);
         });
 
-        // Start updating database every 2.5 minutes
+        // Start updating call database every 2.5 minutes
         timeoutId = report.scheduleUpdate(2.5 * 60 * 1000);
+        // Update user list every 12 hours
+        users.scheduleUpdate(12 * 60 * 60 * 1000);
 
     } catch (err) {
         log.error(`Error occurred on server:`, err);

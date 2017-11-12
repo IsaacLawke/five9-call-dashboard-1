@@ -15,7 +15,7 @@ function jsonToSOAP(json, requestType) {
     else throw new Error(`requestType ${requestType} is not a valid type in jsonToSOAP!`);
 
     const service = json['service'];
-    const settings = xml(json['settings']);
+    const settings = json['settings'] ? xml(json['settings']) : '';
     const soapString =
         `<x:Envelope xmlns:x="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://service.${adminOrSupervisor}.ws.five9.com/">
             <x:Header/>
@@ -84,12 +84,12 @@ function sendRequest(message, auth, requestType) {
 
 
 // Request - utility function for Five9 requests. Returns JSON object.
-async function request(params, requestType) {
+async function request(params, requestType, multipleReturns) {
     const soap = jsonToSOAP(params, requestType);
     const response = await sendRequest(soap, params.authorization, requestType);
     let jsonResult;
     await parseString(response.body, (err, result) => {
-        jsonResult = jsonToReturnValue(result, params.service);
+        jsonResult = jsonToReturnValue(result, params.service, multipleReturns);
     });
 
     let fault = getFaultStringFromData(jsonResult);
@@ -120,10 +120,25 @@ async function getReportResults(params) {
     return reportResult;
 }
 
+// Access the Five9 `getUsersGeneralInfo` endpoint, returning the return value
+// from there as JSON.
+async function getUsersGeneralInfo() {
+    let params = getParameters('getUsersGeneralInfo');
+    let result = await request(params, 'configuration', true);
+    return result;
+}
 
 // Gets the actual returned value/data out of JSON from the server.
-function jsonToReturnValue(json, type) {
-    return json['env:Envelope']['env:Body'][0]['ns2:'+type+'Response'][0]['return'][0];
+// @param returnMultiple - include multiple data points from the SOAP `return`
+//                         value. true for getUsersGeneralInfo.
+function jsonToReturnValue(json, type, returnMultiple=false) {
+    if (returnMultiple) {
+        return json['env:Envelope']['env:Body'][0]['ns2:'+type+'Response'][0]
+                   ['return'];
+   } else {
+       return json['env:Envelope']['env:Body'][0]['ns2:'+type+'Response'][0]
+                  ['return'][0];
+   }
 }
 
 
@@ -153,6 +168,12 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
                     { 'rollingPeriod': 'Minutes10' }
                 ] }
             ]
+        }
+    }
+    // Get user list w/ basic info
+    if (requestType == 'getUsersGeneralInfo') {
+        params = {
+            'service': 'getUsersGeneralInfo',
         }
     }
     // Report running params
@@ -202,3 +223,4 @@ module.exports.jsonToSOAP = jsonToSOAP;
 module.exports.sendRequest = sendRequest;
 module.exports.getParameters = getParameters;
 module.exports.getReportResults = getReportResults;
+module.exports.getUsersGeneralInfo = getUsersGeneralInfo;

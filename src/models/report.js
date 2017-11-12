@@ -178,7 +178,6 @@ async function callbackUpdateListeners() {
 // Update Five9 data
 async function refreshDatabase(time, reportModel, reportName) {
     log.message(`Updating report database at ${moment()} with ${reportName}`);
-
     const data = [];
 
     // Remove today's old data
@@ -188,7 +187,7 @@ async function refreshDatabase(time, reportModel, reportName) {
                 $lte: time.end
             }
         }, (err, success) => {
-            console.log('delete err: ' + err);
+            if (err) log.error(`Error deleting data in report model: ${err}`);
         });
 
     // Get CSV data
@@ -205,8 +204,7 @@ async function refreshDatabase(time, reportModel, reportName) {
             .fromString(csvData)
             .on('json', (res) => {
                 // cast calls and SL as numbers
-                res['calls'] *= 1;
-                res['serviceLevel'] *= 1;
+                res['calls'] *= 1;   res['serviceLevel'] *= 1;
 
                 // Set interval in Date format
                 let datestring = res.date + ' ' + res['HALF HOUR'];
@@ -219,12 +217,8 @@ async function refreshDatabase(time, reportModel, reportName) {
 
     // Insert the new data
     return reportModel.collection.insert(data, (err, docs) => {
-        console.log('insert err: ' + err);
+        if (err) log.error(`Error inserting data in report model: ${err}`);
         callbackUpdateListeners(); // TODO: call back when _all_ updates are done
-        return reportModel.collection.stats((err, results) => {
-            console.log('stats err: ' + err);
-            console.log('count: ' + results.count + '. size: ' + results.size + 'b');
-        });
     });
 }
 
