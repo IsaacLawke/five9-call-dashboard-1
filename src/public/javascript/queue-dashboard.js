@@ -16,13 +16,6 @@ $(document).ready(() => {
             clearTimeout(timeout);
         }
 
-        // Initiate a new session
-        try {
-            const success = await beginSession();
-        } catch (err) {
-            error(err, 'Not able to sign in to Five9. Check yo credentials!');
-            return; // abort on failure
-        }
         // begin updating data & page every few seconds
         try {
             runQueueDashboard();
@@ -45,23 +38,20 @@ $(document).ready(() => {
 async function runQueueDashboard() {
     async function eventLoop(interval) {
         // Get the current queue data
-        let params = getParameters('ACDStatus');
-        let response = await request(params);
         let data, slData;
         let time = {};
 
         try {
-            data = await response.json();
-            data = data['env:Envelope']['env:Body'][0]
-                       ['ns2:getStatisticsResponse'][0]['return'][0];
+            // Retrieve current queue stats
+            data = await queueStats();
 
             // Get SL stats
             time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
             time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
             slData = await getReportResults(time, 'service-level');
 
-            // Parse the data and pass it to the view updater
-            refreshView(jsonToViewData(data), slData);
+            // Update the view / DOM
+            refreshView(data, slData);
         } catch (err) {
             // try to get <message> tag, if it exists
             let msg = getFaultStringFromData(data);
@@ -75,8 +65,6 @@ async function runQueueDashboard() {
     }
 
     // Refresh every 20 seconds.
-    // Five9 stats API has a limit of 500 requests per hour
-    //      (1 request every 7.2 seconds).
     eventLoop(20000);
 }
 
@@ -107,18 +95,18 @@ function refreshView(data, serviceLevelData) {
         for (let i=0; i < data.length; i++) {
             let queue = data[i];
             // Include skills in gizmo filter, or all skills if none are in filter
-            if (skills.includes(queue['Skill Name']) || skills.length == 0) {
+            if (skills.includes(queue['SkillName']) || skills.length == 0) {
                 // Real-time queue metrics
-                callsInQueue += queue['Calls In Queue']*1;
-                maxWait = Math.max(maxWait, queue['Current Longest Queue Time']*1);
-                agentsLoggedIn = Math.max(agentsLoggedIn, queue['Agents Logged In'].split(' ')[0]*1);
-                agentsNotReady = Math.max(agentsNotReady, queue['Agents Not Ready For Calls']*1);
-                agentsOnCall = Math.max(agentsOnCall, queue['Agents On Call']*1);
-                agentsReady = Math.max(agentsReady, queue['Agents Ready For Calls']*1);
+                callsInQueue += queue['CallsInQueue'];
+                maxWait = Math.max(maxWait, queue['CurrentLongestQueueTime']);
+                agentsLoggedIn = Math.max(agentsLoggedIn, queue['AgentsLoggedIn'].split(' ')[0]*1);
+                agentsNotReady = Math.max(agentsNotReady, queue['AgentsNotReadyForCalls']);
+                agentsOnCall = Math.max(agentsOnCall, queue['AgentsOnCall']);
+                agentsReady = Math.max(agentsReady, queue['AgentsReadyForCalls']);
 
                 // SL metrics
                 let metrics = serviceLevelData.reduce((totals, current) => {
-                    if (current.skill == queue['Skill Name']) {
+                    if (current.skill == queue['SkillName']) {
                         totals.serviceLevel += current.serviceLevel;
                         totals.calls += current.calls;
                     }
@@ -128,11 +116,11 @@ function refreshView(data, serviceLevelData) {
                 callsOffered += metrics.calls;
 
                 // Add to list of skills in queue
-                if (queue['Calls In Queue']*1 > 0) {
+                if (queue['CallsInQueue'] > 0) {
                     thisGizmo.queueList.push({
-                        skillName: queue['Skill Name'],
-                        callsInQueue: queue['Calls In Queue']*1,
-                        maxWait: formatWaitTime(queue['Current Longest Queue Time']*1)
+                        skillName: queue['SkillName'],
+                        callsInQueue: queue['CallsInQueue'],
+                        maxWait: formatWaitTime(queue['CurrentLongestQueueTime'])
                     });
                 }
             }

@@ -85,10 +85,10 @@ app.get('/admin', async (req, res) => {
 //                 for, comma-separated. Matches "like" Five9 skill names.
 ///////////////////////////
 
-// Five9 Statistics API request
-app.post('/api/statistics', async (req, res) => {
+// Five9 current queue statistics (ACDStatus endpoint at Five9)
+app.post('/api/queue-stats', async (req, res) => {
     try {
-        log.message(`API - Statistics request from ${req.get('host')}`);
+        log.message(`API - Queue stats request from ${req.get('host')}`);
 
         // Authenticate user
         const hasPermission = await verify.hasPermission(req.body['authorization']);
@@ -98,19 +98,21 @@ app.post('/api/statistics', async (req, res) => {
             return;
         }
 
-        // Generate SOAP message for Five9
-        const message = five9.jsonToSOAP(req.body, 'statistics');
-        const auth = req.body['authorization'];
-
-        // Send request to Five9
-        let response = await five9.sendRequest(message, auth, 'statistics');
-
-        // On response, format as JSON and send back to client
-        parseString(response.body, (err, result) => {
-            res.set('Content-Type', 'application/json');
-            res.send(result);
-        });
+        // Send data as response when loaded
+        async function sendResponse() {
+            let data;
+            try {
+                data = await queue.getData();
+                res.set('Content-Type', 'application/json');
+                res.send(JSON.stringify(data));
+            } catch (err) {
+                res.set('Content-Type', 'application/text');
+                res.status(500).send(`An error occurred on the server while getting queue stats: ${err}`);
+            }
+        }
+        queue.addUpdateListener(sendResponse);
     } catch (err) {
+        log.error('Error during api/queue-stats: ' + JSON.stringify(err));
         res.set('Content-Type', 'application/text');
         res.send('An error occurred on the server during POST.');
     }
@@ -156,6 +158,7 @@ async function handleReportRequest(req, res, dataGetter) {
         report.addUpdateListener(sendResponse);
 
     } catch (err) {
+        log.error(`Error during handleReportRequest(${dataGetter.name}): ` + JSON.stringify(err));
         res.set('Content-Type', 'application/text');
         res.status(500).send(`An error occurred on the server when retrieving report information: ${err}`);
     }
@@ -248,8 +251,10 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 1000);
         });
 
-        // Update queue stats every 20 seconds
-        queue.scheduleUpdate(20 * 1000);
+        // Update queue stats every 15 seconds
+        // Five9 stats API has a limit of 500 requests per hour
+        //      (1 request every 7.2 seconds).
+        queue.scheduleUpdate(15 * 1000);
         // Start updating call database every 2.5 minutes
         report.scheduleUpdate(2.5 * 60 * 1000);
         // Update user list every 12 hours

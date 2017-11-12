@@ -17,7 +17,6 @@ async function hasPermission(auth) {
     // Log this username
     const decoded = Buffer.from(auth, 'base64').toString();
     const username = decoded.split(':')[0];
-    log.message(`Authenticating user ${username} with Five9`);
 
     // Is this an active user in our Five9 instance? If not, no go.
     let activeUser = await users.isActive(username);
@@ -41,6 +40,7 @@ async function hasPermission(auth) {
         return true;
     }
     // Otherwise, you shall not pass!
+    log.error(`User ${username} not authenticated successfully`);
     return false;
 }
 

@@ -27,9 +27,19 @@ const queueStatsSchema = mongoose.Schema({
 // Stats model
 const QueueStats = mongoose.model('QueueStats', queueStatsSchema);
 
-
+//////////////////////////////////////////
+// Database updating
+let currentlyUpdatingData = false;
+// Update from Five9 every ${interval} seconds
+// Returns ID for setTimeout timer
 async function scheduleUpdate(interval) {
+    currentlyUpdatingData = true;
+    // update from Five9
     await refreshDatabase();
+
+    // Schedule next update
+    currentlyUpdatingData = false;
+    return setTimeout(() => scheduleUpdate(interval), interval);
 }
 
 async function refreshDatabase() {
@@ -48,7 +58,6 @@ async function refreshDatabase() {
     // for each document
     const data = jsonToViewData(response);
 
-
     debugger;
     // add to database
     return QueueStats.collection.insert(data, (err, docs) => {
@@ -58,12 +67,16 @@ async function refreshDatabase() {
 }
 
 
+async function getData() {
+    return await QueueStats.find({});
+}
+
 // Store callbacks that come in while the database is updating
 // Once DB update's finished, call them back in refreshDatabase()
 let updateListeners = [];
 async function addUpdateListener(fun) {
     if (currentlyUpdatingData) {
-        log.message(`API request arrived while updating Report database. Adding updateListener.`);
+        log.message(`API request arrived while updating QueueStats database. Adding updateListener.`);
         updateListeners.push(fun);
     } else {
         fun();
@@ -118,5 +131,6 @@ function jsonToViewData(json,
 }
 
 
-
 module.exports.scheduleUpdate = scheduleUpdate;
+module.exports.getData = getData;
+module.exports.addUpdateListener = addUpdateListener;

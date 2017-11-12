@@ -4,6 +4,16 @@
 // requests on to Five9's server.
 ////////////////////////////////////////////////////////////////
 
+// Get real-time stats
+async function queueStats() {
+    const auth = getAuthString($('.username').val(), $('.password').val());
+    const params = { authorization: auth };
+
+    const response = await request(params, 'queue-stats');
+    return await response.json();
+}
+
+
 // Get CSV string of report results from Five9
 // ${type}: 'maps' or 'service-level'
 async function getReportResults(params, type) {
@@ -13,26 +23,6 @@ async function getReportResults(params, type) {
     const response = await getReportData(params, type);
     const data = await response.json();
     return data;
-}
-
-
-// Let's get started!
-// Authorize user to start pulling data in a Statistics session.
-// Returns true if successful, and false otherwise.
-async function beginSession() {
-    // Initiate session with Five9 statistics API
-    let params = getParameters('setSessionParameters');
-    let response = await request(params);
-
-    if (response.status == 200) {
-        console.log('Session has begun!');
-        let data = await response.json();
-        let fault = getFaultStringFromData(data);
-        if (fault != '') throw new Error('Set Session Parameters issue: ' + fault);
-    } else {
-        console.log(response);
-        throw new Error('Set sessions parameters HTTP status code: ' + response.statusCode);
-    }
 }
 
 
