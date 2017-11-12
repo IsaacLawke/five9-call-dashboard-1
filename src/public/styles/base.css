@@ -136,15 +136,17 @@ body * {
     height: 1.5em;
     margin: 0.5em auto;
     color: #888;
-    background-color: rgba(250, 250, 250, 0.5);
+    background-color: transparent;
     border-radius: 4px;
 }
 .stats-box .show-skills-list:hover {
     background-color: rgba(200, 200, 200, 0.65);
+    cursor: pointer;
 }
 .stats-box .show-skills-list.selected {
-    color: #000;
     filter: invert(100%);
+    color: #000;
+    background-color: rgba(250, 250, 250, 0.5);
 }
 
 
