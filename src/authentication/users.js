@@ -33,7 +33,7 @@ async function isActive(username) {
         await wait(1000);
     }
     let user = await Users.findOne({ username: username });
-    return user.active;
+    return user != null && user.active;
 }
 
 // Update from Five9 every ${interval} seconds

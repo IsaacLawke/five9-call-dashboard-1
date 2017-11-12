@@ -85,6 +85,14 @@ app.post('/api/statistics', async (req, res) => {
     try {
         log.message(`API - Statistics request from ${req.get('host')}`);
 
+        // Authenticate user
+        const hasPermission = await verify.hasPermission(req.body['authorization']);
+        if (!hasPermission) {
+            res.set('Content-Type', 'application/text');
+            res.status(401).send('Could not authenticate your user.');
+            return;
+        }
+
         // Generate SOAP message for Five9
         const message = five9.jsonToSOAP(req.body, 'statistics');
         const auth = req.body['authorization'];

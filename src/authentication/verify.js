@@ -22,6 +22,7 @@ async function hasPermission(auth) {
     // Is this an active user in our Five9 instance? If not, no go.
     let activeUser = await users.isActive(username);
     if (!activeUser) {
+        log.error(`User ${username} not found in database as active user`);
         return false;
     }
 
