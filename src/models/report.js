@@ -221,6 +221,7 @@ async function addUpdateListener(fun) {
 async function callbackUpdateListeners() {
     for (var i=0; i < updateListeners.length; i++) {
         let listenerFunction = updateListeners.pop();
+        log.message(`callbackUpdateListeners after Report refresh: calling ${listenerFunction.name}`);
         listenerFunction();
     }
 }
