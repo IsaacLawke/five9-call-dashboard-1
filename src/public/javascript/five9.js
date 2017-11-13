@@ -64,8 +64,11 @@ async function request(parameters, url='statistics') {
 
     return fetch(apiURL, requestOptions)
         .then((response) => {
-            if (response.status == 504) notifyServer504(parameters, url);
-            if (!response.ok) error(response.status);
+            if (response.status == 504) notifyServer504(parameters, url); // debugging
+            if (!response.ok) {
+                let bodyText = await response.text();
+                throw new Error(`Server responded with ${response.status} ${response.statusText}: ${bodyText}`);
+            }
             return response;
         }).then((response) => {
             return response;
