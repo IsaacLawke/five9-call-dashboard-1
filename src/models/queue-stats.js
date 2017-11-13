@@ -34,6 +34,10 @@ let currentlyUpdatingData = false;
 // Returns ID for setTimeout timer
 async function scheduleUpdate(interval) {
     currentlyUpdatingData = true;
+
+    // ensure session is open
+    await five9.openStatisticsSession();
+
     // update from Five9
     await refreshDatabase();
 
@@ -47,9 +51,6 @@ async function refreshDatabase() {
 
     // Remove all old data
     await QueueStats.remove({});
-
-    //
-    await five9.openStatisticsSession();
 
     // Pull in the new stuff
     const params = five9.getParameters('ACDStatus');

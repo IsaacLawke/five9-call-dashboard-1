@@ -86,7 +86,7 @@ async function openStatisticsSession() {
     const soap = jsonToSOAP(params, 'statistics');
     const response = await sendRequest(soap, params.authorization, 'statistics');
     if (response.statusCode == 200) {
-        log.message('Beginning session - 200 response');
+        log.message('Opening statistics session - 200 response');
         let fault = getFaultStringFromData(response.body);
         if (fault != '') throw new Error('Set Session Parameters issue: ' + fault);
         return response;

@@ -248,7 +248,7 @@ const server = app.listen(port, async () => {
         mongoose.connection.on('disconnected', () => {
             log.message('DB Disconnected: reconnecting.');
             log.error('DB Disconnected: reconnecting.');
-            setTimeout(connect, 1000);
+            setTimeout(connect, 3000);
         });
 
         // Update queue stats every 15 seconds
