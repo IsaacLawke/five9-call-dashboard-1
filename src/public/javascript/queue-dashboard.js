@@ -53,9 +53,7 @@ async function runQueueDashboard() {
             // Update the view / DOM
             refreshView(data, slData);
         } catch (err) {
-            // try to get <message> tag, if it exists
-            let msg = getFaultStringFromData(data);
-            error(err, `Server responded unexpectedly, with message: ${msg}. You authorized?`);
+            error(err, `Server responded unexpectedly, with error: ${err}. You authorized?`);
         }
 
         // restart loop
