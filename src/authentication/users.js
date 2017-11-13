@@ -70,3 +70,4 @@ async function refreshUserDatabase(usersModel) {
 
 module.exports.isActive = isActive;
 module.exports.scheduleUpdate = scheduleUpdate;
+module.exports.refreshUserDatabase = refreshUserDatabase;
