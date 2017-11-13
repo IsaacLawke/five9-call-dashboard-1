@@ -63,7 +63,7 @@ async function request(parameters, url='statistics') {
     }
 
     return fetch(apiURL, requestOptions)
-        .then((response) => {
+        .then(async (response) => {
             if (response.status == 504) notifyServer504(parameters, url); // debugging
             if (!response.ok) {
                 let bodyText = await response.text();
