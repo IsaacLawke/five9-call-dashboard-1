@@ -84,8 +84,8 @@ async function request(params, requestType, multipleReturns) {
 async function openStatisticsSession() {
     // first, use getSessionParameters to see if a session is already open
     let params = getParameters('getSessionParameters');
-    soap = jsonToSOAP(params, 'statistics');
-    response = await sendRequest(soap, params.authorization, 'statistics');
+    let soap = jsonToSOAP(params, 'statistics');
+    let response = await sendRequest(soap, params.authorization, 'statistics');
     if (response.statusCode == 200) {
         return response;
     }

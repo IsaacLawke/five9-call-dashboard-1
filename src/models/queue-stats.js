@@ -61,7 +61,6 @@ async function refreshDatabase() {
         // for each document
         data = jsonToViewData(response);
 
-        debugger;
         // add to database
         return QueueStats.collection.insert(data, (err, docs) => {
             if (err) log.error(`Error inserting data in report model: ${err}`);
