@@ -80,20 +80,30 @@ async function request(params, requestType, multipleReturns) {
     return jsonResult;
 }
 
-//
+// Opens a statistics API session, if not already open
 async function openStatisticsSession() {
-    const params = getParameters('setSessionParameters');
-    const soap = jsonToSOAP(params, 'statistics');
-    const response = await sendRequest(soap, params.authorization, 'statistics');
+    // first, use getSessionParameters to see if a session is already open
+    let params = getParameters('getSessionParameters');
+    let soap = jsonToSOAP(params, 'statistics');
+    let response = await sendRequest(soap, params.authorization, 'statistics');
     if (response.statusCode == 200) {
-        log.message('Opening statistics session - 200 response');
+        return response;
+    }
+
+    // No session open -- open with setSessionParameters
+    params = getParameters('setSessionParameters');
+    soap = jsonToSOAP(params, 'statistics');
+    response = await sendRequest(soap, params.authorization, 'statistics');
+    if (response.statusCode == 200) {
+        log.message('Opening new statistics session - 200 response');
         let fault = getFaultStringFromData(response.body);
         if (fault != '') throw new Error('Set Session Parameters issue: ' + fault);
         return response;
     }
 
-    log.message('getSessionParameters status != 200, response:' + JSON.stringify(response));
+    log.error('setSessionParameters status != 200, response:' + JSON.stringify(response));
     throw new Error('Set sessions parameters HTTP status code: ' + response.statusCode);
+    return response;
 }
 
 // Get CSV string of report results from Five9
@@ -164,6 +174,12 @@ function getParameters(requestType, reportId=null, criteriaTimeStart=null,
                     { 'rollingPeriod': 'Minutes10' }
                 ] }
             ]
+        }
+    }
+    // Check if session is open
+    if (requestType == 'getSessionParameters') {
+        params = {
+            'service': 'getSessionParameters'
         }
     }
     // Get real-time call stats
