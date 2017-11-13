@@ -48,23 +48,30 @@ async function scheduleUpdate(interval) {
 
 async function refreshDatabase() {
     log.message(`Updating QueueStats database`);
+    let params, response, data;
 
     // Remove all old data
     await QueueStats.remove({});
 
-    // Pull in the new stuff
-    const params = five9.getParameters('ACDStatus');
-    const response = await five9.request(params, 'statistics');
-    // Get the data into a nice JSON / DB friendly format with keys + values
-    // for each document
-    const data = jsonToViewData(response);
+    try {
+        // Pull in the new stuff
+        params = five9.getParameters('ACDStatus');
+        response = await five9.request(params, 'statistics');
+        // Get the data into a nice JSON / DB friendly format with keys + values
+        // for each document
+        data = jsonToViewData(response);
 
-    debugger;
-    // add to database
-    return QueueStats.collection.insert(data, (err, docs) => {
-        if (err) log.error(`Error inserting data in report model: ${err}`);
-        callbackUpdateListeners();
-    });
+        debugger;
+        // add to database
+        return QueueStats.collection.insert(data, (err, docs) => {
+            if (err) log.error(`Error inserting data in report model: ${err}`);
+            callbackUpdateListeners();
+        });
+    } catch (err) {
+        log.error(`Error during QueueStats update. Error: ${JSON.stringify(err)}; `
+                  + `Data: ${JSON.stringify(data)}; `
+                  + `openStatisticsSession response: ${JSON.stringify(response)}`);
+    }
 }
 
 
