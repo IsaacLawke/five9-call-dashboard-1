@@ -1,0 +1,10 @@
+{
+  "apps" : [{
+    "name"	: "app",
+    "script"	: "src/app.js",
+    "env" : {
+      "NODE_ENV": "production"
+    },
+    "cron_restart"	: "0 1 * * *"
+  }]
+}
