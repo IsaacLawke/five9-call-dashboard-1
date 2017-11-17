@@ -60,6 +60,7 @@ function sendRequest(message, auth, requestType) {
                 log.error(`----- Five9 request timed out`);
                 log.log(`----- Five9 request timed out`);
                 req.abort();
+                reject(new Error('Five9 request timed out.'));
             });
         });
 
