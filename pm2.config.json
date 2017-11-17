@@ -5,6 +5,6 @@
     "env" : {
       "NODE_ENV": "production"
     },
-    "cron_restart"	: "0 1 * * *"
+    "cron_restart"	: "0 2,4,20 * * *"
   }]
 }
