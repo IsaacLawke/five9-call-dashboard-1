@@ -117,6 +117,7 @@ function jsonToViewData(json,
     for (let i=0; i < rows.length; i++) {
         let row = rows[i]['values'][0]['data'];
         let newRow = {};
+        // For each of the included fields, format as `column: value` data
         for (let j=0; j < includeFields.length; j++) {
             let field = includeFields[j];
             newRow[field] = row[columns.indexOf(field)];

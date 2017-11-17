@@ -53,8 +53,19 @@ function sendRequest(message, auth, requestType) {
         // Send the data
         req.write(message);
 
+        // abort on timeout of 300 seconds
+        req.on('socket', (socket) => {
+            socket.setTimeout(300000);
+            socket.on('timeout', () => {
+                log.error(`----- Five9 request timed out`);
+                log.log(`----- Five9 request timed out`);
+                req.abort();
+            });
+        });
+
+        // Handle errors
         req.on('error', (e) => {
-            console.error(e);
+            log.error(e);
             reject(e);
         });
     });
