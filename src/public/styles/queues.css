@@ -1,6 +1,14 @@
-table {
+.queue-list-wrapper {
+    width: 100%;
+    overflow: auto;
+}
+.queue-list {
     width: 215px;
     font-size: 0.67em;
-    display: block;
-    overflow-x: scroll;
+}
+.queue-list .type-text {
+    text-align: left;
+}
+.queue-list .type-number {
+    text-align: right;
 }

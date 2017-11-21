@@ -29,7 +29,7 @@ $(document).ready(() => {
         const id = $(this).closest('.gizmo').attr('id');
         const thisgizmo = gizmo.gizmos[id];
         thisgizmo.showQueueList = !thisgizmo.showQueueList;
-        const table = $(this).next('.queue-list');
+        const table = $(this).next('table.queue-list');
         createQueueList(thisgizmo, table);
     });
 });
@@ -160,24 +160,39 @@ function refreshView(data, serviceLevelData) {
 // ${gizmo} object to build list on. ${table} element storing list.
 function createQueueList(thisGizmo, table) {
     table.empty(); // clear old list
+
+    // anything to list?
+    if (thisGizmo.queueList.length == 0) return;
+
     // Sort by max wait time
     thisGizmo.queueList.sort((a, b) => a.maxWait > b.maxWait ? -1 : 1);
-    // Add headers if not yet created
-    if (thisGizmo.queueList[0] !== undefined &&
-        thisGizmo.queueList[0].skillName != 'Skill Name') {
-        thisGizmo.queueList.unshift({ skillName: 'Skill Name',
-                            callsInQueue: 'Calls',
-                            maxWait: 'Max Wait' });
-    }
+
+    // Add headers
+    const thead = document.createElement('thead');
+    const th1 = document.createElement('th');
+    th1.appendChild(document.createTextNode('Skill Name'));
+    th1.className += ' type-text';
+    const th2 = document.createElement('th');
+    th2.appendChild(document.createTextNode('Calls'));
+    th2.className += ' type-number';
+    const th3 = document.createElement('th');
+    th3.appendChild(document.createTextNode('Max Wait'));
+    th3.className += ' type-number';
+    thead.appendChild(th1); thead.appendChild(th2); thead.appendChild(th3);
+    table.append(thead);
+
     // Update DOM from queueList
     thisGizmo.queueList.forEach((queue) => {
         const tr = document.createElement('tr');
         const td1 = document.createElement('td');
         td1.appendChild(document.createTextNode(queue.skillName));
+        td1.className += ' type-text';
         const td2 = document.createElement('td');
         td2.appendChild(document.createTextNode(queue.callsInQueue));
+        td2.className += ' type-number';
         const td3 = document.createElement('td');
         td3.appendChild(document.createTextNode(queue.maxWait));
+        td3.className += ' type-number';
         tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
         table.append(tr);
     });
