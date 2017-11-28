@@ -88,7 +88,7 @@ app.get('/admin', async (req, res) => {
 // Five9 current queue statistics (ACDStatus endpoint at Five9)
 app.post('/api/queue-stats', async (req, res) => {
     try {
-        log.message(`API - Queue stats request from ${req.get('host')}`);
+        // log.message(`API - Queue stats request from ${req.get('host')}`);
 
         // Authenticate user
         const hasPermission = await verify.hasPermission(req.body['authorization']);
@@ -120,13 +120,13 @@ app.post('/api/queue-stats', async (req, res) => {
 
 // Request data to update maps page
 app.post('/api/reports/maps', async (req, res) => {
-    log.message(`API - Maps request from ${req.get('host')}`);
+    // log.message(`API - Maps request from ${req.get('host')}`);
     handleReportRequest(req, res, report.getZipCodeData);
 });
 
 // Request data to update service level metrics
 app.post('/api/reports/service-level', (req, res) => {
-    log.message(`API - Service Level request from ${req.get('host')}`);
+    // log.message(`API - Service Level request from ${req.get('host')}`);
     handleReportRequest(req, res, report.getServiceLevelData);
 });
 
