@@ -1,0 +1,9 @@
+.scorecard-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.scorecard-wrapper .metric-wrapper {
+    width: 33%;
+}

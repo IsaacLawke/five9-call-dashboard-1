@@ -29,13 +29,12 @@ const FIVE9_ZIP_FIELD = 'CallersZipCodeForExample';
 For SL and zipcode data, create a file `src/secure_settings.js`:
 
 ```
-const FIVE9_USERNAME = 'admin_username';
-const FIVE9_PASSWORD = 'admin_password';
+// Admin- and supervisor-level credentials to retrieve report and queue data
+module.exports.FIVE9_USERNAME = 'admin_username';
+module.exports.FIVE9_PASSWORD = 'admin_password';
 
-// MongoDB URI
-const MONGODB_URI = 'mongodb://localhost/five9-report-data-collection';
-
-// ...then export these constants
+// Insert MongoDB URI here
+module.exports.MONGODB_URI = 'mongodb://localhost/five9-report-data-collection';
 ```
 
 Then travel to `localhost:3000` in your browser. Polyfills haven't been implemented yet, so you'll need a modern browser.
@@ -43,3 +42,11 @@ Then travel to `localhost:3000` in your browser. Polyfills haven't been implemen
 Type in your Supervisor-level Five9 credentials, then add a widget and (optionally) put in comma-separated skill names.
 
 Happy queue-watching!
+
+
+### Code structure
+All client-side files (HTML, JS, and CSS) are in the `src/public` directory.
+
+The Express server is defined in `src/app.js`, including routes and spinning up the repeating calls to Five9's API. The data from Five9 is stored in the local MongoDB database.
+
+Client requests to the API hit the Express server, which pulls the appropriate data from MongoDB and passes it on to the client.
