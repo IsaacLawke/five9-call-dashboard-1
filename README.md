@@ -10,12 +10,6 @@ Clone the project, go to the new directory and install dependencies:
 npm install
 ```
 
-Fire up the server:
-
-```
-npm start
-```
-
 Create a file `src/public/javascript/local_settings.js` that looks like this:
 
 ```
@@ -35,6 +29,12 @@ module.exports.FIVE9_PASSWORD = 'admin_password';
 
 // Insert MongoDB URI here
 module.exports.MONGODB_URI = 'mongodb://localhost/five9-report-data-collection';
+```
+
+Fire up the server:
+
+```
+npm start
 ```
 
 Then travel to `localhost:3000` in your browser. Polyfills haven't been implemented yet, so you'll need a modern browser.
