@@ -1,7 +1,7 @@
 # Five9 Call Dashboard
-Real-time call dashboard using Five9's SOAP APIs, allowing you to groups skills and show current wait times, calls in queue, and agents staffed to handle the calls. The maps page is a [choropleth](https://bl.ocks.org/mbostock/4060606 "example of a choropleth") showing calls by ZIP3 code with [D3](https://d3js.org/ "D3").
+Real-time call dashboard using Five9's SOAP APIs, allowing you to groups skills and show current wait times, service levels, calls in queue, and agents staffed to handle the calls. Also included is a maps page showing calls by ZIP3 code using [D3](https://d3js.org/ "D3") to create a [choropleth](https://bl.ocks.org/mbostock/4060606 "example of a choropleth").
 
-This uses Express as an intermediate server to circumvent browser-side CORS requests directly to the Five9 API server. There's a bit of server-side translation of JSON to SOAP, as well. VanillaJS and jQuery are used on the client side for updating the view.
+This uses Express as an intermediate server to get Five9 data and store it in MongoDB, then pass it along to the client. VanillaJS and jQuery are used on the client side for updating the view.
 
 ### Install
 Clone the project, go to the new directory and install dependencies:
@@ -10,17 +10,14 @@ Clone the project, go to the new directory and install dependencies:
 npm install
 ```
 
-Create a file `src/public/javascript/local_settings.js` that looks like this:
+Create a file `src/public/javascript/local_settings.js` defining our API URL:
 
 ```
 // Express API URL - development setting
 const API_URL = 'http://localhost:3000/api/';
-
-// Name of Five9 field that provides callers' zip codes for the map functionality
-const FIVE9_ZIP_FIELD = 'CallersZipCodeForExample';
 ```
 
-For SL and zipcode data, create a file `src/secure_settings.js`:
+For data retrieval from Five9, create a file `src/secure_settings.js`:
 
 ```
 // Admin- and supervisor-level credentials to retrieve report and queue data
@@ -42,7 +39,6 @@ Then travel to `localhost:3000` in your browser. Polyfills haven't been implemen
 Type in your Supervisor-level Five9 credentials, then add a widget and (optionally) put in comma-separated skill names.
 
 Happy queue-watching!
-
 
 ### Code structure
 All client-side files (HTML, JS, and CSS) are in the `src/public` directory.
