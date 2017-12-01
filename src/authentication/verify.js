@@ -44,4 +44,14 @@ async function hasPermission(auth) {
     return false;
 }
 
+// See if agent is authorized through Agent API
+async function hasAgentPermission(auth) {
+    // Break out username and password for HTTP request
+    const decoded = Buffer.from(auth, 'base64').toString();
+    const [username, password] = decoded.split(':');
+
+    
+}
+
 module.exports.hasPermission = hasPermission;
+module.exports.hasAgentPermission = hasAgentPermission;

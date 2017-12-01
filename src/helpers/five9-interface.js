@@ -5,8 +5,6 @@ const parseString = require('xml2js').parseString; // parse XML to JSON
 const xml = require('xml');
 
 
-
-
 // Create a request to the Five9 Statistics API.
 // Returns promise.
 function sendRequest(message, auth, requestType) {

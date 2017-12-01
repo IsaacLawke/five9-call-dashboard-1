@@ -1,3 +1,10 @@
+h1 {
+    font-weight: lighter;
+}
+h2, h3 {
+    font-weight: normal;
+}
+
 .scorecard-wrapper {
     display: flex;
     flex-direction: row;
@@ -6,4 +13,47 @@
 
 .scorecard-wrapper .metric-wrapper {
     width: 33%;
+}
+
+.green {
+    color: hsl(120, 35%, 50%);
+}
+.red {
+    color: hsl(0, 55%, 60%);
+}
+
+.data-table-wrapper {
+    max-height: 20em;
+    height: 350px;
+    width: 100%;
+    margin: 2em 0;
+}
+.data-table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: auto;
+}
+.data-table thead tr {
+    display: block;
+
+}
+.data-table th {
+    background-color: #efefef;
+    font-weight: normal;
+}
+.data-table tr {
+    width: 100%;
+}
+.data-table td, .data-table th {
+    padding: 0 1em;
+    width: 7em;
+}
+.data-table td {
+    border: 1px solid #ddd;
+}
+.data-table tbody {
+    display: block;
+    overflow: auto;
+    width: 100%;
+    height: 300px;
 }

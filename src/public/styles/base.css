@@ -67,7 +67,7 @@ body * {
     width: 230px;
 }
 
-.stats-box h3 {
+.stats-box .department-name {
     margin-top: 0;
     margin-left: 0.5em;
     margin-right: 0.5em;
