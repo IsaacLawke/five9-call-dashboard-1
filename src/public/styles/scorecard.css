@@ -45,7 +45,7 @@ h2, h3 {
     width: 100%;
 }
 .data-table td, .data-table th {
-    padding: 0 1em;
+    padding: 0 0.5em;
     width: 7em;
 }
 .data-table td {

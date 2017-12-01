@@ -64,6 +64,12 @@ app.get('/maps', async (req, res) => {
     res.sendFile(dir);
 });
 
+// scorecard
+app.get('/scorecard', async (req, res) => {
+    let dir = path.join(__dirname + '/public/scorecard.html');
+    res.sendFile(dir);
+});
+
 // admin panel
 app.get('/admin', async (req, res) => {
     let dir = path.join(__dirname + '/public/admin.html');
