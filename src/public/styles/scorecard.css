@@ -32,6 +32,7 @@ h2, h3 {
     table-layout: fixed;
     border-collapse: collapse;
     margin: auto;
+    font-size: 0.8em;
 }
 .data-table thead tr {
     display: block;
