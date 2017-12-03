@@ -148,13 +148,14 @@ const store = new Vuex.Store({
 });
 
 const vm = new Vue({
-    el: '.content-wrapper',
+    el: '#app',
     store,
     data: {
         dtvMeta: dtvMeta,
         dtvData: dtvData,
 
         closeRate: closeRate,
+        lineData: [5,2,12,17,11],
 
         ahtData: x,
         ahtMeta: ahtMeta,
@@ -181,13 +182,10 @@ const vm = new Vue({
     },
 
     components: {
-        'data-table': DataTable
+        'data-table': DataTable,
+        'line-graph': LineGraph
     }
 });
-
-
-
-
 
 //
 // $(document).ready(() => {

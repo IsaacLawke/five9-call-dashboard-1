@@ -11,7 +11,7 @@
     </head>
 
     <body>
-    <div class="content-wrapper">
+    <div id="app" class="content-wrapper">
             <h1>John Doe</h1>
             <div class="scorecard-wrapper">
                 <widget-box
@@ -28,6 +28,7 @@
                       :data="dtvData"
                       :meta="dtvMeta"
                     ></data-table>
+                    <line-graph :data="lineData"></line-graph>
                 </div>
 
                 <div class="metric-wrapper stats-box aht" v-if="showAHT">
