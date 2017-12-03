@@ -5,7 +5,10 @@
   "main": "app.js",
   "scripts": {
     "start": "node ./src/app.js",
-    "test": "./node_modules/mocha/bin/_mocha"
+    "test": "./node_modules/mocha/bin/_mocha",
+    "build": "webpack --config ./webpack.config.js --progress --colors",
+    "build:production": "NODE_ENV=production npm run build",
+    "build:dev": "NODE_ENV=develop npm run build"
   },
   "author": "Nathan Clonts",
   "license": "ISC",
@@ -27,6 +30,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "chai-http": "^3.0.0",
-    "mocha": "^3.5.0"
+    "mocha": "^3.5.0",
+    "webpack": "^3.9.1"
   }
 }
