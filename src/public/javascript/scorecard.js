@@ -40,9 +40,9 @@ const prodMeta = mergeDeep({
 
 
 dataTableRow = {
-    props: ['datum', 'meta', 'isHighlighted'],
+    props: ['datum', 'meta'],
     template: `
-        <tr v-bind:class="{ highlight: isHighlighted }">
+        <tr v-bind:class="{ highlight: isHighlighted(datum) }">
             <td
               v-for="key in meta.headers"
               v-on:mouseover="highlightDate(datum)"
@@ -52,11 +52,14 @@ dataTableRow = {
             </td>
         </tr>`,
     methods: {
+        isHighlighted: function(datum) {
+            return this.$store.state.dateHighlighted == datum.Date;
+        },
         highlightDate: function(datum) {
-            this.$emit('hover-date', datum.Date);
+            this.$store.commit('hoverDate', datum.Date);
         },
         unhighlightDate: function() {
-            this.$emit('unhover-date');
+            this.$store.commit('unhoverDate');
         },
         formatText: function (val, key, meta) {
             if (meta.format.hasOwnProperty(key)) {
@@ -77,27 +80,10 @@ dataTableRow = {
     }
 };
 
-singleValue = {
-    props: ['value', 'title'],
-    template: `
-        <h3>{{ title }}</h3>
-        <p class="metric">{{ value }}</p>
-    `
-};
-
-widget = {
-    field: 'CloseRate',
-
-}
-
-Vue.component('widget-box', {
-    // props: ['data', aa],
-});
-
 
 // Table with fixed headers. Accepts JSON data.
 Vue.component('data-table', {
-    props: ['data', 'meta', 'highlightedDate'],
+    props: ['data', 'meta'],
     template: `
         <div class="data-table-wrapper">
         <table class="data-table">
@@ -110,12 +96,9 @@ Vue.component('data-table', {
             <tbody>
                 <tr is="data-table-row"
                   v-for="(datum, i) in data"
-                  v-on:hover-date="highlightDate"
-                  v-on:unhover-date="unhighlightDate"
                   :key="i"
                   :datum="datum"
                   :meta="meta"
-                  :isHighlighted="highlightedDate == datum.Date"
                 ></tr>
             </tbody>
         </table>
@@ -124,27 +107,64 @@ Vue.component('data-table', {
     components: {
         'data-table-row': dataTableRow
     },
-    methods: {
-        highlightDate: function(date) {
-            this.$emit('hover-date', date);
-        },
-        unhighlightDate: function() {
-            this.$emit('unhover-date');
+    computed: {
+        dateHighlighted: function() {
+            return store.state.dateHighlighted;
         }
     }
 });
 
-Vue.component('')
+singleValue = {
+    props: ['value', 'title'],
+    template: `
+        <h3>{{ title }}</h3>
+        <p class="metric">{{ value }}</p>
+    `
+};
 
+const closeRate = {'title': 'Close Rate'};
+closeRate.data = closeRateData;
+closeRate.meta = closeRateMeta;
+console.log(closeRate)
+Vue.component('widget-box', {
+    props: ['params'],
+    template: `
+        <div class="metric-wrapper stats-box">
+            <h2 class="descriptor">{{ params.title }}</h2>
+            <data-table
+              :data="params.data"
+              :meta="params.meta"
+            ></data-table>
+        </div>
+    `,
+    components: {
+        'single-value': singleValue
+    }
+});
 
-let vm = new Vue({
+Vue.use(Vuex);
+const store = new Vuex.Store({
+    state: {
+        dateHighlighted: '2017-11-01'
+    },
+    mutations: {
+        hoverDate (state, date) {
+            state.dateHighlighted = date;
+        },
+        unhoverDate (state) {
+            state.dateHighlighted = null;
+        }
+    }
+});
+
+const vm = new Vue({
     el: '.content-wrapper',
+    store,
     data: {
         dtvMeta: dtvMeta,
         dtvData: dtvData,
 
-        closeRateData: closeRateData,
-        closeRateMeta: closeRateMeta,
+        closeRate: closeRate,
 
         ahtData: x,
         ahtMeta: ahtMeta,
@@ -163,14 +183,15 @@ let vm = new Vue({
             this.highlightedDate = date;
         },
         unhighlightDate: function () {
-            console.log('top level unhigh');
             this.highlightedDate = '';
         },
         isHighlighted: function (date) {
             return date == highlightedDate;
         }
     }
-})
+});
+
+
 
 
 
