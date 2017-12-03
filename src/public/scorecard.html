@@ -22,6 +22,9 @@
                     <h3>Month to Date</h3>
                     <p class="metric green">53.9%</p>
                     <data-table
+                      v-on:hover-date="highlightDate"
+                      v-on:unhover-date="unhighlightDate"
+                      :highlighted-date="highlightedDate"
                       :data="closeRateData"
                       :meta="closeRateMeta"
                     ></data-table>
@@ -34,6 +37,9 @@
                         <h3>Month to Date</h3>
                         <p class="metric green">33</p>
                         <data-table
+                          v-on:hover-date="highlightDate"
+                          v-on:unhover-date="unhighlightDate"
+                          :highlighted-date="highlightedDate"
                           :data="dtvData"
                           :meta="dtvMeta"
                         ></data-table>
@@ -46,6 +52,9 @@
                     <h3>Month to Date</h3>
                     <p class="metric">09:31</p>
                     <data-table
+                      v-on:hover-date="highlightDate"
+                      v-on:unhover-date="unhighlightDate"
+                      :highlighted-date="highlightedDate"
                       :data="ahtData"
                       :meta="ahtMeta"
                     ></data-table>
