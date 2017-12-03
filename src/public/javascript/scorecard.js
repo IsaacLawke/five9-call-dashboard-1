@@ -1,14 +1,22 @@
 
-let x = [{"Date":"11/1/2017","AHT":"13:25","ACW":"00:35","Hold":"01:31","Calls":"62"},{"Date":"11/2/2017","AHT":"14:00","ACW":"00:50","Hold":"01:18","Calls":"68"},{"Date":"11/3/2017","AHT":"11:27","ACW":"00:37","Hold":"01:27","Calls":"42"},{"Date":"11/4/2017","AHT":"11:31","ACW":"00:48","Hold":"01:40","Calls":"62"},{"Date":"11/5/2017","AHT":"13:01","ACW":"00:34","Hold":"01:31","Calls":"53"},{"Date":"11/6/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/7/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/8/2017","AHT":"13:30","ACW":"00:23","Hold":"01:16","Calls":"54"},{"Date":"11/9/2017","AHT":"12:10","ACW":"00:38","Hold":"01:19","Calls":"28"},{"Date":"11/10/2017","AHT":"14:29","ACW":"00:20","Hold":"01:38","Calls":"45"},{"Date":"11/11/2017","AHT":"11:51","ACW":"00:25","Hold":"01:16","Calls":"30"},{"Date":"11/12/2017","AHT":"12:00","ACW":"00:30","Hold":"01:19","Calls":"41"},{"Date":"11/13/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/14/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/15/2017","AHT":"13:46","ACW":"00:40","Hold":"01:29","Calls":"41"},{"Date":"11/16/2017","AHT":"13:47","ACW":"00:37","Hold":"01:29","Calls":"51"},{"Date":"11/17/2017","AHT":"15:05","ACW":"00:27","Hold":"01:25","Calls":"41"},{"Date":"11/18/2017","AHT":"12:09","ACW":"00:25","Hold":"01:35","Calls":"35"},{"Date":"11/19/2017","AHT":"12:54","ACW":"00:35","Hold":"01:22","Calls":"25"},{"Date":"11/20/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/21/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/22/2017","AHT":"11:29","ACW":"00:35","Hold":"01:46","Calls":"43"},{"Date":"11/23/2017","AHT":"11:35","ACW":"00:34","Hold":"01:40","Calls":"51"},{"Date":"11/24/2017","AHT":"13:35","ACW":"00:40","Hold":"01:45","Calls":"46"},{"Date":"11/25/2017","AHT":"13:00","ACW":"00:49","Hold":"01:36","Calls":"43"},{"Date":"11/26/2017","AHT":"12:23","ACW":"00:35","Hold":"01:41","Calls":"41"},{"Date":"11/27/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/28/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/29/2017","AHT":"14:18","ACW":"00:27","Hold":"01:27","Calls":"42"},{"Date":"11/30/2017","AHT":"11:30","ACW":"00:34","Hold":"01:42","Calls":"55"}]
+let x = [{"Date":"11/1/2017","AHT":"09:25","ACW":"00:35","Hold":"01:31","Calls":"62"},{"Date":"11/2/2017","AHT":"14:00","ACW":"00:50","Hold":"01:18","Calls":"68"},{"Date":"11/3/2017","AHT":"09:57","ACW":"00:37","Hold":"01:27","Calls":"42"},{"Date":"11/4/2017","AHT":"11:31","ACW":"00:48","Hold":"01:40","Calls":"62"},{"Date":"11/5/2017","AHT":"13:01","ACW":"00:34","Hold":"01:31","Calls":"53"},{"Date":"11/6/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/7/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/8/2017","AHT":"09:55","ACW":"00:23","Hold":"01:16","Calls":"54"},{"Date":"11/9/2017","AHT":"12:10","ACW":"00:38","Hold":"01:19","Calls":"28"},{"Date":"11/10/2017","AHT":"14:29","ACW":"00:20","Hold":"01:38","Calls":"45"},{"Date":"11/11/2017","AHT":"11:51","ACW":"00:25","Hold":"01:16","Calls":"30"},{"Date":"11/12/2017","AHT":"12:00","ACW":"00:30","Hold":"01:19","Calls":"41"},{"Date":"11/13/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/14/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/15/2017","AHT":"13:46","ACW":"00:40","Hold":"01:29","Calls":"41"},{"Date":"11/16/2017","AHT":"09:47","ACW":"00:37","Hold":"01:29","Calls":"51"},{"Date":"11/17/2017","AHT":"15:05","ACW":"00:27","Hold":"01:25","Calls":"41"},{"Date":"11/18/2017","AHT":"12:09","ACW":"00:25","Hold":"01:35","Calls":"35"},{"Date":"11/19/2017","AHT":"12:54","ACW":"00:35","Hold":"01:22","Calls":"25"},{"Date":"11/20/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/21/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/22/2017","AHT":"11:29","ACW":"00:35","Hold":"01:46","Calls":"43"},{"Date":"11/23/2017","AHT":"11:35","ACW":"00:34","Hold":"01:40","Calls":"51"},{"Date":"11/24/2017","AHT":"13:35","ACW":"00:40","Hold":"01:45","Calls":"46"},{"Date":"11/25/2017","AHT":"13:00","ACW":"00:49","Hold":"01:36","Calls":"43"},{"Date":"11/26/2017","AHT":"12:23","ACW":"00:35","Hold":"01:41","Calls":"41"},{"Date":"11/27/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/28/2017","AHT":"N/A","ACW":"N/A","Hold":"N/A","Calls":"0"},{"Date":"11/29/2017","AHT":"09:18","ACW":"00:27","Hold":"01:27","Calls":"42"},{"Date":"11/30/2017","AHT":"11:30","ACW":"00:34","Hold":"01:42","Calls":"55"}]
 
+const ahtMeta = {
+    headers: [
+        'Date', 'AHT', 'ACW', 'Hold', 'Calls'
+    ],
+    formatting: {
 
-Vue.component('data-table-row', {
-    props: ['datum'],
+    }
+};
+
+dataTableRow = {
+    props: ['datum', 'keys'],
     template: `<tr>
         <td
-          v-for="(val,key) in datum"
-          v-bind:class="styleClass(val,key)">
-            {{ formatText(val, key) }}
+          v-for="key in keys"
+          v-bind:class="styleClass(datum[key], key)">
+            {{ formatText(datum[key], key) }}
         </td>
         </tr>`,
     methods: {
@@ -19,9 +27,43 @@ Vue.component('data-table-row', {
             return val;
         },
         styleClass: function (val, key) {
-            if (key == 'Calls' && val > 0) return 'green';
-            return '';
+            switch (key) {
+                case 'AHT':
+                    if (val == 'N/A') return '';
+                    return moment(val, 'mm:ss').valueOf() <= moment('10:00', 'mm:ss').valueOf()
+                            ? 'green' : 'red';
+                default:
+                    return '';
+            }
         }
+    }
+};
+
+// Parent component for data-table-row
+Vue.component('data-table', {
+    props: ['data', 'meta'],
+    template: `
+        <div class="data-table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th v-for="header in meta.headers"
+                    >{{ header }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr is="data-table-row"
+                  v-for="(datum, i) in data"
+                  :key="i"
+                  :datum="datum"
+                  :keys="meta.headers"
+                ></tr>
+            </tbody>
+        </table>
+        </div>
+    `,
+    components: {
+        'data-table-row': dataTableRow
     }
 });
 
@@ -30,6 +72,7 @@ let vm = new Vue({
     el: '.aht',
     data: {
         agentData: x,
+        ahtMeta: ahtMeta,
         showAHT: true,
         metricDescription: 'Your AHT'
     }

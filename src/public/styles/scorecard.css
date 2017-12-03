@@ -9,10 +9,12 @@ h2, h3 {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .scorecard-wrapper .metric-wrapper {
     width: 33%;
+    min-width: 200px;
 }
 
 .green {
@@ -36,7 +38,7 @@ h2, h3 {
 }
 .data-table thead tr {
     display: block;
-
+    width: calc(100% - 17px);
 }
 .data-table th {
     background-color: #efefef;

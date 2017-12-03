@@ -128,26 +128,10 @@
                     <p class="metric" v-bind:title="metricDescription">10:06</p>
                     <h3>Month to Date</h3>
                     <p class="metric">09:31</p>
-                    <div class="data-table-wrapper">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>AHT</th>
-                                    <th>ACW</th>
-                                    <th>Hold</th>
-                                    <th>Calls</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr is="data-table-row"
-                                  v-for="(datum, i) in agentData"
-                                  :key="i"
-                                  :datum="datum"
-                                ></tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <data-table
+                      :data="agentData"
+                      :meta="ahtMeta"
+                    ></data-table>
                 </div>
 
                 <div class="metric-wrapper stats-box">
