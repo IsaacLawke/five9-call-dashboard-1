@@ -52,7 +52,7 @@ async function runQueueDashboard() {
                 slData = await getReportResults(time, 'service-level');
             } catch (err) {
                 error(err, `An error occurred when getting service level data.`);
-                slData = {};
+                slData = [];
             }
 
             // Update the view / DOM
