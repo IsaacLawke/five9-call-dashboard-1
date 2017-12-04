@@ -48,7 +48,12 @@ async function runQueueDashboard() {
             // Get SL stats
             time.start = moment().format('YYYY-MM-DD') + 'T00:00:00';
             time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
-            slData = await getReportResults(time, 'service-level');
+            try {
+                slData = await getReportResults(time, 'service-level');
+            } catch (err) {
+                message(err, `Server responded unexpectedly when getting service level data.`);
+                slData = {};
+            }
 
             // Update the view / DOM
             refreshView(data, slData);
