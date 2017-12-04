@@ -52,6 +52,7 @@ async function runQueueDashboard() {
                 slData = await getReportResults(time, 'service-level');
             } catch (err) {
                 error(err, `An error occurred when getting service level data.`);
+                $('#message').text('An error occurred while retrieving service level data.');
                 slData = [];
             }
 
