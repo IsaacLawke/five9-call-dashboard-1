@@ -11,8 +11,10 @@ Accepts data prop with structure:
 
 <template>
     <div class="line-graph">
+
         <svg @mousemove="mouseover" :width="width" :height="height">
-            <g class="axis" ref="yaxis"></g>
+            <text :x="55" :y="10">{{ yField }}</text>
+            <g class="axis" ref="yaxis" :style="{transform: `translate(20px,${margin.top}px)`}"></g>
             <g :style="{transform: `translate(${margin.left}px, ${margin.top}px)`}">
                 <path class="area" :d="paths.area" />
                 <path class="line" :d="paths.line" />
@@ -35,7 +37,7 @@ const props = {
         default: () => ({
             left: 40,
             right: 10,
-            top: 10,
+            top: 15,
             bottom: 10,
         }),
     }
@@ -150,6 +152,15 @@ export default {
 </script>
 
 <style scoped>
+    .line-graph {
+        display: flex;
+        flex-direction: column;
+    }
+    .line-graph text {
+        text-anchor: middle;
+        font-size: 0.8em;
+    }
+
     h1, .content {
       margin-left: 20px;
     }
@@ -157,15 +168,18 @@ export default {
       display: inline-block;
       width: 150px;
     }
+
     .line-graph {
       height: 150px;
     }
     .line {
         fill: none;
         stroke: steelblue;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        stroke-width: 1.5;
     }
     .axis {
         font-size: 0.5em;
-        transform: translate(20px,0px);
     }
 </style>

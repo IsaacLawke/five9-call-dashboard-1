@@ -4,13 +4,15 @@
           v-for="key in meta.headers"
           v-on:mouseover="highlightDate(datum)"
           v-on:mouseleave="unhighlightDate"
-          v-bind:class="styleClass(datum[key], key)">
-            {{ formatText(datum[key], key, meta) }}
+          v-bind:class="formatted(datum[key], key).styleClass">
+            {{ formatted(datum[key], key).value }}
         </td>
     </tr>
 </template>
 
 <script>
+import {formatValue} from '../javascript/scorecard-format.js';
+
 export default {
     props: ['datum', 'meta'],
     methods: {
@@ -23,21 +25,10 @@ export default {
         unhighlightDate: function() {
             this.$store.commit('unhoverDate');
         },
-        formatText: function (val, key, meta) {
-            if (meta.format.hasOwnProperty(key)) {
-                return meta.format[key](val);
-            }
-            return val;
-        },
-        styleClass: function (val, key) {
-            switch (key) {
-                case 'AHT':
-                    if (val == 'N/A') return '';
-                    return moment(val, 'mm:ss').valueOf() <= moment('10:00', 'mm:ss').valueOf()
-                            ? 'green' : 'red';
-                default:
-                    return '';
-            }
+        formatted: function (val, field) {
+            // if (field=='AHT') debugger;
+            let res = formatValue(val, field);
+            return res;
         }
     }
 }
