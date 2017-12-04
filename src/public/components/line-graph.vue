@@ -12,6 +12,7 @@ Accepts data prop with structure:
 <template>
     <div class="line-graph">
         <svg @mousemove="mouseover" :width="width" :height="height">
+            <g class="axis" ref="yaxis"></g>
             <g :style="{transform: `translate(${margin.left}px, ${margin.top}px)`}">
                 <path class="area" :d="paths.area" />
                 <path class="line" :d="paths.line" />
@@ -23,25 +24,21 @@ Accepts data prop with structure:
 
 <script>
 const props = {
+    xField: {default: 'x'},
+    yField: {default: 'y'},
     data: {
-        type: Object,
-        default: () => ({'x': ['2017-11-01', '2017-11-02', '2017-11-03', '2017-11-04'],
-                        'y': [12, 2, 15, 9]
-                    })
+        type: Array,
+        default: () => [{x: '2017-11-01', y: 12}, {x: '2017-11-02', y: 2}, {x: '2017-11-03', y: 7}]
     },
     margin: {
         type: Object,
         default: () => ({
-            left: 0,
-            right: 0,
+            left: 40,
+            right: 10,
             top: 10,
             bottom: 10,
         }),
-    },
-    ceil: {
-        type: Number,
-        default: 20,
-    },
+    }
 };
 export default {
     name: 'line-graph',
@@ -69,6 +66,9 @@ export default {
             const height = this.height - this.margin.top - this.margin.bottom;
             return { width, height };
         },
+        ceil() {
+            return d3.max(this.data, (d) => d[this.yField]);
+        }
     },
     mounted() {
         window.addEventListener('resize', this.onResize);
@@ -81,7 +81,7 @@ export default {
         width: function widthChanged() {
             this.initialize();
             this.update();
-        },
+        }
     },
     methods: {
         onResize() {
@@ -94,26 +94,35 @@ export default {
         initialize() {
             this.scaled.x = d3.scaleTime().rangeRound([0, this.padded.width]);
             this.scaled.y = d3.scaleLinear().range([this.padded.height, 0]);
-            console.log(this.padded.height);
             d3.axisLeft().scale(this.scaled.x);
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
             const parseTime = d3.timeParse('%Y-%m-%d');
+            for (let d of this.data) {
+                d[this.yField] *= 1;
+                if (isNaN(d[this.yField])) d[this.yField] = 0;
+            }
 
-            this.scaled.x.domain(d3.extent(this.data.x, parseTime));
+            this.scaled.x.domain(d3.extent(this.data, (d) => parseTime(d[this.xField])));
             this.scaled.y.domain([0, this.ceil]);
             this.points = [];
 
-            for (let i=0; i < this.data.x.length; i++) {
+            for (let d of this.data) {
                 this.points.push({
-                    x: this.scaled.x(parseTime(this.data.x[i])),
-                    y: this.scaled.y(this.data.y[i]),
+                    x: this.scaled.x(parseTime(d[this.xField])),
+                    y: this.scaled.y(d[this.yField]),
                     max: this.height,
                 });
             }
             // this.paths.area = this.createArea(this.points);
             this.paths.line = this.createLine(this.points);
+
+            // draw axes
+            d3.select(this.$refs.yaxis)
+                .call(d3.axisLeft(this.scaled.y))
+                .selectAll('path, .tick line').attr('stroke', '#ccc');
+            d3.select(this.$refs.yaxis).selectAll('text').attr('#444');
         },
         mouseover({ offsetX }) {
             if (this.points.length > 0) {
@@ -154,5 +163,9 @@ export default {
     .line {
         fill: none;
         stroke: steelblue;
+    }
+    .axis {
+        font-size: 0.5em;
+        transform: translate(20px,0px);
     }
 </style>

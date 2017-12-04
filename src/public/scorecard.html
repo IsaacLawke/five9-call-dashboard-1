@@ -28,7 +28,11 @@
                       :data="dtvData"
                       :meta="dtvMeta"
                     ></data-table>
-                    <line-graph ></line-graph>
+                    <line-graph
+                      :data="dtvData"
+                      :x-field="dtvMeta.graph.fields.x"
+                      :y-field="dtvMeta.graph.fields.y"
+                    ></line-graph>
                 </div>
 
                 <div class="metric-wrapper stats-box aht" v-if="showAHT">
@@ -41,6 +45,11 @@
                       :data="ahtData"
                       :meta="ahtMeta"
                     ></data-table>
+                    <line-graph
+                      :data="ahtData"
+                      :x-field="ahtMeta.graph.fields.x"
+                      :y-field="ahtMeta.graph.fields.y"
+                    ></line-graph>
                 </div>
 
                 <div class="metric-wrapper stats-box" v-if="showProductivity">
@@ -52,7 +61,12 @@
                     <data-table
                       :data="productivityData"
                       :meta="productivityMeta"
-                    >{{ productivityData }}</data-table>
+                    ></data-table>
+                    <line-graph
+                      :data="productivityData"
+                      :x-field="productivityMeta.graph.fields.x"
+                      :y-field="productivityMeta.graph.fields.y"
+                    ></line-graph>
                 </div>
             </div>
         </div>

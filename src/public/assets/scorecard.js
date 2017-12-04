@@ -486,7 +486,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-let x = [{"Date": "2017-11-01","AHT": "12:25","ACW": "12:35","Hold": "12:31","Calls": "62"}, {"Date": "2017-11-02","AHT": "12:51","ACW": "12:23","Hold": "12:35","Calls": "68"}, {"Date": "2017-11-03","AHT": "12:29","ACW": "12:25","Hold": "12:38","Calls": "42"}, {"Date": "2017-11-04","AHT": "12:42","ACW": "12:46","Hold": "12:31","Calls": "62"}, {"Date": "2017-11-05","AHT": "12:16","ACW": "12:23","Hold": "12:16","Calls": "53"}, {"Date": "2017-11-06","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-07","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-08","AHT": "12:24","ACW": "12:25","Hold": "12:20","Calls": "54"}, {"Date": "2017-11-09","AHT": "12:35","ACW": "12:24","Hold": "12:18","Calls": "28"}, {"Date": "2017-11-10","AHT": "12:22","ACW": "12:33","Hold": "12:30","Calls": "45"}, {"Date": "2017-11-11","AHT": "12:04","ACW": "12:40","Hold": "12:26","Calls": "30"}, {"Date": "2017-11-12","AHT": "12:59","ACW": "12:46","Hold": "12:46","Calls": "41"}, {"Date": "2017-11-13","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-14","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-15","AHT": "12:28","ACW": "12:25","Hold": "12:39","Calls": "41"}, {"Date": "2017-11-16","AHT": "12:34","ACW": "12:37","Hold": "12:29","Calls": "51"}, {"Date": "2017-11-17","AHT": "12:17","ACW": "12:23","Hold": "12:21","Calls": "41"}, {"Date": "2017-11-18","AHT": "12:44","ACW": "12:45","Hold": "12:24","Calls": "35"}, {"Date": "2017-11-19","AHT": "12:00","ACW": "12:25","Hold": "12:25","Calls": "25"}, {"Date": "2017-11-20","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-21","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-22","AHT": "12:30","ACW": "12:44","Hold": "12:20","Calls": "43"}, {"Date": "2017-11-23","AHT": "12:16","ACW": "12:26","Hold": "12:16","Calls": "51"}, {"Date": "2017-11-24","AHT": "12:21","ACW": "12:25","Hold": "12:45","Calls": "46"}, {"Date": "2017-11-25","AHT": "12:20","ACW": "12:47","Hold": "12:37","Calls": "43"}, {"Date": "2017-11-26","AHT": "12:37","ACW": "12:35","Hold": "12:18","Calls": "41"}, {"Date": "2017-11-27","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-28","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-29","AHT": "12:38","ACW": "12:35","Hold": "12:29","Calls": "42"}, {"Date": "2017-11-30","AHT": "12:56","ACW": "12:28","Hold": "12:22","Calls": "55"}]
+let ahtData = [{"Date": "2017-11-01","AHT": "12:25","ACW": "12:35","Hold": "12:31","Calls": "62"}, {"Date": "2017-11-02","AHT": "12:51","ACW": "12:23","Hold": "12:35","Calls": "68"}, {"Date": "2017-11-03","AHT": "12:29","ACW": "12:25","Hold": "12:38","Calls": "42"}, {"Date": "2017-11-04","AHT": "12:42","ACW": "12:46","Hold": "12:31","Calls": "62"}, {"Date": "2017-11-05","AHT": "12:16","ACW": "12:23","Hold": "12:16","Calls": "53"}, {"Date": "2017-11-06","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-07","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-08","AHT": "12:24","ACW": "12:25","Hold": "12:20","Calls": "54"}, {"Date": "2017-11-09","AHT": "12:35","ACW": "12:24","Hold": "12:18","Calls": "28"}, {"Date": "2017-11-10","AHT": "12:22","ACW": "12:33","Hold": "12:30","Calls": "45"}, {"Date": "2017-11-11","AHT": "12:04","ACW": "12:40","Hold": "12:26","Calls": "30"}, {"Date": "2017-11-12","AHT": "12:59","ACW": "12:46","Hold": "12:46","Calls": "41"}, {"Date": "2017-11-13","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-14","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-15","AHT": "12:28","ACW": "12:25","Hold": "12:39","Calls": "41"}, {"Date": "2017-11-16","AHT": "12:34","ACW": "12:37","Hold": "12:29","Calls": "51"}, {"Date": "2017-11-17","AHT": "12:17","ACW": "12:23","Hold": "12:21","Calls": "41"}, {"Date": "2017-11-18","AHT": "12:44","ACW": "12:45","Hold": "12:24","Calls": "35"}, {"Date": "2017-11-19","AHT": "12:00","ACW": "12:25","Hold": "12:25","Calls": "25"}, {"Date": "2017-11-20","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-21","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-22","AHT": "12:30","ACW": "12:44","Hold": "12:20","Calls": "43"}, {"Date": "2017-11-23","AHT": "12:16","ACW": "12:26","Hold": "12:16","Calls": "51"}, {"Date": "2017-11-24","AHT": "12:21","ACW": "12:25","Hold": "12:45","Calls": "46"}, {"Date": "2017-11-25","AHT": "12:20","ACW": "12:47","Hold": "12:37","Calls": "43"}, {"Date": "2017-11-26","AHT": "12:37","ACW": "12:35","Hold": "12:18","Calls": "41"}, {"Date": "2017-11-27","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-28","AHT": "N/A","ACW": "N/A","Hold": "N/A","Calls": "0"}, {"Date": "2017-11-29","AHT": "12:38","ACW": "12:35","Hold": "12:29","Calls": "42"}, {"Date": "2017-11-30","AHT": "12:56","ACW": "12:28","Hold": "12:22","Calls": "55"}]
 
 
 let prodData = [{"Date": "2017-11-01","Productivity": "0.86"}, {"Date": "2017-11-02","Productivity": "0.86"}, {"Date": "2017-11-03","Productivity": "0.86"}, {"Date": "2017-11-04","Productivity": "0.92"}, {"Date": "2017-11-05","Productivity": "0.84"}, {"Date": "2017-11-06","Productivity": "N/A"}, {"Date": "2017-11-07","Productivity": "N/A"}, {"Date": "2017-11-08","Productivity": "0.86"}, {"Date": "2017-11-09","Productivity": "0.93"}, {"Date": "2017-11-10","Productivity": "0.93"}, {"Date": "2017-11-11","Productivity": "0.87"}, {"Date": "2017-11-12","Productivity": "0.86"}, {"Date": "2017-11-13","Productivity": "N/A"}, {"Date": "2017-11-14","Productivity": "N/A"}, {"Date": "2017-11-15","Productivity": "0.86"}, {"Date": "2017-11-16","Productivity": "0.84"}, {"Date": "2017-11-17","Productivity": "0.93"}, {"Date": "2017-11-18","Productivity": "0.92"}, {"Date": "2017-11-19","Productivity": "0.84"}, {"Date": "2017-11-20","Productivity": "N/A"}, {"Date": "2017-11-21","Productivity": "N/A"}, {"Date": "2017-11-22","Productivity": "0.86"}, {"Date": "2017-11-23","Productivity": "0.79"}, {"Date": "2017-11-24","Productivity": "0.88"}, {"Date": "2017-11-25","Productivity": "0.90"}, {"Date": "2017-11-26","Productivity": "0.80"}, {"Date": "2017-11-27","Productivity": "N/A"}, {"Date": "2017-11-28","Productivity": "N/A"}, {"Date": "2017-11-29","Productivity": "0.83"}, {"Date": "2017-11-30","Productivity": "0.83"}]
@@ -510,61 +510,44 @@ const baseMeta = {
     }
 }
 const closeRateMeta = mergeDeep({
-    headers: ['Date', 'Close Rate', 'Sales', 'Calls']
+    headers: ['Date', 'Close Rate', 'Sales', 'Calls'],
+    graph: {
+        fields: {
+            x: 'Date',
+            y: 'Close Rate'
+        }
+    }
 }, baseMeta);
 const dtvMeta = mergeDeep({
-    headers: ['Date', 'DTV Sales', 'Rolling Total', 'Pacing', 'Delta']
+    headers: ['Date', 'DTV Sales', 'Rolling Total', 'Pacing', 'Delta'],
+    graph: {
+        fields: {
+            x: 'Date',
+            y: 'DTV Sales'
+        }
+    }
 }, baseMeta);
 const ahtMeta = mergeDeep({
     headers: [
         'Date', 'AHT', 'ACW', 'Hold', 'Calls'
-    ]
-}, baseMeta);
-const prodMeta = mergeDeep({
-    headers: ['Date', 'Productivity']
-}, baseMeta);
-
-
-const dataTableRow = {
-    props: ['datum', 'meta'],
-    template: `
-        <tr v-bind:class="{ highlight: isHighlighted(datum) }">
-            <td
-              v-for="key in meta.headers"
-              v-on:mouseover="highlightDate(datum)"
-              v-on:mouseleave="unhighlightDate"
-              v-bind:class="styleClass(datum[key], key)">
-                {{ formatText(datum[key], key, meta) }}
-            </td>
-        </tr>`,
-    methods: {
-        isHighlighted: function(datum) {
-            return this.$store.state.dateHighlighted == datum.Date;
-        },
-        highlightDate: function(datum) {
-            this.$store.commit('hoverDate', datum.Date);
-        },
-        unhighlightDate: function() {
-            this.$store.commit('unhoverDate');
-        },
-        formatText: function (val, key, meta) {
-            if (meta.format.hasOwnProperty(key)) {
-                return meta.format[key](val);
-            }
-            return val;
-        },
-        styleClass: function (val, key) {
-            switch (key) {
-                case 'AHT':
-                    if (val == 'N/A') return '';
-                    return moment(val, 'mm:ss').valueOf() <= moment('10:00', 'mm:ss').valueOf()
-                            ? 'green' : 'red';
-                default:
-                    return '';
-            }
+    ],
+    graph: {
+        fields: {
+            x: 'Date',
+            y: 'AHT'
         }
     }
-};
+}, baseMeta);
+const productivityMeta = mergeDeep({
+    headers: ['Date', 'Productivity'],
+    graph: {
+        fields: {
+            x: 'Date',
+            y: 'Productivity'
+        }
+    }
+}, baseMeta);
+
 
 const singleValue = {
     props: ['value', 'title'],
@@ -609,11 +592,17 @@ Vue.component('widget-box', {
               :data="params.data"
               :meta="params.meta"
             ></data-table>
+            <line-graph
+              :data="params.data"
+              :x-field="params.meta.graph.fields.x"
+              :y-field="params.meta.graph.fields.y"
+            ></line-graph>
         </div>
     `,
     components: {
         'single-value': singleValue,
-        'data-table': __WEBPACK_IMPORTED_MODULE_1__components_data_table_vue__["a" /* default */]
+        'data-table': __WEBPACK_IMPORTED_MODULE_1__components_data_table_vue__["a" /* default */],
+        'line-graph': __WEBPACK_IMPORTED_MODULE_0__components_line_graph_vue__["a" /* default */]
     }
 });
 
@@ -642,12 +631,12 @@ const vm = new Vue({
         closeRate: closeRate,
         lineData: [5,2,12,17,11],
 
-        ahtData: x,
+        ahtData: ahtData,
         ahtMeta: ahtMeta,
         showAHT: true,
 
         productivityData: prodData,
-        productivityMeta: prodMeta,
+        productivityMeta: productivityMeta,
         showProductivity: true,
 
         metricDescription: 'Your AHT',
@@ -814,7 +803,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line-graph[data-v-21d5040e] {\n  height: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n}\n", ""]);
+exports.push([module.i, "\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line-graph[data-v-21d5040e] {\n  height: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n}\n.axis[data-v-21d5040e] {\n    font-size: 0.5em;\n    transform: translate(20px,0px);\n}\n", ""]);
 
 // exports
 
@@ -880,27 +869,24 @@ module.exports = function listToStyles (parentId, list) {
 //
 //
 //
+//
 
 const props = {
+    xField: {default: 'x'},
+    yField: {default: 'y'},
     data: {
-        type: Object,
-        default: () => ({'x': ['2017-11-01', '2017-11-02', '2017-11-03', '2017-11-04'],
-                        'y': [12, 2, 15, 9]
-                    })
+        type: Array,
+        default: () => [{x: '2017-11-01', y: 12}, {x: '2017-11-02', y: 2}, {x: '2017-11-03', y: 7}]
     },
     margin: {
         type: Object,
         default: () => ({
-            left: 0,
-            right: 0,
+            left: 40,
+            right: 10,
             top: 10,
             bottom: 10,
         }),
-    },
-    ceil: {
-        type: Number,
-        default: 20,
-    },
+    }
 };
 /* harmony default export */ __webpack_exports__["a"] = ({
     name: 'line-graph',
@@ -928,6 +914,9 @@ const props = {
             const height = this.height - this.margin.top - this.margin.bottom;
             return { width, height };
         },
+        ceil() {
+            return d3.max(this.data, (d) => d[this.yField]);
+        }
     },
     mounted() {
         window.addEventListener('resize', this.onResize);
@@ -940,7 +929,7 @@ const props = {
         width: function widthChanged() {
             this.initialize();
             this.update();
-        },
+        }
     },
     methods: {
         onResize() {
@@ -953,26 +942,35 @@ const props = {
         initialize() {
             this.scaled.x = d3.scaleTime().rangeRound([0, this.padded.width]);
             this.scaled.y = d3.scaleLinear().range([this.padded.height, 0]);
-            console.log(this.padded.height);
             d3.axisLeft().scale(this.scaled.x);
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
             const parseTime = d3.timeParse('%Y-%m-%d');
+            for (let d of this.data) {
+                d[this.yField] *= 1;
+                if (isNaN(d[this.yField])) d[this.yField] = 0;
+            }
 
-            this.scaled.x.domain(d3.extent(this.data.x, parseTime));
+            this.scaled.x.domain(d3.extent(this.data, (d) => parseTime(d[this.xField])));
             this.scaled.y.domain([0, this.ceil]);
             this.points = [];
 
-            for (let i=0; i < this.data.x.length; i++) {
+            for (let d of this.data) {
                 this.points.push({
-                    x: this.scaled.x(parseTime(this.data.x[i])),
-                    y: this.scaled.y(this.data.y[i]),
+                    x: this.scaled.x(parseTime(d[this.xField])),
+                    y: this.scaled.y(d[this.yField]),
                     max: this.height,
                 });
             }
             // this.paths.area = this.createArea(this.points);
             this.paths.line = this.createLine(this.points);
+
+            // draw axes
+            d3.select(this.$refs.yaxis)
+                .call(d3.axisLeft(this.scaled.y))
+                .selectAll('path, .tick line').attr('stroke', '#ccc');
+            d3.select(this.$refs.yaxis).selectAll('text').attr('#444');
         },
         mouseover({ offsetX }) {
             if (this.points.length > 0) {
@@ -1016,6 +1014,8 @@ var render = function() {
         on: { mousemove: _vm.mouseover }
       },
       [
+        _c("g", { ref: "yaxis", staticClass: "axis" }),
+        _vm._v(" "),
         _c(
           "g",
           {
