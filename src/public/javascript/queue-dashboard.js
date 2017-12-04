@@ -51,7 +51,7 @@ async function runQueueDashboard() {
             try {
                 slData = await getReportResults(time, 'service-level');
             } catch (err) {
-                message(err, `Server responded unexpectedly when getting service level data.`);
+                error(err, `An error occurred when getting service level data.`);
                 slData = {};
             }
 
