@@ -730,11 +730,11 @@ function mergeDeep(target, ...sources) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_line_graph_vue__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21d5040e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_line_graph_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21d5040e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_line_graph_vue__ = __webpack_require__(9);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(18)
+  __webpack_require__(5)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -780,8 +780,46 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 5 */,
-/* 6 */,
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(6);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("27c1deb2", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-21d5040e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./line-graph.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-21d5040e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./line-graph.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(1)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line-graph[data-v-21d5040e] {\n  height: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports) {
 
@@ -832,11 +870,23 @@ module.exports = function listToStyles (parentId, list) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 const props = {
     data: {
-        type: Array,
-        default: () => [1,2,3,4,5],
+        type: Object,
+        default: () => ({'x': ['2017-11-01', '2017-11-02', '2017-11-03', '2017-11-04'],
+                        'y': [12, 2, 15, 9]
+                    })
     },
     margin: {
         type: Object,
@@ -888,7 +938,6 @@ const props = {
     },
     watch: {
         width: function widthChanged() {
-            console.log('widthchanged');
             this.initialize();
             this.update();
         },
@@ -902,30 +951,28 @@ const props = {
         createLine: d3.line().x(d => d.x).y(d => d.y),
         createValueSelector: d3.area().x(d => d.x).y0(d => d.max).y1(0),
         initialize() {
-            this.scaled.x = d3.scaleLinear().range([0, this.padded.width]);
+            this.scaled.x = d3.scaleTime().rangeRound([0, this.padded.width]);
             this.scaled.y = d3.scaleLinear().range([this.padded.height, 0]);
             console.log(this.padded.height);
             d3.axisLeft().scale(this.scaled.x);
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
-            this.scaled.x.domain([0, d3.max(this.data)]);
+            const parseTime = d3.timeParse('%Y-%m-%d');
+
+            this.scaled.x.domain(d3.extent(this.data.x, parseTime));
             this.scaled.y.domain([0, this.ceil]);
             this.points = [];
-            let i = 0;
-            for (const d of this.data) {
-                console.log(d);
+
+            for (let i=0; i < this.data.x.length; i++) {
                 this.points.push({
-                    x: this.scaled.x(i),
-                    y: this.scaled.y(d),
+                    x: this.scaled.x(parseTime(this.data.x[i])),
+                    y: this.scaled.y(this.data.y[i]),
                     max: this.height,
                 });
-                i++;
             }
-            console.log(this.points);
             // this.paths.area = this.createArea(this.points);
             this.paths.line = this.createLine(this.points);
-            console.log(this.paths.line);
         },
         mouseover({ offsetX }) {
             if (this.points.length > 0) {
@@ -953,7 +1000,57 @@ const props = {
 
 
 /***/ }),
-/* 9 */,
+/* 9 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "line-graph" }, [
+    _c(
+      "svg",
+      {
+        attrs: { width: _vm.width, height: _vm.height },
+        on: { mousemove: _vm.mouseover }
+      },
+      [
+        _c(
+          "g",
+          {
+            style: {
+              transform:
+                "translate(" + _vm.margin.left + "px, " + _vm.margin.top + "px)"
+            }
+          },
+          [
+            _c("path", { staticClass: "area", attrs: { d: _vm.paths.area } }),
+            _vm._v(" "),
+            _c("path", { staticClass: "line", attrs: { d: _vm.paths.line } }),
+            _vm._v(" "),
+            _c("path", {
+              staticClass: "selector",
+              attrs: { d: _vm.paths.selector }
+            })
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-21d5040e", esExports)
+  }
+}
+
+/***/ }),
 /* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1279,97 +1376,6 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-48d3d2c4", esExports)
-  }
-}
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(19);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(2)("27c1deb2", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-21d5040e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./line-graph.vue", function() {
-     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-21d5040e\",\"scoped\":true,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./line-graph.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line-graph[data-v-21d5040e] {\n  height: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "line-graph" }, [
-    _c(
-      "svg",
-      {
-        attrs: { width: _vm.width, height: _vm.height },
-        on: { mousemove: _vm.mouseover }
-      },
-      [
-        _c(
-          "g",
-          {
-            style: {
-              transform:
-                "translate(" + _vm.margin.left + "px, " + _vm.margin.top + "px)"
-            }
-          },
-          [
-            _c("path", { staticClass: "area", attrs: { d: _vm.paths.area } }),
-            _vm._v(" "),
-            _c("path", { staticClass: "line", attrs: { d: _vm.paths.line } }),
-            _vm._v(" "),
-            _c("path", {
-              staticClass: "selector",
-              attrs: { d: _vm.paths.selector }
-            })
-          ]
-        )
-      ]
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-21d5040e", esExports)
   }
 }
 

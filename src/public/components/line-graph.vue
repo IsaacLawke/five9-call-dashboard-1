@@ -1,3 +1,14 @@
+<!--
+Line graph component.
+
+Accepts data prop with structure:
+{
+  'yyyy-mm-dd': 1,
+  'yyyy-mm-dd': 2, ...
+}
+
+ -->
+
 <template>
     <div class="line-graph">
         <svg @mousemove="mouseover" :width="width" :height="height">
@@ -13,8 +24,10 @@
 <script>
 const props = {
     data: {
-        type: Array,
-        default: () => [1,2,3,4,5],
+        type: Object,
+        default: () => ({'x': ['2017-11-01', '2017-11-02', '2017-11-03', '2017-11-04'],
+                        'y': [12, 2, 15, 9]
+                    })
     },
     margin: {
         type: Object,
@@ -66,7 +79,6 @@ export default {
     },
     watch: {
         width: function widthChanged() {
-            console.log('widthchanged');
             this.initialize();
             this.update();
         },
@@ -80,30 +92,28 @@ export default {
         createLine: d3.line().x(d => d.x).y(d => d.y),
         createValueSelector: d3.area().x(d => d.x).y0(d => d.max).y1(0),
         initialize() {
-            this.scaled.x = d3.scaleLinear().range([0, this.padded.width]);
+            this.scaled.x = d3.scaleTime().rangeRound([0, this.padded.width]);
             this.scaled.y = d3.scaleLinear().range([this.padded.height, 0]);
             console.log(this.padded.height);
             d3.axisLeft().scale(this.scaled.x);
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
-            this.scaled.x.domain([0, d3.max(this.data)]);
+            const parseTime = d3.timeParse('%Y-%m-%d');
+
+            this.scaled.x.domain(d3.extent(this.data.x, parseTime));
             this.scaled.y.domain([0, this.ceil]);
             this.points = [];
-            let i = 0;
-            for (const d of this.data) {
-                console.log(d);
+
+            for (let i=0; i < this.data.x.length; i++) {
                 this.points.push({
-                    x: this.scaled.x(i),
-                    y: this.scaled.y(d),
+                    x: this.scaled.x(parseTime(this.data.x[i])),
+                    y: this.scaled.y(this.data.y[i]),
                     max: this.height,
                 });
-                i++;
             }
-            console.log(this.points);
             // this.paths.area = this.createArea(this.points);
             this.paths.line = this.createLine(this.points);
-            console.log(this.paths.line);
         },
         mouseover({ offsetX }) {
             if (this.points.length > 0) {
