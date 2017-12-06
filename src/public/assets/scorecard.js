@@ -632,26 +632,26 @@ closeRate.widgets = {
 };
 /////// TODO: add a v-for to widget-box to make the single-value things from closeRate
 Vue.component('widget-box', {
-    props: ['params'],
+    props: ['title', 'widgets', 'data', 'meta'],
     template: `
         <div class="metric-wrapper stats-box">
-            <h2 class="descriptor">{{ params.title }}</h2>
+            <h2 class="descriptor">{{ title }}</h2>
             <single-value
-              v-for="(param, i) in params.widgets['single-value']"
-              v-bind="param"
+              v-for="(widget, i) in widgets['single-value']"
+              v-bind="widget"
               :key="i"
             ></single-value>
             <data-table
               @hoverDate="hoverDate"
               @unhoverDate="unhoverDate"
-              :data="params.data"
-              :meta="params.meta"
+              :data="data"
+              :meta="meta"
               :highlightedDate="highlightedDate"
             ></data-table>
             <line-graph
-              :data="params.data"
-              :x-field="params.meta.graph.fields.x"
-              :y-field="params.meta.graph.fields.y"
+              :data="data"
+              :x-field="meta.graph.fields.x"
+              :y-field="meta.graph.fields.y"
             ></line-graph>
         </div>
     `,
