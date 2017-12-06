@@ -115,8 +115,11 @@ Vue.component('widget-box', {
               :key="i"
             ></single-value>
             <data-table
+              @hoverDate="hoverDate"
+              @unhoverDate="unhoverDate"
               :data="params.data"
               :meta="params.meta"
+              :highlightedDate="highlightedDate"
             ></data-table>
             <line-graph
               :data="params.data"
@@ -129,6 +132,19 @@ Vue.component('widget-box', {
         'single-value': singleValue,
         'data-table': DataTable,
         'line-graph': LineGraph
+    },
+    data: function() {
+        return {
+            highlightedDate: null
+        }
+    },
+    methods: {
+        hoverDate: function(date) {
+            this.highlightedDate = date;
+        },
+        unhoverDate: function(date) {
+            this.highlightedDate = null;
+        }
     }
 });
 

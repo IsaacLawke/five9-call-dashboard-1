@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -274,7 +274,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(7)
+var listToStyles = __webpack_require__(8)
 
 /*
 type StyleObject = {
@@ -480,10 +480,51 @@ function applyToTag (styleElement, obj) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = formatValue;
+function formatValue(value, field) {
+    let format, styleClass;
+    switch(field) {
+        case 'Date':
+            format = (val) => moment(val).format('MMM D');
+            styleClass = (val) => '';
+            break;
+
+        case 'Close Rate':
+            format = (val) => isNaN(val)
+                            ? 'N/A'
+                            : (val * 100).toFixed(0) + '%';
+            styleClass = (val) => isNaN(val)
+                            ? ''
+                            : val >= 0.5 ? 'green' : 'red';
+            break;
+
+        case 'AHT':
+            format = (val) => val;
+            styleClass = (val) => {
+                if (val == 'N/A') return '';
+                return moment(val, 'mm:ss').valueOf() <= moment('10:00', 'mm:ss').valueOf()
+                        ? 'green' : 'red';
+            };
+            break;
+
+        default:
+            format = (val) => val;
+            styleClass = (val) => '';
+            break;
+    };
+    return { value: format(value), styleClass: styleClass(value) };
+};
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_line_graph_vue__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_data_table_vue__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scorecard_format_js__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_line_graph_vue__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_data_table_vue__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scorecard_format_js__ = __webpack_require__(3);
 
 
 
@@ -601,8 +642,11 @@ Vue.component('widget-box', {
               :key="i"
             ></single-value>
             <data-table
+              @hoverDate="hoverDate"
+              @unhoverDate="unhoverDate"
               :data="params.data"
               :meta="params.meta"
+              :highlightedDate="highlightedDate"
             ></data-table>
             <line-graph
               :data="params.data"
@@ -615,6 +659,19 @@ Vue.component('widget-box', {
         'single-value': singleValue,
         'data-table': __WEBPACK_IMPORTED_MODULE_1__components_data_table_vue__["a" /* default */],
         'line-graph': __WEBPACK_IMPORTED_MODULE_0__components_line_graph_vue__["a" /* default */]
+    },
+    data: function() {
+        return {
+            highlightedDate: null
+        }
+    },
+    methods: {
+        hoverDate: function(date) {
+            this.highlightedDate = date;
+        },
+        unhoverDate: function(date) {
+            this.highlightedDate = null;
+        }
     }
 });
 
@@ -726,16 +783,16 @@ function mergeDeep(target, ...sources) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_line_graph_vue__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21d5040e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_line_graph_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_line_graph_vue__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_21d5040e_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_line_graph_vue__ = __webpack_require__(10);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(5)
+  __webpack_require__(6)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -781,13 +838,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -807,7 +864,7 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -821,7 +878,7 @@ exports.push([module.i, "\n.line-graph[data-v-21d5040e] {\n    display: flex;\n 
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /**
@@ -854,7 +911,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1012,7 +1069,7 @@ const props = {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1071,16 +1128,16 @@ if (false) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_data_table_vue__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48d3d2c4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_data_table_vue__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_data_table_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_48d3d2c4_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_data_table_vue__ = __webpack_require__(18);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(11)
+  __webpack_require__(12)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1126,13 +1183,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -1152,7 +1209,7 @@ if(false) {
 }
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)(undefined);
@@ -1160,17 +1217,20 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_table_row_vue__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_table_row_vue__ = __webpack_require__(15);
+//
+//
+//
 //
 //
 //
@@ -1196,25 +1256,28 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['data', 'meta'],
+    props: ['data', 'meta', 'highlightedDate'],
     components: {
         'data-table-row': __WEBPACK_IMPORTED_MODULE_0__data_table_row_vue__["a" /* default */]
     },
-    computed: {
-        dateHighlighted: function() {
-            return store.state.dateHighlighted;
+    methods: {
+        hoverDate: function(date) {
+            this.$emit('hoverDate', date);
+        },
+        unhoverDate: function(date) {
+            this.$emit('unhoverDate', date);
         }
     }
 });
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_data_table_row_vue__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_067c065e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_data_table_row_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_data_table_row_vue__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_067c065e_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_data_table_row_vue__ = __webpack_require__(17);
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -1260,11 +1323,11 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__javascript_scorecard_format_js__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__javascript_scorecard_format_js__ = __webpack_require__(3);
 //
 //
 //
@@ -1281,16 +1344,15 @@ if (false) {(function () {
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['datum', 'meta'],
+    props: ['datum', 'meta', 'isHighlighted'],
     methods: {
-        isHighlighted: function(datum) {
-            return this.$store.state.dateHighlighted == datum.Date;
-        },
         highlightDate: function(datum) {
-            this.$store.commit('hoverDate', datum.Date);
+            // this.$store.commit('hoverDate', datum.Date);
+            this.$emit('hoverDate', datum.Date);
         },
-        unhighlightDate: function() {
-            this.$store.commit('unhoverDate');
+        unhighlightDate: function(datum) {
+            // this.$store.commit('unhoverDate');
+            this.$emit('unhoverDate', datum.Date);
         },
         formatted: function (val, field) {
             // if (field=='AHT') debugger;
@@ -1302,7 +1364,7 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1312,7 +1374,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "tr",
-    { class: { highlight: _vm.isHighlighted(_vm.datum) } },
+    { class: { highlight: _vm.isHighlighted } },
     _vm._l(_vm.meta.headers, function(key) {
       return _c(
         "td",
@@ -1348,7 +1410,7 @@ if (false) {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1373,7 +1435,12 @@ var render = function() {
           return _c("data-table-row", {
             key: i,
             tag: "tr",
-            attrs: { datum: datum, meta: _vm.meta }
+            attrs: {
+              datum: datum,
+              meta: _vm.meta,
+              isHighlighted: _vm.highlightedDate == datum.Date
+            },
+            on: { hoverDate: _vm.hoverDate, unhoverDate: _vm.unhoverDate }
           })
         })
       )
@@ -1390,47 +1457,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-48d3d2c4", esExports)
   }
 }
-
-/***/ }),
-/* 18 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = formatValue;
-function formatValue(value, field) {
-    let format, styleClass;
-    switch(field) {
-        case 'Date':
-            format = (val) => moment(val).format('MMM D');
-            styleClass = (val) => '';
-            break;
-
-        case 'Close Rate':
-            format = (val) => isNaN(val)
-                            ? 'N/A'
-                            : (val * 100).toFixed(0) + '%';
-            styleClass = (val) => isNaN(val)
-                            ? ''
-                            : val >= 0.5 ? 'green' : 'red';
-            break;
-
-        case 'AHT':
-            format = (val) => val;
-            styleClass = (val) => {
-                if (val == 'N/A') return '';
-                return moment(val, 'mm:ss').valueOf() <= moment('10:00', 'mm:ss').valueOf()
-                        ? 'green' : 'red';
-            };
-            break;
-
-        default:
-            format = (val) => val;
-            styleClass = (val) => '';
-            break;
-    };
-    return { value: format(value), styleClass: styleClass(value) };
-};
-
 
 /***/ })
 /******/ ]);

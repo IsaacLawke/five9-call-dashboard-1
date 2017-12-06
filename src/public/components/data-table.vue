@@ -10,9 +10,12 @@
         <tbody>
             <tr is="data-table-row"
               v-for="(datum, i) in data"
+              @hoverDate="hoverDate"
+              @unhoverDate="unhoverDate"
               :key="i"
               :datum="datum"
               :meta="meta"
+              :isHighlighted="highlightedDate==datum.Date"
             ></tr>
         </tbody>
     </table>
@@ -23,13 +26,16 @@
 import DataTableRow from './data-table-row.vue';
 
 export default {
-    props: ['data', 'meta'],
+    props: ['data', 'meta', 'highlightedDate'],
     components: {
         'data-table-row': DataTableRow
     },
-    computed: {
-        dateHighlighted: function() {
-            return store.state.dateHighlighted;
+    methods: {
+        hoverDate: function(date) {
+            this.$emit('hoverDate', date);
+        },
+        unhoverDate: function(date) {
+            this.$emit('unhoverDate', date);
         }
     }
 }

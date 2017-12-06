@@ -1,5 +1,5 @@
 <template>
-    <tr v-bind:class="{ highlight: isHighlighted(datum) }">
+    <tr v-bind:class="{ highlight: isHighlighted }">
         <td
           v-for="key in meta.headers"
           v-on:mouseover="highlightDate(datum)"
@@ -14,16 +14,15 @@
 import {formatValue} from '../javascript/scorecard-format.js';
 
 export default {
-    props: ['datum', 'meta'],
+    props: ['datum', 'meta', 'isHighlighted'],
     methods: {
-        isHighlighted: function(datum) {
-            return this.$store.state.dateHighlighted == datum.Date;
-        },
         highlightDate: function(datum) {
-            this.$store.commit('hoverDate', datum.Date);
+            // this.$store.commit('hoverDate', datum.Date);
+            this.$emit('hoverDate', datum.Date);
         },
-        unhighlightDate: function() {
-            this.$store.commit('unhoverDate');
+        unhighlightDate: function(datum) {
+            // this.$store.commit('unhoverDate');
+            this.$emit('unhoverDate', datum.Date);
         },
         formatted: function (val, field) {
             // if (field=='AHT') debugger;
