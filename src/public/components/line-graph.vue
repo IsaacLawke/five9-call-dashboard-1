@@ -100,7 +100,6 @@ export default {
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
-            console.log(this.$store.state.objectives);
             const parseTime = d3.timeParse('%Y-%m-%d');
             for (let d of this.data) {
                 d[this.yField] *= 1;

@@ -758,25 +758,14 @@ const objectives = {
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
-        objectives: {
-            'CloseRate': {
-                goal: 0.55,
-                goalThresholds: [
-                    0.45,
-                    0.50,
-                    0.55
-                ]
-            }
-        }
+        objectives: {}
     },
     mutations: {
-        setObjectives (o) {
-            state.objectives = o;
+        setObjectives (state, newObjectives) {
+            this.state.objectives = newObjectives;
         }
     }
 });
-// store.commit('setObjectives', objectives);
-
 
 const vm = new Vue({
     el: '#app',
@@ -787,6 +776,7 @@ const vm = new Vue({
         closeRate: closeRate,
         productivity: productivity
     },
+
     created: function () {
         store.commit('setObjectives', objectives);
     },
@@ -1088,7 +1078,6 @@ const props = {
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
-            console.log(this.$store.state.objectives);
             const parseTime = d3.timeParse('%Y-%m-%d');
             for (let d of this.data) {
                 d[this.yField] *= 1;
@@ -1419,15 +1408,12 @@ if (false) {(function () {
     props: ['datum', 'meta', 'isHighlighted'],
     methods: {
         highlightDate: function(datum) {
-            // this.$store.commit('hoverDate', datum.Date);
             this.$emit('hoverDate', datum.Date);
         },
         unhighlightDate: function(datum) {
-            // this.$store.commit('unhoverDate');
             this.$emit('unhoverDate', datum.Date);
         },
         formatted: function (val, field) {
-            // if (field=='AHT') debugger;
             let res = Object(__WEBPACK_IMPORTED_MODULE_0__javascript_scorecard_format_js__["a" /* formatValue */])(val, field);
             return res;
         }

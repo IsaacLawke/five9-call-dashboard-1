@@ -231,25 +231,14 @@ const objectives = {
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
-        objectives: {
-            'CloseRate': {
-                goal: 0.55,
-                goalThresholds: [
-                    0.45,
-                    0.50,
-                    0.55
-                ]
-            }
-        }
+        objectives: {}
     },
     mutations: {
-        setObjectives (o) {
-            state.objectives = o;
+        setObjectives (state, newObjectives) {
+            this.state.objectives = newObjectives;
         }
     }
 });
-// store.commit('setObjectives', objectives);
-
 
 const vm = new Vue({
     el: '#app',
@@ -260,6 +249,7 @@ const vm = new Vue({
         closeRate: closeRate,
         productivity: productivity
     },
+
     created: function () {
         store.commit('setObjectives', objectives);
     },

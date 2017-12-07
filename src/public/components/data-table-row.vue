@@ -17,15 +17,12 @@ export default {
     props: ['datum', 'meta', 'isHighlighted'],
     methods: {
         highlightDate: function(datum) {
-            // this.$store.commit('hoverDate', datum.Date);
             this.$emit('hoverDate', datum.Date);
         },
         unhighlightDate: function(datum) {
-            // this.$store.commit('unhoverDate');
             this.$emit('unhoverDate', datum.Date);
         },
         formatted: function (val, field) {
-            // if (field=='AHT') debugger;
             let res = formatValue(val, field);
             return res;
         }
