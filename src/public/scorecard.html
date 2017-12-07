@@ -18,56 +18,17 @@
               v-bind="closeRate"
             ></widget-box>
 
-            <div class="metric-wrapper stats-box">
-                <h2 class="descriptor">DIRECTV Sales</h2>
-                <h3>Today</h3>
-                <p class="metric calls green">2</p>
-                <h3>Month to Date</h3>
-                <p class="metric green">33</p>
-                <data-table
-                  :data="dtvData"
-                  :meta="dtvMeta"
-                ></data-table>
-                <line-graph
-                  :data="dtvData"
-                  :x-field="dtvMeta.graph.fields.x"
-                  :y-field="dtvMeta.graph.fields.y"
-                ></line-graph>
-            </div>
+            <widget-box
+              v-bind="dtv"
+            ></widget-box>
 
-            <div class="metric-wrapper stats-box aht" v-if="showAHT">
-                <h2 class="descriptor">AHT</h2>
-                <h3>Today</h3>
-                <p class="metric" v-bind:title="metricDescription">10:06</p>
-                <h3>Month to Date</h3>
-                <p class="metric">09:31</p>
-                <data-table
-                  :data="ahtData"
-                  :meta="ahtMeta"
-                ></data-table>
-                <line-graph
-                  :data="ahtData"
-                  :x-field="ahtMeta.graph.fields.x"
-                  :y-field="ahtMeta.graph.fields.y"
-                ></line-graph>
-            </div>
+            <widget-box
+              v-bind="aht"
+            ></widget-box>
 
-            <div class="metric-wrapper stats-box" v-if="showProductivity">
-                <h2 class="descriptor">Productivity</h2>
-                <h3>Today</h3>
-                <p class="metric available red">71%</p>
-                <h3>Month to Date</h3>
-                <p class="metric available green">86%</p>
-                <data-table
-                  :data="productivityData"
-                  :meta="productivityMeta"
-                ></data-table>
-                <line-graph
-                  :data="productivityData"
-                  :x-field="productivityMeta.graph.fields.x"
-                  :y-field="productivityMeta.graph.fields.y"
-                ></line-graph>
-            </div>
+            <widget-box
+              v-bind="productivity"
+            ></widget-box>
         </div>
     </div>
     </body>

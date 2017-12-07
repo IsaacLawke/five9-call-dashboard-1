@@ -11,7 +11,6 @@ Accepts data prop with structure:
 
 <template>
     <div class="line-graph">
-
         <svg @mousemove="mouseover" :width="width" :height="height">
             <text :x="55" :y="10">{{ yField }}</text>
             <g class="axis" ref="yaxis" :style="{transform: `translate(20px,${margin.top}px)`}"></g>
@@ -42,6 +41,7 @@ const props = {
         }),
     }
 };
+
 export default {
     name: 'line-graph',
     props,
@@ -100,6 +100,7 @@ export default {
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
+            console.log(this.$store.state.objectives);
             const parseTime = d3.timeParse('%Y-%m-%d');
             for (let d of this.data) {
                 d[this.yField] *= 1;
