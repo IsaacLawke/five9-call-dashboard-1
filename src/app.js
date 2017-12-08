@@ -26,6 +26,7 @@ const queue  = require('./models/queue-stats'); // real-time queue feeds
 const users = require('./authentication/users'); // stores usernames to check auth
 const verify = require('./authentication/verify'); // check user permissions
 
+const customers = require ('./customers/customers');
 
 ///////////////////////////
 // Define the app
@@ -126,19 +127,23 @@ app.post('/api/queue-stats', async (req, res) => {
 
 // Request data to update maps page
 app.post('/api/reports/maps', async (req, res) => {
-    // log.message(`API - Maps request from ${req.get('host')}`);
     handleReportRequest(req, res, report.getZipCodeData);
 });
 
 // Request data to update service level metrics
 app.post('/api/reports/service-level', (req, res) => {
-    // log.message(`API - Service Level request from ${req.get('host')}`);
     handleReportRequest(req, res, report.getServiceLevelData);
 });
 
-// Handles all reporting data requests.
-// ${dataGetter} is the function that retreives actual data from DB (either
-// getServiceLevelData or getZipCodeData)
+
+
+/**
+ * Handles all reporting data requests.
+ * @param  {Express request} req
+ * @param  {Express response} res
+ * @param  {function} dataGetter is the function that retreives actual data from DB
+ *                              (either getServiceLevelData or getZipCodeData)
+  */
 async function handleReportRequest(req, res, dataGetter) {
     try {
         // Authenticate user
@@ -257,6 +262,8 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 3000);
         });
 
+        customers.refreshData();
+
         // Update queue stats every 15 seconds
         // Five9 stats API has a limit of 500 requests per hour
         //      (1 request every 7.2 seconds).
@@ -267,7 +274,7 @@ const server = app.listen(port, async () => {
         // users.scheduleUpdate(12 * 60 * 60 * 1000);
 
     } catch (err) {
-        log.error(`Error occurred on server:`, err);
+        log.error(`Error occurred on server:` + err);
     }
 });
 
