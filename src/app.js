@@ -262,7 +262,8 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 3000);
         });
 
-        customers.refreshData();
+        await customers.refreshData();
+        console.log(await customers.getData());
 
         // Update queue stats every 15 seconds
         // Five9 stats API has a limit of 500 requests per hour

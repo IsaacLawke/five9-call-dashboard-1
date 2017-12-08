@@ -186,7 +186,8 @@ async function refreshDatabase(time, reportModel, reportName) {
             .fromString(csvData)
             .on('json', (res) => {
                 // cast calls and SL as numbers
-                res['calls'] *= 1;   res['serviceLevel'] *= 1;
+                res['calls'] *= 1;
+                res['serviceLevel'] *= 1;
 
                 // Set interval in Date format
                 let datestring = res.date + ' ' + res['HALF HOUR'];
