@@ -1,7 +1,6 @@
 /node_modules/
 secret_settings.*
 api_url.js
-local_settings.js
 secure_settings.*
 *.csv*
 *.tsv*
