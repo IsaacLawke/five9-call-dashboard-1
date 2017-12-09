@@ -92,11 +92,21 @@ app.get('/admin', async (req, res) => {
 //                 for, comma-separated. Matches "like" Five9 skill names.
 ///////////////////////////
 
+/**
+ * Wrapper to catch errors in API calls
+ * @param  {Function} fn Express route handler
+ * @return {Function} route handler with error-catching for Promise awaits
+ */
+function asyncMiddleware(fn) {
+    return function(req, res, next) {
+        return Promise.resolve(fn(req, res, next))
+            .catch(next);
+    }
+}
+
 // Five9 current queue statistics (ACDStatus endpoint at Five9)
 app.post('/api/queue-stats', async (req, res) => {
     try {
-        // log.message(`API - Queue stats request from ${req.get('host')}`);
-
         // Authenticate user
         const hasPermission = await verify.hasPermission(req.body['authorization']);
         if (!hasPermission) {
@@ -263,18 +273,17 @@ const server = app.listen(port, async () => {
         });
 
         await customers.refreshData();
-        console.log('Database:');
         let x = await customers.getData();
-        console.log(x);
+        console.log(x.slice(0,10));
 
         // Update queue stats every 15 seconds
         // Five9 stats API has a limit of 500 requests per hour
         //      (1 request every 7.2 seconds).
         // queue.scheduleUpdate(15 * 1000);
         // Start updating call database every 2.5 minutes
-        report.scheduleUpdate(2.5 * 60 * 1000);
+        // report.scheduleUpdate(2.5 * 60 * 1000);
         // Update user list every 12 hours
-        users.scheduleUpdate(12 * 60 * 60 * 1000);
+        // users.scheduleUpdate(12 * 60 * 60 * 1000);
 
     } catch (err) {
         log.error(`Error occurred on server:` + err);

@@ -79,7 +79,7 @@ async function scheduleUpdate(interval) {
 // Summarize call and service level data by skill. Params should give start
 // and end time for data.
 async function getServiceLevelData(params) {
-    const results = await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         DataFeed.aggregate( [
             // Filter for the selected date and skills
             { $match:
@@ -106,17 +106,17 @@ async function getServiceLevelData(params) {
             resolve(data);
         })
     });
-    return results;
 }
 
 // Summarize data by zip code. Params should give start time, end time, and
 // skills to filter for.
 async function getZipCodeData(params) {
+    // Filter for matching (case-insensitive) skill names
     let skillFilter = params.skills.split(',').map((skillName) => {
         return { 'skill': { '$regex': skillName.trim(), '$options': 'i' } };
     });
 
-    const results = await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         DataFeed.aggregate( [
             // Filter for the selected date and skills
             { $match: { $and: [
@@ -142,7 +142,6 @@ async function getZipCodeData(params) {
             resolve(data);
         })
     });
-    return results;
 }
 
 // Get all report data within timeFilter.start and timeFilter.stop
@@ -152,7 +151,7 @@ async function getData(timeFilter, reportModel) {
             $gte: moment(timeFilter.start, 'YYYY-MM-DD[T]HH:mm:ss').toDate(),
             $lte: moment(timeFilter.end, 'YYYY-MM-DD[T]HH:mm:ss').toDate()
         }
-    }, (err, data) => data);
+    });
     return results;
 }
 

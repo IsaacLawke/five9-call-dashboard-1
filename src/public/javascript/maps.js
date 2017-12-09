@@ -2,10 +2,10 @@
 // Offers methods to create/draw the map and update when new data is received.
 class CallMap {
     // Create and draw map on initial run
-    async create(callData) {
+    async create(callData, keyFn, rollupFn) {
         let width = 960,
             height = 500;
-        let processedData = this.process(callData);
+        let processedData = this.process(callData, keyFn, rollupFn);
 
         this.calls = d3.map(processedData, (d) => d.key);
         let maxValue = d3.max(processedData, (d) => d.value);
@@ -43,12 +43,12 @@ class CallMap {
     }
 
     // Update map with new data
-    async update(callData) {
+    async update(callData, keyFn, rollupFn) {
         // Check if this chart already exists. If not, create it.
-        if (!this.svg) return this.create(callData);
+        if (!this.svg) return this.create(callData, keyFn, rollupFn);
 
         // format the data properly
-        let processedData = this.process(callData);
+        let processedData = this.process(callData, keyFn, rollupFn);
         // match calls to keys (zip codes)
         this.calls = d3.map(processedData, (d) => d.key);
 
@@ -152,10 +152,12 @@ class CallMap {
     }
 
     // Takes call data (by zip code), returns total calls by ZIP3
-    process(data) {
+    process(data, keyFn, rollupFn) {
         let callsByZip = d3.nest()
-            .key((d) => d['zipCode'].substring(0,3))
-            .rollup((d) => d3.sum(d, (x) => x.calls))
+            .key(keyFn)
+            .rollup(rollupFn)
+            // .key((d) => d['zipCode'].substring(0,3))
+            // .rollup((d) => d3.sum(d, (x) => x.calls))
             .entries(data)
             .filter((d) => d.key != ''); // remove calls with no zipcode assigned
         return callsByZip;

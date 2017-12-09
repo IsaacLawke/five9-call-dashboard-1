@@ -7,7 +7,7 @@ let timeout = null;
 $(document).ready(() => {
     let callMap = new CallMap();
 
-    // listen for sign-in button press
+    // listen for sign-in and update button presses
     $('.begin-session, .filters-wrapper .update').click(async (event) => {
         // stop any current event loops running
         if (timeout != null) {
@@ -65,8 +65,12 @@ async function updateMap(callMap) {
     const params = reportTimeRange();
     params.skills = $('.skills.filter').val();
 
+    // Key and value extractor functions
+    keyFn = (d) => d['zipCode'].substring(0, 3);
+    rollupFn = (d) => d3.sum(d, (x) => x['calls']);
+
     const data = await getReportResults(params, 'maps');
-    callMap.update(data);
+    callMap.update(data, keyFn, rollupFn);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
 }
