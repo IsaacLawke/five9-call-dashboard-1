@@ -163,14 +163,21 @@ async function refreshDatabase(time, reportModel, reportName) {
     const data = [];
 
     // Remove today's old data
-    await reportModel.remove({
+    await new Promise ((resolve, reject) => {
+        reportModel.remove({
             date: {
                 $gte: time.start,
                 $lte: time.end
             }
         }, (err, success) => {
-            if (err) log.error(`Error deleting data in report model: ${err}`);
+            if (err) {
+                log.error(`Error deleting data in report model: ${err}`);
+                reject(err);
+            } else {
+                resolve(success);
+            }
         });
+    });
 
     // Get CSV data
     // Calls by zips data
@@ -199,9 +206,15 @@ async function refreshDatabase(time, reportModel, reportName) {
         });
 
     // Insert the new data
-    return reportModel.collection.insert(data, (err, docs) => {
-        if (err) log.error(`Error inserting data in report model: ${err}`);
-        callbackUpdateListeners();
+    return new Promise ((resolve, reject) => {
+        reportModel.collection.insert(data, (err, docs) => {
+            if (err) {
+                log.error(`Error inserting data in report model: ${err}`);
+                reject(err);
+            }
+            callbackUpdateListeners();
+            resolve(docs);
+        });
     });
 }
 

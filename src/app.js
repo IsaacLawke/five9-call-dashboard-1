@@ -26,7 +26,7 @@ const queue  = require('./models/queue-stats'); // real-time queue feeds
 const users = require('./authentication/users'); // stores usernames to check auth
 const verify = require('./authentication/verify'); // check user permissions
 
-const customers = require ('./customers/customers');
+const customers = require('./customers/customers');
 
 ///////////////////////////
 // Define the app
@@ -263,16 +263,18 @@ const server = app.listen(port, async () => {
         });
 
         await customers.refreshData();
-        console.log(await customers.getData());
+        console.log('Database:');
+        let x = await customers.getData();
+        console.log(x);
 
         // Update queue stats every 15 seconds
         // Five9 stats API has a limit of 500 requests per hour
         //      (1 request every 7.2 seconds).
         // queue.scheduleUpdate(15 * 1000);
-        // // Start updating call database every 2.5 minutes
-        // report.scheduleUpdate(2.5 * 60 * 1000);
-        // // Update user list every 12 hours
-        // users.scheduleUpdate(12 * 60 * 60 * 1000);
+        // Start updating call database every 2.5 minutes
+        report.scheduleUpdate(2.5 * 60 * 1000);
+        // Update user list every 12 hours
+        users.scheduleUpdate(12 * 60 * 60 * 1000);
 
     } catch (err) {
         log.error(`Error occurred on server:` + err);

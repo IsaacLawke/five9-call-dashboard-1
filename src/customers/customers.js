@@ -22,21 +22,32 @@ const customersSchema = mongoose.Schema({
 //  MongoDB model
 const Customers = mongoose.model('Customers', customersSchema);
 
+
+//////////////////////////////////////////
+// Module methods
+//////////////////////////////////////////
 /**
  * Refresh the Customers table from Looker.
  * @return {Promise} Resolves once the Customers table is updated.
  */
 async function refreshData() {
+    // Authenticate, get data from Looker and format for easy consumption
     let auth = await getAuthToken(secure.LOOKER_CLIENT_ID, secure.LOOKER_CLIENT_SECRET);
-
     let rawData = await getJsonData(auth);
-
     let data = format(rawData);
 
     // Remove old data and add the new
+    // Wrapped in Promise for easy awaits in calling function
     await Customers.remove({});
-    return Customers.collection.insert(data, (err, docs) => {
-        if (err) log.error(`Error inserting data in Customers model: ${err}`);
+    return new Promise ((resolve, reject) => {
+        Customers.collection.insert(data, (err, docs) => {
+            if (err) {
+                log.error(`Error inserting data in Customers model: ${err}`);
+                reject(err);
+            } else {
+                resolve(docs);
+            }
+        });
     });
 }
 
@@ -49,12 +60,11 @@ async function getData() {
  * @return {Object}      Data ready to be insterted into database
  */
 function format(data) {
+    // Remove null zip code and map to database's field names
     return data
-    // Remove null zip code
     .filter((d) => d[secure.LOOKER_FIELD_ZIP_CODE] != null)
-    // Map to database's field names
     .map((d) => ({
-            'zipCode': d[secure.LOOKER_FIELD_ZIP_CODE],
+            'zipCode':       d[secure.LOOKER_FIELD_ZIP_CODE],
             'customerCount': d[secure.LOOKER_FIELD_CUSTOMER_COUNT]
         })
     );
@@ -80,10 +90,11 @@ async function getAuthToken(client_id, client_secret) {
  */
 async function getJsonData(auth) {
     let endpoint = `looks/${secure.LOOKER_LOOK_ID}/run/json`;
-    let params = 'limit=10';
+    let params = 'limit=100000';
     let data = await lookerRequest(params, endpoint, auth, 'GET');
     return JSON.parse(data.body);
 }
+
 
 /**
  * Makes a request to the Looker API.
