@@ -30,7 +30,7 @@
 }
 
 /* Data filters */
-.date-type-toggle, .date-filter-inputs, input.filter {
+.side-by-side-buttons, .date-filter-inputs, input.filter {
     margin: 12px auto;
 }
 
@@ -54,26 +54,26 @@ input.filter.relative-minutes {
     text-align: left;
 }
 
-.date-type-toggle button,
+.filter-type-wrapper button,
 .filters-wrapper .update  {
     background-color: #f1f1f1;
     letter-spacing: normal;
     height: 1.5em;
 }
 
-.date-type-toggle button:hover,
+.filter-type-wrapper button:hover,
 .filters-wrapper .update:hover {
     background-color: #e5e5e5;
 }
 
 /* Toggle switch */
-.date-type-toggle button {
+.filter-type-wrapper button {
     font-size: 0.8em;
     width: 80px;
     text-transform: none;
     color: #bbb;
 }
-.date-type-toggle .checked {
+.filter-type-wrapper .checked {
     color: #666;
 }
 
