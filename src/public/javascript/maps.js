@@ -70,8 +70,6 @@ class CallMap {
         this.drawStates(this.usa);
     }
 
-
-
     // Draw ZIP3 areas, colored by number of calls
     // ${zipData} is GeoJSON describing the topography
     drawZips(zipData) {
@@ -151,13 +149,17 @@ class CallMap {
             .remove();
     }
 
-    // Takes call data (by zip code), returns total calls by ZIP3
+    /**
+     * Rolls up JSON data according to key and value extraction functions
+     * @param  {Object}   data     JSON data
+     * @param  {Function} keyFn    extract key from each data point
+     * @param  {Function} rollupFn summarize values from each data point
+     * @return {Object}            nested data for easy parsing by D3
+     */
     process(data, keyFn, rollupFn) {
         let callsByZip = d3.nest()
             .key(keyFn)
             .rollup(rollupFn)
-            // .key((d) => d['zipCode'].substring(0,3))
-            // .rollup((d) => d3.sum(d, (x) => x.calls))
             .entries(data)
             .filter((d) => d.key != ''); // remove calls with no zipcode assigned
         return callsByZip;

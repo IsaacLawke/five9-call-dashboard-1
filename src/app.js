@@ -85,7 +85,7 @@ app.get('/admin', async (req, res) => {
 //
 // /statistics returns all real-time stats
 //
-// /reports routes take the following parameters in the POST body:
+// /reports routes take the following parameters in the JSON POST body:
 //      - start : start time for data range (YYYY-MM-DD[T]HH:mm:ss)
 //      - end   : end time for data range (YYYY-MM-DD[T]HH:mm:ss)
 //      - skills : in maps/zip code endpoint, which skill names to filter
@@ -135,16 +135,20 @@ app.post('/api/queue-stats', async (req, res) => {
     }
 });
 
-// Request data to update maps page
-app.post('/api/reports/maps', async (req, res) => {
-    handleReportRequest(req, res, report.getZipCodeData);
-});
-
 // Request data to update service level metrics
 app.post('/api/reports/service-level', (req, res) => {
     handleReportRequest(req, res, report.getServiceLevelData);
 });
 
+// Request calls by zip code for maps page
+app.post('/api/reports/maps', (req, res) => {
+    handleReportRequest(req, res, report.getZipCodeData);
+});
+
+// Request customer counts by zip code for maps page
+app.post('/api/reports/customers', (req, res) => {
+    handleReportRequest(req, res, customers.getData);
+});
 
 
 /**

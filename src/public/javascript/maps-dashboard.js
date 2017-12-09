@@ -4,6 +4,10 @@
 // timeout to pause event loop when needed
 let timeout = null;
 
+const mapSettings = {
+    display: 'total'
+};
+
 $(document).ready(() => {
     let callMap = new CallMap();
 
@@ -13,11 +17,16 @@ $(document).ready(() => {
         if (timeout != null) {
             clearTimeout(timeout);
         }
-
         // Update map every 3 minutes
         startUpdatingMap(callMap, 3*60);
     });
 
+    // Listen for changes to the filter settings
+    setupFilterListeners();
+});
+
+
+function setupFilterListeners() {
     // handle toggle for relative / absolute date filters
     $('.date-type-toggle').children().click((event) => {
         // Relative button was chosen
@@ -45,8 +54,22 @@ $(document).ready(() => {
             $('.relative-parameters-wrapper').addClass('hidden');
         }
     });
-});
 
+    // Alternate between mapping total calls or calls per customer count
+    $('.call-display-toggle').children().click((event) => {
+        // Was Total button clicked?
+        if ($(event.currentTarget).hasClass('total')) {
+            mapSettings.display = 'total';
+            $('.call-display-toggle .total').addClass('checked');
+            $('.call-display-toggle .relative').removeClass('checked');
+        // Relative display was chosen
+        } else {
+            mapSettings.display = 'relative';
+            $('.call-display-toggle .total').removeClass('checked');
+            $('.call-display-toggle .relative').addClass('checked');
+        }
+    });
+}
 
 // Begins a loop of updating the map data every ${refreshRate} seconds
 async function startUpdatingMap(callMap, refreshRate) {
@@ -66,8 +89,10 @@ async function updateMap(callMap) {
     params.skills = $('.skills.filter').val();
 
     // Key and value extractor functions
-    keyFn = (d) => d['zipCode'].substring(0, 3);
-    rollupFn = (d) => d3.sum(d, (x) => x['calls']);
+    const keyFn = (d) => d['zipCode'].substring(0, 3);
+    if (mapSettings.display == 'total') {
+        const rollupFn = (d) => d3.sum(d, (x) => x['calls']);
+    }
 
     const data = await getReportResults(params, 'maps');
     callMap.update(data, keyFn, rollupFn);
