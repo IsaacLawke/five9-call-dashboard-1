@@ -32,6 +32,7 @@ const Customers = mongoose.model('Customers', customersSchema);
  * @return {Promise} Resolves once the Customers table is updated.
  */
 async function refreshData(interval) {
+    log.message('Updating Customers database');
     // Authenticate, get data from Looker and format for easy consumption
     let auth = await getAuthToken(secure.LOOKER_CLIENT_ID, secure.LOOKER_CLIENT_SECRET);
     let rawData = await getJsonData(auth);
