@@ -87,29 +87,43 @@ async function updateMap(callMap) {
     const params = reportTimeRange();
     params.skills = $('.skills.filter').val();
 
-    // Key and value extractor functions
-    const keyFn = (d) => d.zipCode.substring(0, 3);
-    let rollupFn;
-    if (mapSettings.display == 'total') {
-        rollupFn = (d) => d3.sum(d, (x) => x.calls);
-    } else if (mapSettings.display == 'relative') {
-        rollupFn = (d) => {
-            let calls = d3.sum(d, (x) => x.calls);
-            let customers = d3.sum(d, (x) => x.customerCount);
-            if (customers == 0) return 0;
-            return (calls / customers) * 100;
-        }
-    }
-
+    // get all the datas
     let customerData = await getCustomerData();
     const callData = await getReportResults(params, 'maps');
+
     let data = callData.map((d) => ({
         zipCode: d.zipCode,
         calls: d.calls,
-        customerCount: customerData[d.zipCode] || 0
+        customers: customerData[d.zipCode] || 0
     }));
-    console.log(data);
-    callMap.update(data, keyFn, rollupFn);
+
+    // Determine the field being mapped -- total calls or per customer
+    let field;
+    if (mapSettings.display == 'total') {
+        // rollupFn = (d) => d3.sum(d, (x) => x.calls);
+        field = 'calls';
+        callMap.keyTitle = 'Calls offered';
+    } else if (mapSettings.display == 'relative') {
+        field = 'callsPerCustomer';
+        callMap.keyTitle = 'Calls offered divided by customer base';
+    }
+
+    // Key and value extractor functions
+    const keyFn = (d) => d.zipCode.substring(0, 3);
+    const rollupFn = (d) => {
+        let calls = d3.sum(d, (x) => x.calls);
+        let customers = d3.sum(d, (x) => x.customers);
+        let callsPerCustomer;
+        if (customers == 0) callsPerCustomer = 0;
+        else callsPerCustomer = calls / customers * 100;
+        return {
+            'calls': calls,
+            'customers': customers,
+            'callsPerCustomer': callsPerCustomer
+        }
+    }
+
+    callMap.update(data, field, keyFn, rollupFn);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
 }

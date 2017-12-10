@@ -2,16 +2,16 @@
 // Offers methods to create/draw the map and update when new data is received.
 class CallMap {
     // Create and draw map on initial run
-    async create(callData, keyFn, rollupFn) {
+    async create(callData, field, keyFn, rollupFn) {
         let width = 960,
             height = 500;
         let processedData = this.process(callData, keyFn, rollupFn);
 
         this.calls = d3.map(processedData, (d) => d.key);
-        let maxValue = d3.max(processedData, (d) => d.value);
+        let maxValue = d3.max(processedData, (d) => d.value[field]);
 
         this.x = d3.scaleLinear()
-            .domain(d3.extent(processedData, (d) => d.value))
+            .domain(d3.extent(processedData, (d) => d.value[field]))
             .rangeRound([600, 860]);
 
         this.color = d3.scaleThreshold()
@@ -25,27 +25,28 @@ class CallMap {
             .attr('height', height);
 
         // Key / legend
+        this.keyTitle = 'Calls offered';
         this.drawKey(this.x, this.color);
 
         return d3.queue()
             .defer(d3.json, API_URL + 'states')
             .defer(d3.json, API_URL + 'zip3-data')
-            .await((err, usa, zipData) => this.onReady(err, usa, zipData));
+            .await((err, usa, zipData) => this.onReady(err, usa, zipData, field));
     }
 
     // Assign initial variables when map is first created and topographic
     // data is first loaded
-    onReady(err, usa, zipData) {
+    onReady(err, usa, zipData, field) {
         this.zipData = zipData;
         this.usa = usa;
-        this.drawZips(zipData);
+        this.drawZips(zipData, field);
         this.drawStates(usa);
     }
 
     // Update map with new data
-    async update(callData, keyFn, rollupFn) {
+    async update(callData, field, keyFn, rollupFn) {
         // Check if this chart already exists. If not, create it.
-        if (!this.svg) return this.create(callData, keyFn, rollupFn);
+        if (!this.svg) return this.create(callData, field, keyFn, rollupFn);
 
         // format the data properly
         let processedData = this.process(callData, keyFn, rollupFn);
@@ -53,7 +54,7 @@ class CallMap {
         this.calls = d3.map(processedData, (d) => d.key);
 
         // update domain and range
-        let maxValue = d3.max(processedData, (d) => d.value);
+        let maxValue = d3.max(processedData, (d) => d.value[field]);
         this.x.domain(d3.range(1, maxValue, maxValue-2));
         this.color.domain(d3.range(1, maxValue, maxValue / 9));
 
@@ -66,13 +67,13 @@ class CallMap {
         // clear old states and zips
         this.svg.selectAll('.zips, .states').remove().exit();
         // then rebuild them
-        this.drawZips(this.zipData);
+        this.drawZips(this.zipData, field);
         this.drawStates(this.usa);
     }
 
     // Draw ZIP3 areas, colored by number of calls
     // ${zipData} is GeoJSON describing the topography
-    drawZips(zipData) {
+    drawZips(zipData, field) {
         this.svg.insert('g', '.key')
             .attr('class', 'zips')
           .selectAll('path')
@@ -82,22 +83,25 @@ class CallMap {
             .attr('fill', (d) => {
                 let zip = d.properties.ZIP;
                 let val = this.calls.has(zip)
-                    ? this.calls.get(zip).value
+                    ? this.calls.get(zip).value[field]
                     : 0;
                 return this.color(val);
             })
             .attr('stroke', (d) => {
                 let zip = d.properties.ZIP;
                 let val = this.calls.has(zip)
-                    ? this.calls.get(zip).value
+                    ? this.calls.get(zip).value[field]
                     : 0;
                 if (val > 0) return 'hsla(208, 30%, 60%, 0.5)';
             })
           .append('title')
             .text((d) => {
                 let zip = d.properties.ZIP;
-                let numCalls = this.calls.has(zip) ? this.calls.get(zip).value : 0;
-                return `ZIP3: ${zip}\nCalls: ${numCalls}`;
+                let o = { calls: 0, customers: 0, callsPerCustomer: 0 }
+                if (this.calls.has(zip)) {
+                    o = this.calls.get(zip).value;
+                }
+                return `ZIP3: ${zip}\nCalls: ${o.calls}\nCustomers: ${o.customers}\nCalls divided by customer count: ${d3.format(".0%")(o.callsPerCustomer/100)}`;
             });
     }
 
@@ -140,7 +144,7 @@ class CallMap {
             .attr('fill', '#000')
             .attr('text-anchor', 'start')
             .attr('font-weight', 'bold')
-            .text('Calls offered');
+            .text(this.keyTitle);
           this.g.call(d3.axisBottom(x)
             .tickSize(13)
             .tickFormat(d3.format('d'))
