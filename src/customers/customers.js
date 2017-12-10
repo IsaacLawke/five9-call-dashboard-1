@@ -166,3 +166,4 @@ function lookerRequest(message, endpoint, auth, method='POST',
 
 module.exports.getData = getData;
 module.exports.refreshData = refreshData;
+module.exports.Customers = Customers;

@@ -90,8 +90,9 @@ async function updateMap(callMap) {
 
     // Key and value extractor functions
     const keyFn = (d) => d['zipCode'].substring(0, 3);
+    let rollupFn;
     if (mapSettings.display == 'total') {
-        const rollupFn = (d) => d3.sum(d, (x) => x['calls']);
+        rollupFn = (d) => d3.sum(d, (x) => x['calls']);
     }
 
     const data = await getReportResults(params, 'maps');

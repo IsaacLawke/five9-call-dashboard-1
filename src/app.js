@@ -146,8 +146,25 @@ app.post('/api/reports/maps', (req, res) => {
 });
 
 // Request customer counts by zip code for maps page
-app.post('/api/reports/customers', (req, res) => {
-    handleReportRequest(req, res, customers.getData);
+app.post('/api/reports/customers', async (req, res) => {
+    try {
+        // Authenticate user
+        const hasPermission = await verify.hasPermission(req.body['authorization']);
+        if (!hasPermission) {
+            res.set('Content-Type', 'application/text');
+            res.status(401).send('Could not authenticate your user.');
+            return;
+        }
+        // Send data
+        const data = await customers.getData();
+        res.set('Content-Type', 'application/json');
+        res.send(JSON.stringify(data));
+
+    } catch (err) {
+        log.error(`Error during handleReportRequest(${dataGetter.name}): ` + JSON.stringify(err));
+        res.set('Content-Type', 'application/text');
+        res.status(500).send(`An error occurred on the server when retrieving report information: ${err}`);
+    }
 });
 
 
@@ -276,7 +293,8 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 3000);
         });
 
-        await customers.refreshData();
+        await customers.Customers.remove({});
+        customers.refreshData();
         let x = await customers.getData();
         console.log(x.slice(0,10));
 
