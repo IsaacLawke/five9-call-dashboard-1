@@ -20,7 +20,6 @@ class CallMap {
         this.color = d3.scaleThreshold()
             .domain(d3.range(1, maxValue, maxValue / 9))
             .range(this.colors);
-        // this.color = d3.scaleSequential(d3.interpolateBlues);
 
         this.path = d3.geoPath();
 
@@ -138,9 +137,7 @@ class CallMap {
               .attr('height', 8)
               .attr('x', (d) => x(d[0]))
               .attr('width', (d) => {
-                  // TODO: some values negative
-                  //if (this.x(d[1]) - this.x(d[0]) < 0) debugger;
-                  return x(d[1]) - x(d[0]);
+                  return Math.abs(x(d[1]) - x(d[0]));
               } )
               .attr('fill', (d) => color(d[0]));
 
