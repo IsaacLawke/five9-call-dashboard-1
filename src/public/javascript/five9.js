@@ -49,6 +49,7 @@ async function getReportData(parameters, reportType) {
 }
 
 
+
 // Make a request to server with given parameters (from getParameters)
 async function request(parameters, url='statistics') {
     const apiURL = API_URL + url; // defined in api_url.js

@@ -3,7 +3,6 @@
 
 // timeout to pause event loop when needed
 let timeout = null;
-
 const mapSettings = {
     display: 'total'
 };
@@ -95,10 +94,38 @@ async function updateMap(callMap) {
         rollupFn = (d) => d3.sum(d, (x) => x['calls']);
     }
 
-    const data = await getReportResults(params, 'maps');
+    let customerData = await getCustomerData();
+    const callData = await getReportResults(params, 'maps');
+    let data = callData.map((d) => ({
+        zipCode: d.zipCode,
+        calls: d.calls,
+        customerCount: customerData[d.zipCode] || 0
+    }));
+
     callMap.update(data, keyFn, rollupFn);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
+}
+
+// record time of last update (default to Y2K to force an update)
+const customerCount = {
+    data: [],
+    lastUpdateTime: moment('2000-01-01')
+};
+async function getCustomerData() {
+    // reload data from server if it's been 6+ hours since the last update
+    if (customerCount.lastUpdateTime.isBefore(moment().subtract(6, 'hours'))) {
+        let rawData = await getReportResults({}, 'customers');
+        // Convert array of objects to a single object with zipcode as key
+        // and customer count as volue
+        customerCount.data = rawData.reduce((object, item) => {
+            object[item.zipCode] = item.customerCount;
+            return object;
+        }, {});
+        customerCount.lastUpdateTime = moment();
+    }
+    // Return data object
+    return customerCount.data;
 }
 
 // Determines start/end times chosen by user
