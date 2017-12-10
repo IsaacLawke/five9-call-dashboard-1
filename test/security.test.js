@@ -46,7 +46,7 @@ describe('Testing security (credentials authentication).', function() {
     }
 
     let endpoints = [
-        'reports/service-level', 'reports/maps', 'queue-stats'
+        'reports/service-level', 'reports/maps', 'queue-stats', 'reports/customers'
     ];
 
     const params = {};
