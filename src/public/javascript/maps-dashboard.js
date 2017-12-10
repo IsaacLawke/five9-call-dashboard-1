@@ -61,11 +61,14 @@ function setupFilterListeners() {
             mapSettings.display = 'total';
             $('.call-display-toggle .total').addClass('checked');
             $('.call-display-toggle .relative').removeClass('checked');
+            // show minimum customer filter
+            $('.call-display .minimum-customers-wrapper').addClass('hidden');
         // Relative display was chosen
         } else {
             mapSettings.display = 'relative';
             $('.call-display-toggle .total').removeClass('checked');
             $('.call-display-toggle .relative').addClass('checked');
+            $('.call-display .minimum-customers-wrapper').removeClass('hidden');
         }
     });
 }
@@ -106,6 +109,13 @@ async function updateMap(callMap) {
     } else if (mapSettings.display == 'relative') {
         field = 'callsPerCustomer';
         callMap.keyTitle = 'Calls offered divided by customer base';
+    }
+
+    // If we're in relative display mode, the user can filter areas meeting a
+    // minimum customer count
+    if (mapSettings.display == 'relative') {
+        let minCustomers = $('.minimum-customers').val() * 1;
+        data = data.filter((d) => d.customers >= minCustomers);
     }
 
     // Key and value extractor functions

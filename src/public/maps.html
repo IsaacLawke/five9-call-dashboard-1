@@ -51,7 +51,7 @@
                             </select>
                             <div class="relative-parameters-wrapper relative hidden">
                                 <p>
-                                    Last <input type="text" class="filter relative-minutes" placeholder="X" value="120" /> minutes
+                                    Last <input type="text" class="filter relative-minutes inline-input" placeholder="X" value="120" /> minutes
                                 </p>
                             </div>
                         </div>
@@ -66,11 +66,16 @@
                         <input type="text" class="filter skills" placeholder="Select the skills to view" value="TS, TECH" />
                     </div>
 
-                    <div class="filter-type-wrapper">
+                    <div class="filter-type-wrapper call-display">
                         <label title="Map either total calls (Total) or calls per customer count (Relative)">Call Display</label>
                         <div class="call-display-toggle side-by-side-buttons">
                             <button class="total checked" title="Display total number of calls from each area.">Total</span>
                             <button class="relative" title="Display calls from area divided by number of customers in area.">Relative</span>
+                        </div>
+                        <div class="relative hidden minimum-customers-wrapper">
+                            <p>
+                                Areas with at least <input type="text" class="filter minimum-customers inline-input" placeholder="X" value="50" /> customers
+                            </p>
                         </div>
                     </div>
 

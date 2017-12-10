@@ -43,13 +43,13 @@ input.filter, .relative-date-selector {
 input.filter {
     display: block;
 }
-input.filter.relative-minutes {
+input.filter.inline-input {
     width: 2em;
     margin: 0;
     display: inline-block;
     text-align: center;
 }
-.relative-parameters-wrapper p {
+.filter-type-wrapper p {
     font-size: 0.75em;
     text-align: left;
 }
