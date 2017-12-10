@@ -11,6 +11,7 @@ class CallMap {
         let processedData = this.process(callData, keyFn, rollupFn);
 
         this.calls = d3.map(processedData, (d) => d.key);
+        let minValue = d3.min(processedData, (d) => d.value[field]);
         let maxValue = d3.max(processedData, (d) => d.value[field]);
 
         this.x = d3.scaleLinear()
@@ -57,8 +58,9 @@ class CallMap {
         this.calls = d3.map(processedData, (d) => d.key);
 
         // update domain and range
+        let minValue = d3.min(processedData, (d) => d.value[field]);
         let maxValue = d3.max(processedData, (d) => d.value[field]);
-        this.x.domain(d3.range(1, maxValue, maxValue-2));
+        this.x.domain(d3.extent(processedData, (d) => d.value[field]));
         this.color.domain(d3.range(1, maxValue, maxValue / 9));
 
         // Key / legend
