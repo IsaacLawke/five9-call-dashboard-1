@@ -3,6 +3,9 @@
 class CallMap {
     // Create and draw map on initial run
     async create(callData, field, keyFn, rollupFn) {
+        // Taken from d3.schemeBlues[9]
+        this.colors = ["#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"];
+
         let width = 960,
             height = 500;
         let processedData = this.process(callData, keyFn, rollupFn);
@@ -16,7 +19,8 @@ class CallMap {
 
         this.color = d3.scaleThreshold()
             .domain(d3.range(1, maxValue, maxValue / 9))
-            .range(d3.schemeBlues[9]);
+            .range(this.colors);
+        // this.color = d3.scaleSequential(d3.interpolateBlues);
 
         this.path = d3.geoPath();
 
@@ -82,10 +86,8 @@ class CallMap {
             .attr('d', this.path)
             .attr('fill', (d) => {
                 let zip = d.properties.ZIP;
-                let val = this.calls.has(zip)
-                    ? this.calls.get(zip).value[field]
-                    : 0;
-                return this.color(val);
+                if (!this.calls.has(zip)) return '#feffff';
+                return this.color(this.calls.get(zip).value[field]);
             })
             .attr('stroke', (d) => {
                 let zip = d.properties.ZIP;
