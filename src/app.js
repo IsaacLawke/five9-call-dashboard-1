@@ -293,9 +293,8 @@ const server = app.listen(port, async () => {
             setTimeout(connect, 3000);
         });
 
-        await customers.refreshData();
-        let x = await customers.getData();
-        console.log(x.slice(0,10));
+        // Update customers database from Looker every 8 hours
+        customers.refreshData(8 * 3600 * 1000);
 
         // Update queue stats every 15 seconds
         // Five9 stats API has a limit of 500 requests per hour

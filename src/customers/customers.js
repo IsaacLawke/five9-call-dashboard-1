@@ -28,9 +28,10 @@ const Customers = mongoose.model('Customers', customersSchema);
 //////////////////////////////////////////
 /**
  * Refresh the Customers table from Looker.
+ * @param  {Number} interval in ms to re-run after
  * @return {Promise} Resolves once the Customers table is updated.
  */
-async function refreshData() {
+async function refreshData(interval) {
     // Authenticate, get data from Looker and format for easy consumption
     let auth = await getAuthToken(secure.LOOKER_CLIENT_ID, secure.LOOKER_CLIENT_SECRET);
     let rawData = await getJsonData(auth);
@@ -41,6 +42,8 @@ async function refreshData() {
     await Customers.remove({});
     return new Promise ((resolve, reject) => {
         Customers.collection.insert(data, (err, docs) => {
+            // Repeat function after interval
+            setTimeout(() => refreshData(interval), interval);
             if (err) {
                 log.error(`Error inserting data in Customers model: ${err}`);
                 reject(err);
