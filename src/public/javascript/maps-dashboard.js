@@ -88,10 +88,17 @@ async function updateMap(callMap) {
     params.skills = $('.skills.filter').val();
 
     // Key and value extractor functions
-    const keyFn = (d) => d['zipCode'].substring(0, 3);
+    const keyFn = (d) => d.zipCode.substring(0, 3);
     let rollupFn;
     if (mapSettings.display == 'total') {
-        rollupFn = (d) => d3.sum(d, (x) => x['calls']);
+        rollupFn = (d) => d3.sum(d, (x) => x.calls);
+    } else if (mapSettings.display == 'relative') {
+        rollupFn = (d) => {
+            let calls = d3.sum(d, (x) => x.calls);
+            let customers = d3.sum(d, (x) => x.customerCount);
+            if (customers == 0) return 0;
+            return (calls / customers) * 100;
+        }
     }
 
     let customerData = await getCustomerData();
@@ -101,30 +108,37 @@ async function updateMap(callMap) {
         calls: d.calls,
         customerCount: customerData[d.zipCode] || 0
     }));
-
+    console.log(data);
     callMap.update(data, keyFn, rollupFn);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
 }
 
-// record time of last update (default to Y2K to force an update)
+// Object to store customer zipcode data.
 const customerCount = {
     data: [],
-    lastUpdateTime: moment('2000-01-01')
+    // record time of last update (default to Y2K to force an update)
+    lastUpdated: moment('2000-01-01')
 };
+/**
+ * Retrieve customer counts by zip code. Updates from the server every 6 hours.
+ * @return {Object} in format { '<zip code here>': '31415' }
+ */
 async function getCustomerData() {
     // reload data from server if it's been 6+ hours since the last update
-    if (customerCount.lastUpdateTime.isBefore(moment().subtract(6, 'hours'))) {
+    if (customerCount.lastUpdated.isBefore(moment().subtract(6, 'hours'))) {
         let rawData = await getReportResults({}, 'customers');
-        // Convert array of objects to a single object with zipcode as key
+
+        // Convert array of objects to a single object, with zipcode as key
         // and customer count as volue
         customerCount.data = rawData.reduce((object, item) => {
             object[item.zipCode] = item.customerCount;
             return object;
         }, {});
-        customerCount.lastUpdateTime = moment();
+
+        customerCount.lastUpdated = moment();
     }
-    // Return data object
+
     return customerCount.data;
 }
 

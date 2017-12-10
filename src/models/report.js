@@ -195,10 +195,14 @@ async function refreshDatabase(time, reportModel, reportName) {
                 res['calls'] *= 1;
                 res['serviceLevel'] *= 1;
 
+                // Leave only left 5 digits of zip code
+                res['zipCode'] = res['zipCode'].substr(0, 5);
+
                 // Set interval in Date format
                 let datestring = res.date + ' ' + res['HALF HOUR'];
                 delete res['HALF HOUR'];
                 res.date = moment.tz(moment(datestring, 'YYYY/MM/DD HH:mm'), 'America/Los_Angeles').toDate();
+
                 data.push(res);
                 return resolve(data);
             }).on('error', reject);
