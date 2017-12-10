@@ -78,21 +78,27 @@ class CallMap {
     // Draw ZIP3 areas, colored by number of calls
     // ${zipData} is GeoJSON describing the topography
     drawZips(zipData, field) {
-        let defaultColor = '#feffff';
+        let backgroundColor = '#feffff';
+        // Sort so that areas with call data are drawn last and end up on top
+        let sorted = zipData.features.sort((a, b) => {
+            if (!this.calls.has(a.properties.ZIP)) return -1;
+            return 1;
+        });
+
         this.svg.insert('g', '.key')
             .attr('class', 'zips')
           .selectAll('path')
-          .data(zipData.features)
+          .data(sorted)
           .enter().append('path')
             .attr('d', this.path)
             .attr('fill', (d) => {
                 let zip = d.properties.ZIP;
-                if (!this.calls.has(zip)) return defaultColor;
+                if (!this.calls.has(zip)) return backgroundColor;
                 return this.color(this.calls.get(zip).value[field]);
             })
             .attr('stroke', (d) => {
                 let zip = d.properties.ZIP;
-                if (!this.calls.has(zip)) return 'transparent';
+                if (!this.calls.has(zip)) return backgroundColor;
                 return 'hsla(208, 30%, 60%, 0.5)';
             })
           .append('title')
