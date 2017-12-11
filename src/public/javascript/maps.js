@@ -104,7 +104,7 @@ class CallMap {
           .append('title')
             .text((d) => {
                 let zip = d.properties.ZIP;
-                let o = { calls: 0, customers: 0, callsPerCustomer: 0 }
+                let o = { calls: 0, customers: 0, callsPerCustomer: 0 };
                 if (this.calls.has(zip)) {
                     o = this.calls.get(zip).value;
                 }
