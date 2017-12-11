@@ -26,6 +26,8 @@ $(document).ready(() => {
             body: JSON.stringify(body)
         };
 
+        $('.message').text(`Computing....`);
+
         fetch(apiURL, requestOptions)
             .then(async (response) => {
                 let bodyText = await response.text();
@@ -51,7 +53,6 @@ $(document).ready(() => {
             },
             body: JSON.stringify(body)
         };
-
 
         $('.message').text(`Computing....`);
 
