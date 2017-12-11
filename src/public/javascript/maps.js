@@ -108,7 +108,7 @@ class CallMap {
                 if (this.calls.has(zip)) {
                     o = this.calls.get(zip).value;
                 }
-                return `ZIP3: ${zip}\nCalls: ${o.calls}\nCustomers: ${o.customers}\nCalls divided by customer count: ${d3.format(".0%")(o.callsPerCustomer/100)}`;
+                return `ZIP3: ${zip}\nCalls: ${o.calls}\nCustomers: ${o.customers}\nCalls divided by customer count: ${d3.format(".2%")(o.callsPerCustomer)}`;
             });
     }
 
@@ -146,13 +146,13 @@ class CallMap {
             .attr('class', 'caption')
             .attr('x', x.range()[0])
             .attr('y', -6)
-            .attr('fill', '#000')
+            .attr('fill', '#444')
             .attr('text-anchor', 'start')
             .attr('font-weight', 'bold')
             .text(this.keyTitle);
           this.g.call(d3.axisBottom(x)
             .tickSize(13)
-            .tickFormat(d3.format('d'))
+            .tickFormat(this.formatLegend)
             .tickValues(color.domain()))
           .select('.domain')
             .remove();

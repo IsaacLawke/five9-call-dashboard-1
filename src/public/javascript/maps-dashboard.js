@@ -106,9 +106,11 @@ async function updateMap(callMap) {
         // rollupFn = (d) => d3.sum(d, (x) => x.calls);
         field = 'calls';
         callMap.keyTitle = 'Calls offered';
+        callMap.formatLegend = d3.format('d');
     } else if (mapSettings.display == 'relative') {
         field = 'callsPerCustomer';
         callMap.keyTitle = 'Calls offered divided by customer base';
+        callMap.formatLegend = d3.format('.1%');
     }
 
     // If we're in relative display mode, the user can filter areas meeting a
