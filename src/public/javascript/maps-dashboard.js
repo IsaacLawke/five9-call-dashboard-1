@@ -76,6 +76,7 @@ function setupFilterListeners() {
 // Begins a loop of updating the map data every ${refreshRate} seconds
 async function startUpdatingMap(callMap, refreshRate) {
     try {
+        $('.message').text(`Updating...`);
         await updateMap(callMap);
         $('.message').text('Last updated ' + moment().format('h:mm:ss A') + '.');
     } catch (err) {
@@ -94,11 +95,16 @@ async function updateMap(callMap) {
     let customerData = await getCustomerData();
     const callData = await getReportResults(params, 'maps');
 
-    let data = callData.map((d) => ({
-        zipCode: d.zipCode,
-        calls: d.calls,
-        customers: customerData[d.zipCode] || 0
-    }));
+
+    let data = Object.keys(customerData)
+        .map((zip) => ({
+            zipCode: zip,
+            calls: callData
+                    .filter((d) => d.zipCode == zip)
+                    .reduce((sum, d) => sum + d.calls, 0),
+            customers: customerData[zip]
+        }));
+
 
     // Determine the field being mapped -- total calls or per customer
     let field;
@@ -115,9 +121,12 @@ async function updateMap(callMap) {
 
     // If we're in relative display mode, the user can filter areas meeting a
     // minimum customer count
+    let filterFn;
     if (mapSettings.display == 'relative') {
         let minCustomers = $('.minimum-customers').val() * 1;
-        data = data.filter((d) => d.customers >= minCustomers);
+        filterFn = (d) => d.value.customers >= minCustomers;
+    } else {
+        filterFn = (d) => true;
     }
 
     // Key and value extractor functions
@@ -135,7 +144,15 @@ async function updateMap(callMap) {
         }
     }
 
-    callMap.update(data, field, keyFn, rollupFn);
+    // Create the data structure in a D3-friendly way
+    let callsByZip = d3.nest()
+        .key(keyFn)
+        .rollup(rollupFn)
+        .entries(data)
+        .filter(filterFn)
+        .filter((d) => d.key != ''); // remove calls with no zipcode assigned
+
+    callMap.update(callsByZip, field, keyFn, rollupFn);
 
     console.log('Finished updateMap() at ' + moment().format('h:mm:ss A'));
 }

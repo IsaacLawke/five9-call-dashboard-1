@@ -81,7 +81,7 @@ class CallMap {
         let backgroundColor = '#feffff';
         // Sort so that areas with call data are drawn last and end up on top
         let sorted = zipData.features.sort((a, b) => {
-            if (!this.calls.has(a.properties.ZIP)) return -1;
+            if (this.isEmptyZip(a.properties.ZIP, field)) return -1;
             return 1;
         });
 
@@ -93,12 +93,12 @@ class CallMap {
             .attr('d', this.path)
             .attr('fill', (d) => {
                 let zip = d.properties.ZIP;
-                if (!this.calls.has(zip)) return backgroundColor;
+                if (this.isEmptyZip(zip, field)) return backgroundColor;
                 return this.color(this.calls.get(zip).value[field]);
             })
             .attr('stroke', (d) => {
                 let zip = d.properties.ZIP;
-                if (!this.calls.has(zip)) return backgroundColor;
+                if (this.isEmptyZip(zip, field)) return backgroundColor;
                 return 'hsla(208, 30%, 60%, 0.5)';
             })
           .append('title')
@@ -110,6 +110,16 @@ class CallMap {
                 }
                 return `ZIP3: ${zip}\nCalls: ${o.calls}\nCustomers: ${o.customers}\nCalls divided by customer count: ${d3.format(".2%")(o.callsPerCustomer)}`;
             });
+    }
+
+    /**
+     * Returns true if the zip code is not in the data or has a value equal to 0
+     * @param  {String}  zip   zip code
+     * @param  {String}  field to check in this.calls.value
+     * @return {Boolean}
+     */
+    isEmptyZip(zip, field) {
+        return (!this.calls.has(zip) || this.calls.get(zip).value[field] == 0);
     }
 
     // Draw the state outlines
@@ -166,11 +176,12 @@ class CallMap {
      * @return {Object}            nested data for easy parsing by D3
      */
     process(data, keyFn, rollupFn) {
-        let callsByZip = d3.nest()
-            .key(keyFn)
-            .rollup(rollupFn)
-            .entries(data)
-            .filter((d) => d.key != ''); // remove calls with no zipcode assigned
-        return callsByZip;
+        return data;
+        // let callsByZip = d3.nest()
+        //     .key(keyFn)
+        //     .rollup(rollupFn)
+        //     .entries(data)
+        //     .filter((d) => d.key != ''); // remove calls with no zipcode assigned
+        // return callsByZip;
     }
 }
