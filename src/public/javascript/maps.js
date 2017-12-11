@@ -19,7 +19,7 @@ class CallMap {
             .rangeRound([600, 860]);
 
         this.color = d3.scaleThreshold()
-            .domain(d3.range(1, maxValue, maxValue / 9))
+            .domain(d3.range(0, maxValue, maxValue / 9))
             .range(this.colors);
 
         this.path = d3.geoPath();
@@ -58,10 +58,9 @@ class CallMap {
         this.calls = d3.map(processedData, (d) => d.key);
 
         // update domain and range
-        let minValue = d3.min(processedData, (d) => d.value[field]);
-        let maxValue = d3.max(processedData, (d) => d.value[field]);
+        let max = d3.max(processedData, (d) => d.value[field]);
         this.x.domain(d3.extent(processedData, (d) => d.value[field]));
-        this.color.domain(d3.range(1, maxValue, maxValue / 9));
+        this.color.domain(d3.range(0, max, max / 9));
 
         // Key / legend
         // remove then redraw the color key
