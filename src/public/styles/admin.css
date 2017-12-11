@@ -14,6 +14,7 @@ h1 {
 }
 .btn.reboot-server {
     background-color: #f1e9d3;
+    max-width: 500px;
 }
 .btn.reboot-server:hover {
     background-color: #ffa442;
