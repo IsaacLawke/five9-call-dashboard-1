@@ -66,12 +66,12 @@ async function getData() {
 function format(data) {
     // Remove null zip code and map to database's field names
     return data
-    .filter((d) => d[secure.LOOKER_FIELD_ZIP_CODE] != null)
-    .map((d) => ({
-            'zipCode':       d[secure.LOOKER_FIELD_ZIP_CODE],
-            'customerCount': d[secure.LOOKER_FIELD_CUSTOMER_COUNT]
-        })
-    );
+        .filter((d) => d[secure.LOOKER_FIELD_ZIP_CODE] != null)
+        .map((d) => ({
+                'zipCode':       d[secure.LOOKER_FIELD_ZIP_CODE],
+                'customerCount': d[secure.LOOKER_FIELD_CUSTOMER_COUNT]
+            })
+        );
 }
 
 /**
