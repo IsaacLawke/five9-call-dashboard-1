@@ -95,7 +95,7 @@ async function updateMap(callMap) {
     let customerData = await getCustomerData();
     const callData = await getReportResults(params, 'maps');
 
-
+    // build data object off of customerData zip codes
     let data = Object.keys(customerData)
         .map((zip) => ({
             zipCode: zip,
@@ -105,11 +105,20 @@ async function updateMap(callMap) {
             customers: customerData[zip]
         }));
 
+    // if any zips with calls are missing from customerData, add them here
+    let missing = callData
+                    .filter((d) => d.zipCode != ''
+                                && !customerData.hasOwnProperty(d.zipCode))
+                    .map((d) => ({
+                        zipCode: d.zipCode,
+                        calls: d.calls,
+                        customers: 0
+                    }));
+    data.concat(missing);
 
     // Determine the field being mapped -- total calls or per customer
     let field;
     if (mapSettings.display == 'total') {
-        // rollupFn = (d) => d3.sum(d, (x) => x.calls);
         field = 'calls';
         callMap.keyTitle = 'Calls offered';
         callMap.formatLegend = d3.format('d');
