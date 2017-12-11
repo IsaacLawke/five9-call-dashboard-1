@@ -258,14 +258,58 @@ app.post('/api/reboot-server', async (req, res) => {
             res.set('Content-Type', 'application/text');
             res.status(401).send('Could not authenticate your user.');
             return;
-        } else { // continue if permission
-            res.status(200).send('About to reboot! Closing Express server -- should be restarted by PM2 :)');
-            pm2.restart('app', (err) => log.error(`pm2 restart error ${err}`));
         }
+
+        res.status(200).send('About to reboot! Closing Express server -- should be restarted by PM2 :)');
+        pm2.restart('app', (err) => log.error(`pm2 restart error ${err}`));
+
     } catch (err) {
         res.status(500).send('An error occurred on the server while attempting reboot.');
     }
 });
+
+// Update data in a given range
+app.post('/api/reload-data', async (req, res) => {
+    res.set('Content-Type', 'application/text');
+    try {
+        let times = req.body['time'];
+
+        log.message(`---- Reports database reload requested by client for ${JSON.stringify(times)} ----`);
+
+        // Authenticate user. TODO: allow admin level only.
+        const hasPermission = await verify.hasPermission(req.body['authorization']);
+        if (!hasPermission) { // exit if no permission
+            res.set('Content-Type', 'application/text');
+            res.status(401).send('Could not authenticate your user.');
+            return;
+        }
+
+        await reloadReports(times);
+        res.status(200).send(`Report data reloaded for ${JSON.stringify(times)}`);
+
+
+    } catch (err) {
+        res.status(500).send(`An error occurred on the server while attempting data reload: ${err}.`);
+    }
+});
+
+async function reloadReports(time) {
+    // verify user input format
+    let bad = '';
+    if (!moment(time.end, 'YYYY-MM-DDTHH:mm:ss', true).isValid())
+        bad = time.end;
+    if (!moment(time.start, 'YYYY-MM-DDTHH:mm:ss', true).isValid())
+        bad = time.start;
+
+    if (bad != '') throw new Error(`Time not in the right format, ya dangus: ${bad}`);
+
+    if (moment(time.start, 'YYYY-MM-DDTHH:mm:ss') >=
+        moment(time.end, 'YYYY-MM-DDTHH:mm:ss'))
+        throw new Error(`Start time's gotta be less than end time! Come on, you turkey.`);
+
+    // It passed the test... I guess. Reload the data!
+    return await report.loadData(time);
+}
 
 
 ///////////////////////////

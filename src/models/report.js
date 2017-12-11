@@ -69,11 +69,23 @@ async function scheduleUpdate(interval) {
     time.end   = moment().format('YYYY-MM-DD') + 'T23:59:59';
 
     // update from Five9
-    await refreshDatabase(time, DataFeed, 'Dashboard - Data Feed');
+    await loadData(time);
 
     // Schedule next update
     currentlyUpdatingData = false;
     return setTimeout(() => scheduleUpdate(interval), interval);
+}
+
+/**
+ * Re-load data to database. This function directly forces the database to
+ * be updated in a given time range, as apposed to `scheduleUpdate`, which
+ * manages its own start and end times.
+ * @param  {Object} time object with 'start' and 'end' values
+ *                          in format 'YYYY-MM-DDThh:mm:ss'
+ * @return {Promise}
+ */
+async function loadData(time) {
+    return await refreshDatabase(time, DataFeed, 'Dashboard - Data Feed');
 }
 
 // Summarize call and service level data by skill. Params should give start
@@ -251,3 +263,4 @@ module.exports.getServiceLevelData = getServiceLevelData;
 module.exports.getZipCodeData = getZipCodeData;
 module.exports.DataFeed = DataFeed;
 module.exports.refreshDatabase = refreshDatabase;
+module.exports.loadData = loadData;
