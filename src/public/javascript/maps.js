@@ -1,21 +1,25 @@
 // Map of U.S. with ZIP3 areas colored by calls offered.
 // Offers methods to create/draw the map and update when new data is received.
 class CallMap {
-    // Create and draw map on initial run
-    async create(callData, field, keyFn, rollupFn) {
+    /**
+     * Create and draw map on initial run
+     * @param  {Object}  data d3.nest data object with zipcode as key and fields as values
+     * @param  {String}  field to map (calls or callsPerCustomer)
+     * @return {Promise} resolves when complete
+     */
+    async create(data, field) {
         // Taken from d3.schemeBlues[9]
         this.colors = ["#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"];
 
         let width = 960,
             height = 500;
-        let processedData = this.process(callData, keyFn, rollupFn);
 
-        this.calls = d3.map(processedData, (d) => d.key);
-        let minValue = d3.min(processedData, (d) => d.value[field]);
-        let maxValue = d3.max(processedData, (d) => d.value[field]);
+        this.calls = d3.map(data, (d) => d.key);
+        let minValue = d3.min(data, (d) => d.value[field]);
+        let maxValue = d3.max(data, (d) => d.value[field]);
 
         this.x = d3.scaleLinear()
-            .domain(d3.extent(processedData, (d) => d.value[field]))
+            .domain(d3.extent(data, (d) => d.value[field]))
             .rangeRound([600, 860]);
 
         this.color = d3.scaleThreshold()
@@ -48,18 +52,16 @@ class CallMap {
     }
 
     // Update map with new data
-    async update(callData, field, keyFn, rollupFn) {
+    async update(data, field) {
         // Check if this chart already exists. If not, create it.
-        if (!this.svg) return this.create(callData, field, keyFn, rollupFn);
+        if (!this.svg) return this.create(data, field);
 
-        // format the data properly
-        let processedData = this.process(callData, keyFn, rollupFn);
         // match calls to keys (zip codes)
-        this.calls = d3.map(processedData, (d) => d.key);
+        this.calls = d3.map(data, (d) => d.key);
 
         // update domain and range
-        let max = d3.max(processedData, (d) => d.value[field]);
-        this.x.domain(d3.extent(processedData, (d) => d.value[field]));
+        let max = d3.max(data, (d) => d.value[field]);
+        this.x.domain(d3.extent(data, (d) => d.value[field]));
         this.color.domain(d3.range(0, max, max / 9));
 
         // Key / legend
@@ -168,20 +170,5 @@ class CallMap {
             .remove();
     }
 
-    /**
-     * Rolls up JSON data according to key and value extraction functions
-     * @param  {Object}   data     JSON data
-     * @param  {Function} keyFn    extract key from each data point
-     * @param  {Function} rollupFn summarize values from each data point
-     * @return {Object}            nested data for easy parsing by D3
-     */
-    process(data, keyFn, rollupFn) {
-        return data;
-        // let callsByZip = d3.nest()
-        //     .key(keyFn)
-        //     .rollup(rollupFn)
-        //     .entries(data)
-        //     .filter((d) => d.key != ''); // remove calls with no zipcode assigned
-        // return callsByZip;
-    }
+
 }
