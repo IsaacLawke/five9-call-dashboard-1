@@ -125,7 +125,7 @@ async function updateMap(callMap) {
         let customers = d3.sum(d, (x) => x.customers);
         let callsPerCustomer;
         if (customers == 0) callsPerCustomer = 0;
-        else callsPerCustomer = calls / customers * 100;
+        else callsPerCustomer = calls / customers;
         return {
             'calls': calls,
             'customers': customers,
