@@ -22,6 +22,7 @@ $(document).ready(() => {
 
     // Listen for changes to the filter settings
     setupFilterListeners();
+    setDefaultAbsoluteDates();
 });
 
 
@@ -71,6 +72,11 @@ function setupFilterListeners() {
             $('.call-display .minimum-customers-wrapper').removeClass('hidden');
         }
     });
+}
+
+function setDefaultAbsoluteDates() {
+    $('.filter.start-time').val(moment().format('YYYY-MM-DD[T00:00:00]'));
+    $('.filter.end-time'  ).val(moment().format('YYYY-MM-DD[T23:59:59]'));
 }
 
 // Begins a loop of updating the map data every ${refreshRate} seconds
@@ -172,6 +178,8 @@ const customerCount = {
     // record time of last update (default to Y2K to force an update)
     lastUpdated: moment('2000-01-01')
 };
+
+
 /**
  * Retrieve customer counts by zip code. Updates from the server every 6 hours.
  * @return {Object} in format { '<zip code here>': '31415' }
@@ -193,6 +201,7 @@ async function getCustomerData() {
 
     return customerCount.data;
 }
+
 
 // Determines start/end times chosen by user
 // Return {start:'X',end:'Y'}
