@@ -1069,7 +1069,7 @@ const props = {
             this.height = this.$el.offsetHeight;
         },
         createArea: d3.area().x(d => d.x).y0(d => d.max).y1(d => d.y),
-        createLine: d3.line().x(d => d.x).y(d => d.y),
+        createLine: d3.line().x(d => d.x).y(d => d.y).curve(d3.curveMonotoneX),
         createValueSelector: d3.area().x(d => d.x).y0(d => d.max).y1(0),
         initialize() {
             this.scaled.x = d3.scaleTime().rangeRound([0, this.padded.width]);
