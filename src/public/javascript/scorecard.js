@@ -72,8 +72,14 @@ const layout = {
         closeRate,
         dtv
     ]
-}
+};
 
+
+const datasources = {
+    'DIRECTV': {
+        'fields': [ 'DTV Sales', 'Rolling Total', 'Pacing', 'Delta' ]
+    }
+};
 
 const objectives = {
     'CloseRate': {
