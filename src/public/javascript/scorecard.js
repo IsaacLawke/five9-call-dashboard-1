@@ -163,8 +163,11 @@ const store = new Vuex.Store({
         editMode: true
     },
     mutations: {
-        setObjectives (state, newObjectives) {
+        setObjectives(state, newObjectives) {
             this.state.objectives = newObjectives;
+        },
+        toggleEditMode(state) {
+            this.state.editMode = !this.state.editMode;
         }
     }
 });
@@ -187,6 +190,14 @@ const vm = new Vue({
     methods: {
         exportLayout: function() {
             download(layout, 'test.json', 'text/plain');
+        },
+        addCard: function() {
+            const newCard = {
+                'title': '',
+                'data': [],
+                'widgets': []
+            }
+            this.layout.cards.push(newCard);
         }
     }
 });

@@ -21,6 +21,17 @@
         </div>
 
         <button
+            class="add-button"
+            v-if="$store.state.editMode"
+            @click="addCard"
+        >+</button>
+
+        <button
+            @click="$store.commit('toggleEditMode')"
+            id="toggle-edit-mode">
+            Edit Mode
+        </button>
+        <button
             v-if="$store.state.editMode"
             @click="exportLayout"
             id="export-layout">

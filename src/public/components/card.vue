@@ -12,7 +12,7 @@
         :data="data"
         :x-field="widget.fields.x"
         :y-field="widget.fields.y"
-        :key="i"
+        :key="widget.id"
     ></line-graph>
 
     <data-table
