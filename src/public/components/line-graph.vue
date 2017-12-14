@@ -10,8 +10,9 @@ Accepts data prop with structure:
  -->
 
 <template>
-    <div class="line-graph">
-        <svg @mousemove="mouseover" :width="width" :height="height">
+<div class="line-graph">
+    <div ref="graph-wrap" class="graph-wrap">
+        <svg @click="toggleTable" @mousemove="mouseover" :width="width" :height="height">
             <text :x="55" :y="10">{{ yField }}</text>
             <g class="axis" ref="yaxis" :style="{transform: `translate(20px,${margin.top}px)`}"></g>
             <g :style="{transform: `translate(${margin.left}px, ${margin.top}px)`}">
@@ -21,15 +22,27 @@ Accepts data prop with structure:
             </g>
         </svg>
     </div>
+
+    <data-table
+        v-if="showTable"
+        @hoverDate="hoverDate"
+        @unhoverDate="unhoverDate"
+        :data="data"
+        :highlightedDate="highlightedDate"
+    ></data-table>
+</div>
 </template>
 
 <script>
+
+import DataTable from './data-table.vue';
+
 const props = {
     xField: {default: 'x'},
     yField: {default: 'y'},
     data: {
         type: Array,
-        default: () => [{x: '2017-11-01', y: 12}, {x: '2017-11-02', y: 2}, {x: '2017-11-03', y: 7}]
+        default: () => []
     },
     margin: {
         type: Object,
@@ -45,8 +58,13 @@ const props = {
 export default {
     name: 'line-graph',
     props,
+    components: {
+        'data-table': DataTable
+    },
     data () {
         return {
+            showTable: false,
+            highlightedDate: null,
             width: 0,
             height: 0,
             paths: {
@@ -73,6 +91,7 @@ export default {
         }
     },
     mounted() {
+        console.log(DataTable);
         window.addEventListener('resize', this.onResize);
         this.onResize();
     },
@@ -86,9 +105,20 @@ export default {
         }
     },
     methods: {
+        toggleTable() {
+            this.showTable = !this.showTable;
+        },
+
+        hoverDate(date) {
+            this.highlightedDate = date;
+        },
+        unhoverDate(date) {
+            this.highlightedDate = null;
+        },
+
         onResize() {
-            this.width = this.$el.offsetWidth;
-            this.height = this.$el.offsetHeight;
+            this.width = this.$refs['graph-wrap'].offsetWidth;
+            this.height = this.$refs['graph-wrap'].offsetHeight;
         },
         createArea: d3.area().x(d => d.x).y0(d => d.max).y1(d => d.y),
         createLine: d3.line().x(d => d.x).y(d => d.y).curve(d3.curveMonotoneX),
@@ -127,6 +157,7 @@ export default {
             d3.select(this.$refs.yaxis).selectAll('text').attr('#444');
         },
         mouseover({ offsetX }) {
+            // console.log(offsetX);
             if (this.points.length > 0) {
                 const x = offsetX - this.margin.left;
                 const closestPoint = this.getClosestPoint(x);
@@ -152,11 +183,13 @@ export default {
 </script>
 
 <style scoped>
-    .line-graph {
-        display: flex;
-        flex-direction: column;
+    .graph-wrap:hover {
+        cursor: pointer;
     }
-    .line-graph text {
+    .graph-wrap {
+        height: 150px;
+    }
+    .graph-wrap text {
         text-anchor: middle;
         font-size: 0.8em;
     }
@@ -169,9 +202,6 @@ export default {
       width: 150px;
     }
 
-    .line-graph {
-      height: 150px;
-    }
     .line {
         fill: none;
         stroke: steelblue;

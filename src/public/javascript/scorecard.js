@@ -156,6 +156,30 @@ closeRate.widgets = [
 ];
 
 
+
+const dtv = {'title': 'DIRECTV Sales'};
+dtv.data = dtvData;
+dtv.meta = dtvMeta;
+dtv.widgets = [
+    {
+        'component': 'single-value',
+        'title': 'Today',
+        'field': 'DIRECTV Sales',
+        'value': 1
+    },
+    {
+        'component': 'single-value',
+        'title': 'Month to Date',
+        'field': 'DIRECTV Sales',
+        'value': 23
+    },
+    {
+        'component': 'line-graph',
+        'x-field': 'Date'
+    },
+];
+
+
 const aht = {'title': 'AHT'};
 aht.data = ahtData;
 aht.meta = ahtMeta;
@@ -209,26 +233,6 @@ const objectives = {
     }
 };
 
-
-const dtv = {'title': 'DIRECTV Sales'};
-dtv.data = dtvData;
-dtv.meta = dtvMeta;
-dtv.widgets = {
-    'single-value': [
-        {
-            'component': 'single-value',
-            'title': 'Today',
-            'field': 'DIRECTV Sales',
-            'value': 2
-        },
-        {
-            'component': 'single-value',
-            'title': 'Month to Date',
-            'field': 'DIRECTV Sales',
-            'value': 33
-        }
-    ],
-};
 
 const layout = {
     cards: [

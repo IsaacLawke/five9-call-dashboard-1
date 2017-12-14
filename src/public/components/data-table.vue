@@ -3,7 +3,7 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th v-for="header in meta.headers"
+                <th v-for="header in headers"
                 >{{ header }}</th>
             </tr>
         </thead>
@@ -14,7 +14,6 @@
                 @unhoverDate="unhoverDate"
                 :key="i"
                 :datum="datum"
-                :meta="meta"
                 :isHighlighted="highlightedDate==datum.Date"
             ></tr>
         </tbody>
@@ -26,9 +25,14 @@
 import DataTableRow from './data-table-row.vue';
 
 export default {
-    props: ['data', 'meta', 'highlightedDate'],
+    props: ['data', 'highlightedDate'],
     components: {
         'data-table-row': DataTableRow
+    },
+    computed: {
+        headers: function() {
+            return Object.keys(this.data[0]);
+        }
     },
     methods: {
         hoverDate: function(date) {

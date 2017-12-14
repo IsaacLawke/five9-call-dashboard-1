@@ -6,20 +6,21 @@
         v-bind="widget"
         :key="i"
     ></single-value>
-    <data-table
-        v-for="(widget, i) in widgetsOfType('data-table')"
-        @hoverDate="hoverDate"
-        @unhoverDate="unhoverDate"
-        :data="data"
-        :meta="meta"
-        :highlightedDate="highlightedDate"
-    ></data-table>
+
     <line-graph
         v-for="(widget, i) in widgetsOfType('line-graph')"
         :data="data"
         :x-field="meta.graph.fields.x"
         :y-field="meta.graph.fields.y"
     ></line-graph>
+
+    <data-table
+        v-for="(widget, i) in widgetsOfType('data-table')"
+        @hoverDate="hoverDate"
+        @unhoverDate="unhoverDate"
+        :data="data"
+        :highlightedDate="highlightedDate"
+    ></data-table>
 </div>
 </template>
 

@@ -1,11 +1,11 @@
 <template>
     <tr v-bind:class="{ highlight: isHighlighted }">
         <td
-          v-for="key in meta.headers"
+          v-for="(val, key) in datum"
           v-on:mouseover="highlightDate(datum)"
           v-on:mouseleave="unhighlightDate"
-          v-bind:class="formatted(datum[key], key).styleClass">
-            {{ formatted(datum[key], key).value }}
+          v-bind:class="formatted(val, key).styleClass">
+            {{ formatted(val, key).value }}
         </td>
     </tr>
 </template>
@@ -14,7 +14,7 @@
 import {formatValue} from '../javascript/scorecard-format.js';
 
 export default {
-    props: ['datum', 'meta', 'isHighlighted'],
+    props: ['datum', 'headers', 'isHighlighted'],
     methods: {
         highlightDate: function(datum) {
             this.$emit('hoverDate', datum.Date);

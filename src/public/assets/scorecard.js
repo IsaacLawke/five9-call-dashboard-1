@@ -684,6 +684,30 @@ closeRate.widgets = [
 ];
 
 
+
+const dtv = {'title': 'DIRECTV Sales'};
+dtv.data = dtvData;
+dtv.meta = dtvMeta;
+dtv.widgets = [
+    {
+        'component': 'single-value',
+        'title': 'Today',
+        'field': 'DIRECTV Sales',
+        'value': 1
+    },
+    {
+        'component': 'single-value',
+        'title': 'Month to Date',
+        'field': 'DIRECTV Sales',
+        'value': 23
+    },
+    {
+        'component': 'line-graph',
+        'x-field': 'Date'
+    },
+];
+
+
 const aht = {'title': 'AHT'};
 aht.data = ahtData;
 aht.meta = ahtMeta;
@@ -737,26 +761,6 @@ const objectives = {
     }
 };
 
-
-const dtv = {'title': 'DIRECTV Sales'};
-dtv.data = dtvData;
-dtv.meta = dtvMeta;
-dtv.widgets = {
-    'single-value': [
-        {
-            'component': 'single-value',
-            'title': 'Today',
-            'field': 'DIRECTV Sales',
-            'value': 2
-        },
-        {
-            'component': 'single-value',
-            'title': 'Month to Date',
-            'field': 'DIRECTV Sales',
-            'value': 33
-        }
-    ],
-};
 
 const layout = {
     cards: [
@@ -974,7 +978,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.line-graph[data-v-21d5040e] {\n    display: flex;\n    flex-direction: column;\n}\n.line-graph text[data-v-21d5040e] {\n    text-anchor: middle;\n    font-size: 0.8em;\n}\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line-graph[data-v-21d5040e] {\n  height: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n    stroke-linejoin: round;\n    stroke-linecap: round;\n    stroke-width: 1.5;\n}\n.axis[data-v-21d5040e] {\n    font-size: 0.5em;\n}\n", ""]);
+exports.push([module.i, "\n.graph-wrap[data-v-21d5040e]:hover {\n    cursor: pointer;\n}\n.graph-wrap[data-v-21d5040e] {\n    height: 150px;\n}\n.graph-wrap text[data-v-21d5040e] {\n    text-anchor: middle;\n    font-size: 0.8em;\n}\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n    stroke-linejoin: round;\n    stroke-linecap: round;\n    stroke-width: 1.5;\n}\n.axis[data-v-21d5040e] {\n    font-size: 0.5em;\n}\n", ""]);
 
 // exports
 
@@ -1017,6 +1021,17 @@ module.exports = function listToStyles (parentId, list) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__data_table_vue__ = __webpack_require__(11);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1043,12 +1058,15 @@ module.exports = function listToStyles (parentId, list) {
 //
 //
 
+
+
+
 const props = {
     xField: {default: 'x'},
     yField: {default: 'y'},
     data: {
         type: Array,
-        default: () => [{x: '2017-11-01', y: 12}, {x: '2017-11-02', y: 2}, {x: '2017-11-03', y: 7}]
+        default: () => []
     },
     margin: {
         type: Object,
@@ -1064,8 +1082,13 @@ const props = {
 /* harmony default export */ __webpack_exports__["a"] = ({
     name: 'line-graph',
     props,
+    components: {
+        'data-table': __WEBPACK_IMPORTED_MODULE_0__data_table_vue__["a" /* default */]
+    },
     data () {
         return {
+            showTable: false,
+            highlightedDate: null,
             width: 0,
             height: 0,
             paths: {
@@ -1092,6 +1115,7 @@ const props = {
         }
     },
     mounted() {
+        console.log(__WEBPACK_IMPORTED_MODULE_0__data_table_vue__["a" /* default */]);
         window.addEventListener('resize', this.onResize);
         this.onResize();
     },
@@ -1105,9 +1129,20 @@ const props = {
         }
     },
     methods: {
+        toggleTable() {
+            this.showTable = !this.showTable;
+        },
+
+        hoverDate(date) {
+            this.highlightedDate = date;
+        },
+        unhoverDate(date) {
+            this.highlightedDate = null;
+        },
+
         onResize() {
-            this.width = this.$el.offsetWidth;
-            this.height = this.$el.offsetHeight;
+            this.width = this.$refs['graph-wrap'].offsetWidth;
+            this.height = this.$refs['graph-wrap'].offsetHeight;
         },
         createArea: d3.area().x(d => d.x).y0(d => d.max).y1(d => d.y),
         createLine: d3.line().x(d => d.x).y(d => d.y).curve(d3.curveMonotoneX),
@@ -1146,6 +1181,7 @@ const props = {
             d3.select(this.$refs.yaxis).selectAll('text').attr('#444');
         },
         mouseover({ offsetX }) {
+            // console.log(offsetX);
             if (this.points.length > 0) {
                 const x = offsetX - this.margin.left;
                 const closestPoint = this.getClosestPoint(x);
@@ -1179,44 +1215,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "line-graph" }, [
-    _c(
-      "svg",
-      {
-        attrs: { width: _vm.width, height: _vm.height },
-        on: { mousemove: _vm.mouseover }
-      },
-      [
-        _c("text", { attrs: { x: 55, y: 10 } }, [_vm._v(_vm._s(_vm.yField))]),
-        _vm._v(" "),
-        _c("g", {
-          ref: "yaxis",
-          staticClass: "axis",
-          style: { transform: "translate(20px," + _vm.margin.top + "px)" }
-        }),
-        _vm._v(" "),
+  return _c(
+    "div",
+    { staticClass: "line-graph" },
+    [
+      _c("div", { ref: "graph-wrap", staticClass: "graph-wrap" }, [
         _c(
-          "g",
+          "svg",
           {
-            style: {
-              transform:
-                "translate(" + _vm.margin.left + "px, " + _vm.margin.top + "px)"
-            }
+            attrs: { width: _vm.width, height: _vm.height },
+            on: { click: _vm.toggleTable, mousemove: _vm.mouseover }
           },
           [
-            _c("path", { staticClass: "area", attrs: { d: _vm.paths.area } }),
+            _c("text", { attrs: { x: 55, y: 10 } }, [
+              _vm._v(_vm._s(_vm.yField))
+            ]),
             _vm._v(" "),
-            _c("path", { staticClass: "line", attrs: { d: _vm.paths.line } }),
+            _c("g", {
+              ref: "yaxis",
+              staticClass: "axis",
+              style: { transform: "translate(20px," + _vm.margin.top + "px)" }
+            }),
             _vm._v(" "),
-            _c("path", {
-              staticClass: "selector",
-              attrs: { d: _vm.paths.selector }
-            })
+            _c(
+              "g",
+              {
+                style: {
+                  transform:
+                    "translate(" +
+                    _vm.margin.left +
+                    "px, " +
+                    _vm.margin.top +
+                    "px)"
+                }
+              },
+              [
+                _c("path", {
+                  staticClass: "area",
+                  attrs: { d: _vm.paths.area }
+                }),
+                _vm._v(" "),
+                _c("path", {
+                  staticClass: "line",
+                  attrs: { d: _vm.paths.line }
+                }),
+                _vm._v(" "),
+                _c("path", {
+                  staticClass: "selector",
+                  attrs: { d: _vm.paths.selector }
+                })
+              ]
+            )
           ]
         )
-      ]
-    )
-  ])
+      ]),
+      _vm._v(" "),
+      _vm.showTable
+        ? _c("data-table", {
+            attrs: { data: _vm.data, highlightedDate: _vm.highlightedDate },
+            on: { hoverDate: _vm.hoverDate, unhoverDate: _vm.unhoverDate }
+          })
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -1319,7 +1381,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -1353,14 +1415,18 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 //
 //
 //
-//
 
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['data', 'meta', 'highlightedDate'],
+    props: ['data', 'highlightedDate'],
     components: {
         'data-table-row': __WEBPACK_IMPORTED_MODULE_0__data_table_row_vue__["a" /* default */]
+    },
+    computed: {
+        headers: function() {
+            return Object.keys(this.data[0]);
+        }
     },
     methods: {
         hoverDate: function(date) {
@@ -1446,7 +1512,7 @@ if (false) {(function () {
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    props: ['datum', 'meta', 'isHighlighted'],
+    props: ['datum', 'headers', 'isHighlighted'],
     methods: {
         highlightDate: function(datum) {
             this.$emit('hoverDate', datum.Date);
@@ -1474,11 +1540,11 @@ var render = function() {
   return _c(
     "tr",
     { class: { highlight: _vm.isHighlighted } },
-    _vm._l(_vm.meta.headers, function(key) {
+    _vm._l(_vm.datum, function(val, key) {
       return _c(
         "td",
         {
-          class: _vm.formatted(_vm.datum[key], key).styleClass,
+          class: _vm.formatted(val, key).styleClass,
           on: {
             mouseover: function($event) {
               _vm.highlightDate(_vm.datum)
@@ -1488,9 +1554,7 @@ var render = function() {
         },
         [
           _vm._v(
-            "\n        " +
-              _vm._s(_vm.formatted(_vm.datum[key], key).value) +
-              "\n    "
+            "\n        " + _vm._s(_vm.formatted(val, key).value) + "\n    "
           )
         ]
       )
@@ -1522,7 +1586,7 @@ var render = function() {
       _c("thead", [
         _c(
           "tr",
-          _vm._l(_vm.meta.headers, function(header) {
+          _vm._l(_vm.headers, function(header) {
             return _c("th", [_vm._v(_vm._s(header))])
           })
         )
@@ -1536,7 +1600,6 @@ var render = function() {
             tag: "tr",
             attrs: {
               datum: datum,
-              meta: _vm.meta,
               isHighlighted: _vm.highlightedDate == datum.Date
             },
             on: { hoverDate: _vm.hoverDate, unhoverDate: _vm.unhoverDate }
@@ -1646,6 +1709,7 @@ if (false) {(function () {
 //
 //
 //
+//
 
 
 
@@ -1719,17 +1783,6 @@ var render = function() {
         )
       }),
       _vm._v(" "),
-      _vm._l(_vm.widgetsOfType("data-table"), function(widget, i) {
-        return _c("data-table", {
-          attrs: {
-            data: _vm.data,
-            meta: _vm.meta,
-            highlightedDate: _vm.highlightedDate
-          },
-          on: { hoverDate: _vm.hoverDate, unhoverDate: _vm.unhoverDate }
-        })
-      }),
-      _vm._v(" "),
       _vm._l(_vm.widgetsOfType("line-graph"), function(widget, i) {
         return _c("line-graph", {
           attrs: {
@@ -1737,6 +1790,13 @@ var render = function() {
             "x-field": _vm.meta.graph.fields.x,
             "y-field": _vm.meta.graph.fields.y
           }
+        })
+      }),
+      _vm._v(" "),
+      _vm._l(_vm.widgetsOfType("data-table"), function(widget, i) {
+        return _c("data-table", {
+          attrs: { data: _vm.data, highlightedDate: _vm.highlightedDate },
+          on: { hoverDate: _vm.hoverDate, unhoverDate: _vm.unhoverDate }
         })
       })
     ],
