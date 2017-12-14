@@ -10,8 +10,9 @@
     <line-graph
         v-for="(widget, i) in widgetsOfType('line-graph')"
         :data="data"
-        :x-field="meta.graph.fields.x"
-        :y-field="meta.graph.fields.y"
+        :x-field="widget.fields.x"
+        :y-field="widget.fields.y"
+        :key="i"
     ></line-graph>
 
     <data-table
@@ -20,6 +21,7 @@
         @unhoverDate="unhoverDate"
         :data="data"
         :highlightedDate="highlightedDate"
+        :key="i"
     ></data-table>
 </div>
 </template>

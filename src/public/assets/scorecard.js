@@ -608,104 +608,14 @@ const CloseRateField = {
                     : (val * 100).toFixed(0) + '%'
 }
 
-
-const baseMeta = {
-    format: {
-        'Date': (val) => moment(val).format('MMM D')
-    }
-};
-const ahtMeta = mergeDeep({
-    headers: [
-        'Date', 'AHT', 'ACW', 'Hold', 'Calls'
-    ],
-    graph: {
-        fields: {
-            x: 'Date',
-            y: 'AHT'
-        }
-    }
-}, baseMeta);
-const productivityMeta = mergeDeep({
-    headers: ['Date', 'Productivity'],
-    graph: {
-        fields: {
-            x: 'Date',
-            y: 'Productivity'
-        }
-    }
-}, baseMeta);
-
-
-const closeRateMeta = mergeDeep({
-    headers: ['Date', 'Close Rate', 'Sales', 'Calls'],
-    graph: {
-        fields: {
-            x: 'Date',
-            y: 'Close Rate'
-        }
-    }
-}, baseMeta);
-const dtvMeta = mergeDeep({
-    headers: ['Date', 'DTV Sales', 'Rolling Total', 'Pacing', 'Delta'],
-    graph: {
-        fields: {
-            x: 'Date',
-            y: 'DTV Sales'
-        }
-    }
-}, baseMeta);
-
 let dtvData = [{"Date": "2017-11-01","DTV Sales": "2","Rolling Total": "2","Pacing": "1.36","Delta": "1"}, {"Date": "2017-11-02","DTV Sales": "0","Rolling Total": "2","Pacing": "2.73","Delta": "-1"}, {"Date": "2017-11-03","DTV Sales": "1","Rolling Total": "3","Pacing": "4.09","Delta": "-1"}, {"Date": "2017-11-04","DTV Sales": "4","Rolling Total": "7","Pacing": "5.45","Delta": "2"}, {"Date": "2017-11-05","DTV Sales": "4","Rolling Total": "11","Pacing": "6.82","Delta": "4"}, {"Date": "2017-11-06","DTV Sales": "N/A","Rolling Total": "11","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-07","DTV Sales": "N/A","Rolling Total": "11","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-08","DTV Sales": "3","Rolling Total": "14","Pacing": "8.18","Delta": "6"}, {"Date": "2017-11-09","DTV Sales": "3","Rolling Total": "17","Pacing": "9.55","Delta": "7"}, {"Date": "2017-11-10","DTV Sales": "0","Rolling Total": "17","Pacing": "10.91","Delta": "6"}, {"Date": "2017-11-11","DTV Sales": "4","Rolling Total": "21","Pacing": "12.27","Delta": "9"}, {"Date": "2017-11-12","DTV Sales": "0","Rolling Total": "21","Pacing": "13.64","Delta": "7"}, {"Date": "2017-11-13","DTV Sales": "N/A","Rolling Total": "21","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-14","DTV Sales": "N/A","Rolling Total": "21","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-15","DTV Sales": "2","Rolling Total": "23","Pacing": "15","Delta": "8"}, {"Date": "2017-11-16","DTV Sales": "4","Rolling Total": "27","Pacing": "16.36","Delta": "11"}, {"Date": "2017-11-17","DTV Sales": "0","Rolling Total": "27","Pacing": "17.73","Delta": "9"}, {"Date": "2017-11-18","DTV Sales": "0","Rolling Total": "27","Pacing": "19.09","Delta": "8"}, {"Date": "2017-11-19","DTV Sales": "1","Rolling Total": "28","Pacing": "20.45","Delta": "8"}, {"Date": "2017-11-20","DTV Sales": "N/A","Rolling Total": "28","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-21","DTV Sales": "N/A","Rolling Total": "28","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-22","DTV Sales": "0","Rolling Total": "28","Pacing": "21.82","Delta": "6"}, {"Date": "2017-11-23","DTV Sales": "3","Rolling Total": "31","Pacing": "23.18","Delta": "8"}, {"Date": "2017-11-24","DTV Sales": "0","Rolling Total": "31","Pacing": "24.55","Delta": "6"}, {"Date": "2017-11-25","DTV Sales": "4","Rolling Total": "35","Pacing": "25.91","Delta": "9"}, {"Date": "2017-11-26","DTV Sales": "2","Rolling Total": "37","Pacing": "27.27","Delta": "10"}, {"Date": "2017-11-27","DTV Sales": "N/A","Rolling Total": "37","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-28","DTV Sales": "N/A","Rolling Total": "37","Pacing": "N/A","Delta": "N/A"}, {"Date": "2017-11-29","DTV Sales": "2","Rolling Total": "39","Pacing": "28.64","Delta": "10"}, {"Date": "2017-11-30","DTV Sales": "2","Rolling Total": "41","Pacing": "30","Delta": "11"}]
 
 
 let closeRateData = [{"Date": "2017-11-01","Close Rate": "0.59","Sales": "24","Calls": "62"}, {"Date": "2017-11-02","Close Rate": "0.50","Sales": "25","Calls": "68"}, {"Date": "2017-11-03","Close Rate": "0.40","Sales": "17","Calls": "42"}, {"Date": "2017-11-04","Close Rate": "0.40","Sales": "25","Calls": "62"}, {"Date": "2017-11-05","Close Rate": "0.37","Sales": "20","Calls": "53"}, {"Date": "2017-11-06","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-07","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-08","Close Rate": "0.51","Sales": "24","Calls": "54"}, {"Date": "2017-11-09","Close Rate": "0.58","Sales": "16","Calls": "28"}, {"Date": "2017-11-10","Close Rate": "0.44","Sales": "20","Calls": "45"}, {"Date": "2017-11-11","Close Rate": "0.57","Sales": "17","Calls": "30"}, {"Date": "2017-11-12","Close Rate": "0.41","Sales": "17","Calls": "41"}, {"Date": "2017-11-13","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-14","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-15","Close Rate": "0.56","Sales": "23","Calls": "41"}, {"Date": "2017-11-16","Close Rate": "0.35","Sales": "18","Calls": "51"}, {"Date": "2017-11-17","Close Rate": "0.41","Sales": "17","Calls": "41"}, {"Date": "2017-11-18","Close Rate": "0.58","Sales": "20","Calls": "35"}, {"Date": "2017-11-19","Close Rate": "0.59","Sales": "15","Calls": "25"}, {"Date": "2017-11-20","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-21","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-22","Close Rate": "0.58","Sales": "25","Calls": "43"}, {"Date": "2017-11-23","Close Rate": "0.44","Sales": "22","Calls": "51"}, {"Date": "2017-11-24","Close Rate": "0.50","Sales": "23","Calls": "46"}, {"Date": "2017-11-25","Close Rate": "0.51","Sales": "22","Calls": "43"}, {"Date": "2017-11-26","Close Rate": "0.36","Sales": "15","Calls": "41"}, {"Date": "2017-11-27","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-28","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-29","Close Rate": "0.38","Sales": "16","Calls": "42"}, {"Date": "2017-11-30","Close Rate": "0.47","Sales": "26","Calls": "55"}]
-//
-// const aht = {'title': 'AHT'};
-// aht.data = ahtData;
-// aht.meta = ahtMeta;
-// aht.widgets = {
-//     'single-value': [
-//         {
-//             'component': 'single-value',
-//             'title': 'Today',
-//             'field': aht.title,
-//             'value': 2
-//         },
-//         {
-//             'component': 'single-value',
-//             'title': 'Month to Date',
-//             'field': aht.title,
-//             'value': 33
-//         }
-//     ],
-// };
-//
-// const productivity = {'title': 'Productivity'};
-// productivity.data = productivityData;
-// productivity.meta = productivityMeta;
-// productivity.widgets = {
-//     'single-value': [
-//         {
-//             'component': 'single-value',
-//             'title': 'Today',
-//             'field': productivity.title,
-//             'value': 2
-//         },
-//         {
-//             'component': 'single-value',
-//             'title': 'Month to Date',
-//             'field': productivity.title,
-//             'value': 33
-//         }
-//     ],
-// };
-//
-//
 
 
 const closeRate = {'title': 'Close Rate'};
 closeRate.data = closeRateData;
-closeRate.meta = closeRateMeta;
 closeRate.widgets = [
     {
         'component': 'single-value',
@@ -721,7 +631,10 @@ closeRate.widgets = [
     },
     {
         'component': 'line-graph',
-        'x-field': 'Date'
+        'fields': {
+            x: 'Date',
+            y: 'Close Rate'
+        }
     }
 ];
 
@@ -729,7 +642,6 @@ closeRate.widgets = [
 
 const dtv = {'title': 'DIRECTV Sales'};
 dtv.data = dtvData;
-dtv.meta = dtvMeta;
 dtv.widgets = [
     {
         'component': 'single-value',
@@ -745,7 +657,10 @@ dtv.widgets = [
     },
     {
         'component': 'line-graph',
-        'x-field': 'Date'
+        'fields': {
+            x: 'Date',
+            y: 'DTV Sales'
+        }
     },
 ];
 
@@ -1688,6 +1603,8 @@ if (false) {(function () {
 //
 //
 //
+//
+//
 
 
 
@@ -1763,16 +1680,18 @@ var render = function() {
       _vm._v(" "),
       _vm._l(_vm.widgetsOfType("line-graph"), function(widget, i) {
         return _c("line-graph", {
+          key: i,
           attrs: {
             data: _vm.data,
-            "x-field": _vm.meta.graph.fields.x,
-            "y-field": _vm.meta.graph.fields.y
+            "x-field": widget.fields.x,
+            "y-field": widget.fields.y
           }
         })
       }),
       _vm._v(" "),
       _vm._l(_vm.widgetsOfType("data-table"), function(widget, i) {
         return _c("data-table", {
+          key: i,
           attrs: { data: _vm.data, highlightedDate: _vm.highlightedDate },
           on: { hoverDate: _vm.hoverDate, unhoverDate: _vm.unhoverDate }
         })
