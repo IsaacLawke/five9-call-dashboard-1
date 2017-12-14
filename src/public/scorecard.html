@@ -14,22 +14,16 @@
     <div id="app" class="content-wrapper">
         <h1>John Doe</h1>
         <div class="scorecard-wrapper">
-            <widget-box
-              v-bind="closeRate"
-            ></widget-box>
+            <card
+                v-bind="closeRate"
+            ></card>
 
             <widget-box
               v-bind="dtv"
             ></widget-box>
 
-            <widget-box
-              v-bind="aht"
-            ></widget-box>
-
-            <widget-box
-              v-bind="productivity"
-            ></widget-box>
         </div>
+        <button @click="exportLayout" id="export-layout">Export</button>
     </div>
     </body>
 

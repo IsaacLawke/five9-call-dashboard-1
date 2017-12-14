@@ -1,5 +1,5 @@
 <template>
-    <div class="data-table-wrapper">
+<div class="data-table-wrapper">
     <table class="data-table">
         <thead>
             <tr>
@@ -9,17 +9,17 @@
         </thead>
         <tbody>
             <tr is="data-table-row"
-              v-for="(datum, i) in data"
-              @hoverDate="hoverDate"
-              @unhoverDate="unhoverDate"
-              :key="i"
-              :datum="datum"
-              :meta="meta"
-              :isHighlighted="highlightedDate==datum.Date"
+                v-for="(datum, i) in data"
+                @hoverDate="hoverDate"
+                @unhoverDate="unhoverDate"
+                :key="i"
+                :datum="datum"
+                :meta="meta"
+                :isHighlighted="highlightedDate==datum.Date"
             ></tr>
         </tbody>
     </table>
-    </div>
+</div>
 </template>
 
 <script>
