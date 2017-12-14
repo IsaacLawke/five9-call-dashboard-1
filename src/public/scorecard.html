@@ -14,12 +14,18 @@
     <div id="app" class="content-wrapper">
         <div class="scorecard-wrapper">
             <card
-                v-for="card in layout.cards"
+                v-for="(card, i) in layout.cards"
                 v-bind="card"
+                :key="i"
             ></card>
         </div>
 
-        <button @click="exportLayout" id="export-layout">Export</button>
+        <button
+            v-if="$store.state.editMode"
+            @click="exportLayout"
+            id="export-layout">
+            Export
+        </button>
     </div>
     </body>
 

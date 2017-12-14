@@ -245,7 +245,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         objectives: {},
-        editMode: false
+        editMode: true
     },
     mutations: {
         setObjectives (state, newObjectives) {
