@@ -91,7 +91,6 @@ export default {
         }
     },
     mounted() {
-        console.log(DataTable);
         window.addEventListener('resize', this.onResize);
         this.onResize();
     },

@@ -131,6 +131,48 @@ let dtvData = [{"Date": "2017-11-01","DTV Sales": "2","Rolling Total": "2","Paci
 
 
 let closeRateData = [{"Date": "2017-11-01","Close Rate": "0.59","Sales": "24","Calls": "62"}, {"Date": "2017-11-02","Close Rate": "0.50","Sales": "25","Calls": "68"}, {"Date": "2017-11-03","Close Rate": "0.40","Sales": "17","Calls": "42"}, {"Date": "2017-11-04","Close Rate": "0.40","Sales": "25","Calls": "62"}, {"Date": "2017-11-05","Close Rate": "0.37","Sales": "20","Calls": "53"}, {"Date": "2017-11-06","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-07","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-08","Close Rate": "0.51","Sales": "24","Calls": "54"}, {"Date": "2017-11-09","Close Rate": "0.58","Sales": "16","Calls": "28"}, {"Date": "2017-11-10","Close Rate": "0.44","Sales": "20","Calls": "45"}, {"Date": "2017-11-11","Close Rate": "0.57","Sales": "17","Calls": "30"}, {"Date": "2017-11-12","Close Rate": "0.41","Sales": "17","Calls": "41"}, {"Date": "2017-11-13","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-14","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-15","Close Rate": "0.56","Sales": "23","Calls": "41"}, {"Date": "2017-11-16","Close Rate": "0.35","Sales": "18","Calls": "51"}, {"Date": "2017-11-17","Close Rate": "0.41","Sales": "17","Calls": "41"}, {"Date": "2017-11-18","Close Rate": "0.58","Sales": "20","Calls": "35"}, {"Date": "2017-11-19","Close Rate": "0.59","Sales": "15","Calls": "25"}, {"Date": "2017-11-20","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-21","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-22","Close Rate": "0.58","Sales": "25","Calls": "43"}, {"Date": "2017-11-23","Close Rate": "0.44","Sales": "22","Calls": "51"}, {"Date": "2017-11-24","Close Rate": "0.50","Sales": "23","Calls": "46"}, {"Date": "2017-11-25","Close Rate": "0.51","Sales": "22","Calls": "43"}, {"Date": "2017-11-26","Close Rate": "0.36","Sales": "15","Calls": "41"}, {"Date": "2017-11-27","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-28","Close Rate": "N/A","Sales": "0","Calls": "0"}, {"Date": "2017-11-29","Close Rate": "0.38","Sales": "16","Calls": "42"}, {"Date": "2017-11-30","Close Rate": "0.47","Sales": "26","Calls": "55"}]
+//
+// const aht = {'title': 'AHT'};
+// aht.data = ahtData;
+// aht.meta = ahtMeta;
+// aht.widgets = {
+//     'single-value': [
+//         {
+//             'component': 'single-value',
+//             'title': 'Today',
+//             'field': aht.title,
+//             'value': 2
+//         },
+//         {
+//             'component': 'single-value',
+//             'title': 'Month to Date',
+//             'field': aht.title,
+//             'value': 33
+//         }
+//     ],
+// };
+//
+// const productivity = {'title': 'Productivity'};
+// productivity.data = productivityData;
+// productivity.meta = productivityMeta;
+// productivity.widgets = {
+//     'single-value': [
+//         {
+//             'component': 'single-value',
+//             'title': 'Today',
+//             'field': productivity.title,
+//             'value': 2
+//         },
+//         {
+//             'component': 'single-value',
+//             'title': 'Month to Date',
+//             'field': productivity.title,
+//             'value': 33
+//         }
+//     ],
+// };
+//
+//
 
 
 const closeRate = {'title': 'Close Rate'};
@@ -179,47 +221,12 @@ dtv.widgets = [
     },
 ];
 
-
-const aht = {'title': 'AHT'};
-aht.data = ahtData;
-aht.meta = ahtMeta;
-aht.widgets = {
-    'single-value': [
-        {
-            'component': 'single-value',
-            'title': 'Today',
-            'field': aht.title,
-            'value': 2
-        },
-        {
-            'component': 'single-value',
-            'title': 'Month to Date',
-            'field': aht.title,
-            'value': 33
-        }
-    ],
-};
-
-const productivity = {'title': 'Productivity'};
-productivity.data = productivityData;
-productivity.meta = productivityMeta;
-productivity.widgets = {
-    'single-value': [
-        {
-            'component': 'single-value',
-            'title': 'Today',
-            'field': productivity.title,
-            'value': 2
-        },
-        {
-            'component': 'single-value',
-            'title': 'Month to Date',
-            'field': productivity.title,
-            'value': 33
-        }
-    ],
-};
-
+const layout = {
+    cards: [
+        closeRate,
+        dtv
+    ]
+}
 
 
 const objectives = {
@@ -233,29 +240,6 @@ const objectives = {
     }
 };
 
-
-const layout = {
-    cards: [
-        {
-            title: 'DIRECTV',
-            width: 1,
-            widget: [
-                {
-                    'component': 'single-value',
-                    'title': 'Today',
-                    'field': 'DIRECTV Sales',
-                    'value': 2,
-                },
-                {
-                    'component': 'single-value',
-                    'title': 'Month to Date',
-                    'field': 'DIRECTV Sales',
-                    'value': 33
-                }
-            ]
-        },
-    ]
-}
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -274,10 +258,7 @@ const vm = new Vue({
     el: '#app',
     store,
     data: {
-        aht: aht,
-        dtv: dtv,
-        closeRate: closeRate,
-        productivity: productivity
+        layout: layout
     },
 
     created: function () {
@@ -285,8 +266,6 @@ const vm = new Vue({
     },
 
     components: {
-        'data-table': DataTable,
-        'line-graph': LineGraph,
         'card': Card
     },
 

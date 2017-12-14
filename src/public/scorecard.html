@@ -12,17 +12,13 @@
 
     <body>
     <div id="app" class="content-wrapper">
-        <h1>John Doe</h1>
         <div class="scorecard-wrapper">
             <card
-                v-bind="closeRate"
+                v-for="card in layout.cards"
+                v-bind="card"
             ></card>
-
-            <card
-                v-bind="dtv"
-            ></card>
-
         </div>
+
         <button @click="exportLayout" id="export-layout">Export</button>
     </div>
     </body>
