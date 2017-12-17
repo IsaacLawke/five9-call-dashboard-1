@@ -22,8 +22,8 @@ export default {
         unhighlightDate: function(datum) {
             this.$emit('unhoverDate', datum.Date);
         },
-        formatted: function (val, field) {
-            let res = formatValue(val, field);
+        formatted: function (val, fieldName) {
+            let res = formatValue(val, this.$store.getters.field(fieldName));
             return res;
         }
     }
