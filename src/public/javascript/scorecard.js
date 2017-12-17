@@ -165,7 +165,6 @@ const store = new Vuex.Store({
     }
 });
 
-console.log(store.getters.field('Close Rate'));
 
 const vm = new Vue({
     el: '#app',

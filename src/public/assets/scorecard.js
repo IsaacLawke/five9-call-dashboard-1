@@ -843,7 +843,6 @@ const store = new Vuex.Store({
     }
 });
 
-console.log(store.getters.field('Close Rate'));
 
 const vm = new Vue({
     el: '#app',
@@ -969,7 +968,7 @@ exports = module.exports = __webpack_require__(1)(undefined);
 
 
 // module
-exports.push([module.i, "\n.graph-wrap[data-v-21d5040e]:hover {\n    cursor: pointer;\n}\n.graph-wrap[data-v-21d5040e] {\n    height: 150px;\n}\n.graph-wrap text[data-v-21d5040e] {\n    text-anchor: middle;\n    font-size: 0.8em;\n}\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n    stroke-linejoin: round;\n    stroke-linecap: round;\n    stroke-width: 1.5;\n}\n.axis[data-v-21d5040e] {\n    font-size: 0.5em;\n}\n", ""]);
+exports.push([module.i, "\n.graph-wrap[data-v-21d5040e]:hover {\n    cursor: pointer;\n}\n.graph-wrap[data-v-21d5040e] {\n    height: 150px;\n}\n.graph-wrap text[data-v-21d5040e] {\n    text-anchor: middle;\n    font-size: 0.8em;\n}\nh1[data-v-21d5040e], .content[data-v-21d5040e] {\n  margin-left: 20px;\n}\nlabel[data-v-21d5040e] {\n  display: inline-block;\n  width: 150px;\n}\n.line[data-v-21d5040e] {\n    fill: none;\n    stroke: steelblue;\n    stroke-linejoin: round;\n    stroke-linecap: round;\n    stroke-width: 1.5;\n}\n.goal-line[data-v-21d5040e] {\n    fill: none;\n    stroke: lightgrey;\n    stroke-opacity: 0.7;\n    stroke-width: 1.0;\n}\n.axis[data-v-21d5040e] {\n    font-size: 0.5em;\n}\n", ""]);
 
 // exports
 
@@ -1048,6 +1047,7 @@ module.exports = function listToStyles (parentId, list) {
 //
 //
 //
+//
 
 
 
@@ -1072,10 +1072,13 @@ const props = {
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     name: 'line-graph',
+
     props,
+
     components: {
         'data-table': __WEBPACK_IMPORTED_MODULE_0__data_table_vue__["a" /* default */]
     },
+
     data () {
         return {
             showTable: false,
@@ -1086,6 +1089,7 @@ const props = {
                 area: '',
                 line: '',
                 selector: '',
+                goalLine: ''
             },
             lastHoverPoint: {},
             scaled: {
@@ -1095,6 +1099,7 @@ const props = {
             points: [],
         };
     },
+
     computed: {
         padded() {
             const width = this.width - this.margin.left - this.margin.right;
@@ -1105,19 +1110,23 @@ const props = {
             return d3.max(this.data, (d) => d[this.yField]);
         }
     },
+
     mounted() {
         window.addEventListener('resize', this.onResize);
         this.onResize();
     },
+
     beforeDestroy() {
         window.removeEventListener('resize', this.onResize);
     },
+
     watch: {
         width: function widthChanged() {
             this.initialize();
             this.update();
         }
     },
+
     methods: {
         toggleTable() {
             this.showTable = !this.showTable;
@@ -1154,6 +1163,17 @@ const props = {
             this.scaled.y.domain([0, this.ceil]);
             this.points = [];
 
+            // Draw goal line
+            let goal = this.$store.getters.field(this.yField).goal;
+            let goalPoints = this.scaled.x.domain().map((xVal) =>
+                ({
+                    x: this.scaled.x(xVal),
+                    y: this.scaled.y(goal)
+                })
+            );
+            this.paths.goalLine = this.createLine(goalPoints);
+
+            // Create graph points
             for (let d of this.data) {
                 this.points.push({
                     x: this.scaled.x(parseTime(d[this.xField])),
@@ -1517,6 +1537,11 @@ var render = function() {
                 _c("path", {
                   staticClass: "area",
                   attrs: { d: _vm.paths.area }
+                }),
+                _vm._v(" "),
+                _c("path", {
+                  staticClass: "goal-line",
+                  attrs: { d: _vm.paths.goalLine }
                 }),
                 _vm._v(" "),
                 _c("path", {
