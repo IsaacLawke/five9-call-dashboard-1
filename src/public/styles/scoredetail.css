@@ -4,7 +4,59 @@ h1 {
 h2, h3 {
     font-weight: normal;
 }
+/* Testing dropdown space */
+    /* style dropw down menu */
+    .dropm {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
 
+    /* Container - needed to position the dropdown content */
+    .dropdown {
+        position: relative;
+        margin: 1em;
+        display: inline-block;
+    }
+
+    /* dropdown content (hidden by default) */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    /* Links insde the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    /* chnage color of dropdown links on hover */
+    .dropdown-content a:hover {
+            background-color: #f1f1f1;
+    }
+
+    /* show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    /* change the background color of the dropdown button when the dropdown
+    content is shown */
+    .dropdown:hover .dropm {
+        background-color: #3e8e41;
+    }
+
+/* end testing dropdown space */
 .menu{
     width: 100px;
     position: absolute;
@@ -20,9 +72,9 @@ h2, h3 {
 .round-button {
     width: 40px;
     height: 40px;
-    margin: 1em;
+    /*margin: 1em;*/
     border-radius: 40px;
-    margin-left: 0;
+    /* margin-left: .5em; */
     text-align: center;
     line-height: 40px;
     color: #7a7c82;
@@ -61,6 +113,7 @@ h2, h3 {
     top: 0;
     left: 0;
     margin: 1em;
+    padding: 0;
     border-radius: 40px;
     text-align: center;
     line-height: 40px;

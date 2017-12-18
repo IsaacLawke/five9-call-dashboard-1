@@ -11,6 +11,14 @@
     </head>
 
     <body>
+    <div class = "dropdown">
+        <button class = "dropm">Button</button>
+        <div class = "dropdown-content">
+            <a href="#">Link 1</a>
+            <a href="#">Link 2</a>
+            <a href="#">Link 3</a>
+        </div>
+    </div>
     <div id="app" class="content-wrapper">
         <div class="scorecard-wrapper">
             <card
@@ -19,7 +27,8 @@
                 :key="i"
             ></card>
         </div>
-        <button
+
+        <!-- <button
             class="drop-down"
             @click="toggleMenu">
             &#9776;
@@ -31,7 +40,7 @@
                         class="round-button"
                         v-if="$store.state.editMode"
                         @click="addCard"
-                    >Test 1</button>
+                    >></button>
                 </li>
                 <li>
                     <button
@@ -41,18 +50,7 @@
                     >Test 2</button>
                 </li>
             </ul>
-            <!-- <button
-                class="add-button"
-                v-if="$store.state.editMode"
-                @click="addCard"
-            >+</button>
-
-            <button
-              class="button-test"
-              v-if="$store.state.editMode">
-              >
-            </button> -->
-        </div>
+        </div> -->
 
         <button
             @click="$store.commit('toggleEditMode')"
