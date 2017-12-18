@@ -5,6 +5,21 @@ h2, h3 {
     font-weight: normal;
 }
 
+.drop-down{
+    width:  40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 1em;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #888;
+    font-size: 1.5em;
+    background-color: hsla(0,0%,75%, 0.4);
+}
+
 .add-button {
     width: 40px;
     height: 40px;

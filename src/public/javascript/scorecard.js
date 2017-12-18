@@ -170,7 +170,8 @@ const vm = new Vue({
     el: '#app',
     store,
     data: {
-        layout: layout
+        layout: layout,
+        menuIsActive: false
     },
 
     components: {
@@ -188,6 +189,9 @@ const vm = new Vue({
                 'widgets': []
             }
             this.layout.cards.push(newCard);
+        },
+        toggleMenu: function() {
+            this.menuIsActive = !this.menuIsActive
         }
     }
 });

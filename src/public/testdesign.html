@@ -19,12 +19,40 @@
                 :key="i"
             ></card>
         </div>
-
         <button
-            class="add-button"
-            v-if="$store.state.editMode"
-            @click="addCard"
-        >+</button>
+            class="drop-down"
+            @click="toggleMenu">
+            &#9776;
+        </button>
+        <div class="menu" v-if="menuIsActive">
+            <ul>
+                <li>
+                    <button
+                        class="round-button"
+                        v-if="$store.state.editMode"
+                        @click="addCard"
+                    >Test 1</button>
+                </li>
+                <li>
+                    <button
+                        class="round-button"
+                        v-if="$store.state.editMode"
+                        @click="addCard"
+                    >Test 2</button>
+                </li>
+            </ul>
+            <!-- <button
+                class="add-button"
+                v-if="$store.state.editMode"
+                @click="addCard"
+            >+</button>
+
+            <button
+              class="button-test"
+              v-if="$store.state.editMode">
+              >
+            </button> -->
+        </div>
 
         <button
             @click="$store.commit('toggleEditMode')"
@@ -37,11 +65,7 @@
             id="export-layout">
             Export
         </button>
-        <button
-          class="button-test"
-          v-if="$store.state.editMode">
-          >
-        </button>
+
     </div>
     </body>
 

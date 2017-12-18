@@ -5,7 +5,56 @@ h2, h3 {
     font-weight: normal;
 }
 
-.add-button {
+.menu{
+    width: 100px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    margin: 1em;
+    outline: red;
+}
+.menu ul{
+    margin: 0;
+    padding: 0;
+}
+.round-button {
+    width: 40px;
+    height: 40px;
+    margin: 1em;
+    border-radius: 40px;
+    margin-left: 0;
+    text-align: center;
+    line-height: 40px;
+    color: #7a7c82;
+    font-size: 1.5em;
+    background-color: #5d1c1c;
+}
+.round-button span {
+    text-align: center;
+    width: 40px;
+    margin: auto;
+}
+.round-button:hover {
+    border: none;
+    background-color: #9e5555;
+    color: black;
+}
+/* .button-test {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: 2em;
+    margin: 1em;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #7a7c82;
+    font-size: 1.5em;
+    background-color: #5d1c1c;
+} */
+
+.drop-down {
     width: 40px;
     height: 40px;
     position: absolute;
@@ -19,30 +68,12 @@ h2, h3 {
     font-size: 1.5em;
     background-color: #5d1c1c;
 }
-.add-button span {
-    text-align: center;
-    width: 40px;
-    margin: auto;
-}
-.add-button:hover {
+
+.drop-down:hover {
     border: none;
     background-color: #9e5555;
     color: black;
-}
-.button-test {
-    width: 40px;
-    height: 40px;
-    position: absolute;
-    top: 0;
-    left: 2em;
-    margin: 1em;
-    border-radius: 40px;
-    text-align: center;
-    line-height: 40px;
-    color: #7a7c82;
-    font-size: 1.5em;
-    background-color: #5d1c1c;
-}
+  }
 
 .button-test:hover {
     border: none;
