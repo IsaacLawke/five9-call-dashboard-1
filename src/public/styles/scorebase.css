@@ -1,0 +1,277 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    background: #585d62;  /* fallback for old browsers */
+    /*background: linear-gradient(to right, hsl(32, 35%, 92%), hsl(144, 0%, 94%));*/
+
+    color: #585d62;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+input, button, select, textarea, optgroup, option {
+    font-family: inherit;
+}
+
+
+body * {
+    box-sizing: border-box;
+}
+
+.message {
+    color: #666;
+}
+
+.content-wrapper {
+    padding: 2%;
+}
+
+.stats-box {
+    position: relative;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    background-color: #191a1c;
+    box-shadow: 0 1px 5px rgba(0,0,0,1),
+                0 1px 30px rgba(0,0,0,1),
+                0 4px 20px rgba(0,0,0,1),
+                0 1px 4px rgba(0,0,0,1);
+    color: #666;
+}
+
+/* Hidden elements */
+.hidden {
+    display: none;
+}
+
+/* Template used for cloning */
+.stats-box.template {
+    display: none;
+}
+
+
+
+/* Live queue gizmos */
+.gizmo-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 100%;
+    justify-content: space-between;
+    margin-top: 3.5em;
+}
+
+.stats-box.gizmo {
+    width: 230px;
+}
+
+.stats-box .department-name {
+    margin-top: 0;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+.stats-box .department-name {
+    margin: auto 1em;
+    height: 2em;
+}
+
+.stats-box .metric-wrapper {
+    padding: 0.5em;
+}
+
+.stats-box .metric {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.stats-box .descriptor {
+    margin: 0.5em auto;
+}
+
+.stats-box .sub-metric-wrapper {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 0 auto;
+    font-size: 1.3em;
+}
+
+.stats-box .sub-metric-wrapper p {
+    margin: 0.25em;
+}
+
+.stats-box .sub-metric-wrapper .agents-ready-for-calls,
+.stats-box .sub-metric-wrapper .calls-in-sl {
+    color: hsl(120, 35%, 50%);
+}
+.stats-box .sub-metric-wrapper .agents-on-call { color: #888; }
+.stats-box .sub-metric-wrapper .agents-not-ready-for-calls,
+.stats-box .sub-metric-wrapper .calls-out-of-sl {
+    color: hsl(0, 55%, 60%);
+}
+
+/* Hamburger menu to open skill editor and X to remove */
+.gizmo-control {
+    text-decoration: none;
+    position: absolute;
+    font-size: 1.5em;
+    color: #888;
+    margin: 4%;
+}
+.stats-box .skills-edit-toggle {
+    top: 0;
+    right: 0;
+}
+.stats-box .gizmo-control:hover {
+    color: #444;
+}
+
+.stats-box .show-skills-list {
+    height: 1.5em;
+    margin: 0.5em auto;
+    color: #888;
+    background-color: transparent;
+    border-radius: 4px;
+}
+.stats-box .show-skills-list:hover {
+    background-color: rgba(200, 200, 200, 0.65);
+    cursor: pointer;
+}
+.stats-box .show-skills-list.selected {
+    filter: invert(100%);
+    color: #000;
+    background-color: rgba(250, 250, 250, 0.5);
+}
+
+
+
+/* Login styles */
+.credentials-wrapper {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    min-height: 300px;
+    overflow-x: hidden;
+}
+
+.credentials-form, .credentials-cover, .slidable {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    transition: all 1s ease;
+}
+
+.credentials-form input {
+    font-family: sans-serif;
+}
+
+.credentials-form label {
+    font-family: monospace;
+    display: block;
+    margin: 20px;
+}
+
+.credentials-cover {
+    color: #444;
+    letter-spacing: 2px;
+    padding: 0;
+}
+
+.credentials-form.out-of-the-way {
+    transform: translate(-100vw);
+}
+.credentials-cover.out-of-the-way {
+    transform: translate(100vw);
+}
+
+
+
+/* Buttons! */
+button {
+    border: none;
+    width: 100%;
+    height: 50px;
+    letter-spacing: 3px;
+    transition: all 200ms linear;
+}
+
+.btn {
+    background-color: #e6e6e6;
+}
+.btn.add-gizmo {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1em;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #888;
+    font-size: 1.5em;
+    background-color: hsla(0,0%,75%, 0.4);
+}
+.btn.add-gizmo span {
+    text-align: center;
+    width: 40px;
+    margin: auto;
+}
+.btn.add-gizmo:hover {
+    border: none;
+    background-color: hsl(23, 60%, 82%);
+    color: black;
+}
+
+.btn.begin-session {
+    font-size: 1.05em;
+    color: white;
+    max-width: 500px;
+    background: linear-gradient(to right, hsl(32, 35%, 63%), hsl(157, 10%, 55%));
+}
+
+
+.btn.begin-session:hover {
+    background: linear-gradient(to right, hsl(32, 35%, 80%), hsl(157, 10%, 75%));
+}
+
+.btn.credentials-cover-toggle {
+    font-size: 1.05em;
+    background: transparent;
+    color: #888;
+    width: 100%;
+    height: 100%;
+    min-height: 50px;
+
+    transition: all 100ms linear;
+    background: linear-gradient(to right, #fdfcfc, hsl(240, 90%, 98%));
+    background-size: 200% 100%;
+    background-position:left bottom;
+}
+
+.btn.credentials-cover-toggle:hover {
+    background: linear-gradient(to right, #fffefe, hsl(240, 90%, 99%));
+}
+
+.btn:hover {
+    color: #444;
+    letter-spacing: 5px;
+    background-position: right bottom;
+}
+
+.clock {
+    text-align: center;
+    color: hsl(236, 19%, 70%)
+}
+
+@media screen and (max-width: 400px) {
+    .stats-box.gizmo {
+        width: 180px;
+    }
+}
