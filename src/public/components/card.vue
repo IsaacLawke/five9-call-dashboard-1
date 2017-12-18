@@ -10,8 +10,8 @@
     <line-graph
         v-for="(widget, i) in widgetsOfType('line-graph')"
         :data="data"
-        :x-field="widget.fields.x"
-        :y-field="widget.fields.y"
+        :x-field="widget.fieldNames.x"
+        :y-field="widget.fieldNames.y"
         :key="widget.id"
     ></line-graph>
 
@@ -35,7 +35,7 @@ import { formatValue } from '../javascript/scorecard-format';
 
 
 const singleValue = {
-    props: ['value', 'title', 'field'],
+    props: ['value', 'title', 'fieldName'],
     template: `
         <div>
             <h3>{{ title }}</h3>
@@ -46,6 +46,9 @@ const singleValue = {
         </div>
     `,
     computed: {
+        field: function() {
+            return this.$store.getters.field(this.fieldName);
+        },
         formatted: function() {
             return formatValue(this.value, this.field);
         }

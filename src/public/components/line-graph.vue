@@ -17,6 +17,7 @@ Accepts data prop with structure:
             <g class="axis" ref="yaxis" :style="{transform: `translate(20px,${margin.top}px)`}"></g>
             <g :style="{transform: `translate(${margin.left}px, ${margin.top}px)`}">
                 <path class="area" :d="paths.area" />
+                <path class="goal-line" :d="paths.goalLine" />
                 <path class="line" :d="paths.line" />
                 <path class="selector" :d="paths.selector" />
             </g>
@@ -57,10 +58,13 @@ const props = {
 
 export default {
     name: 'line-graph',
+
     props,
+
     components: {
         'data-table': DataTable
     },
+
     data () {
         return {
             showTable: false,
@@ -71,6 +75,7 @@ export default {
                 area: '',
                 line: '',
                 selector: '',
+                goalLine: ''
             },
             lastHoverPoint: {},
             scaled: {
@@ -80,6 +85,7 @@ export default {
             points: [],
         };
     },
+
     computed: {
         padded() {
             const width = this.width - this.margin.left - this.margin.right;
@@ -90,19 +96,23 @@ export default {
             return d3.max(this.data, (d) => d[this.yField]);
         }
     },
+
     mounted() {
         window.addEventListener('resize', this.onResize);
         this.onResize();
     },
+
     beforeDestroy() {
         window.removeEventListener('resize', this.onResize);
     },
+
     watch: {
         width: function widthChanged() {
             this.initialize();
             this.update();
         }
     },
+
     methods: {
         toggleTable() {
             this.showTable = !this.showTable;
@@ -139,6 +149,17 @@ export default {
             this.scaled.y.domain([0, this.ceil]);
             this.points = [];
 
+            // Draw goal line
+            let goal = this.$store.getters.field(this.yField).goal;
+            let goalPoints = this.scaled.x.domain().map((xVal) =>
+                ({
+                    x: this.scaled.x(xVal),
+                    y: this.scaled.y(goal)
+                })
+            );
+            this.paths.goalLine = this.createLine(goalPoints);
+
+            // Create graph points
             for (let d of this.data) {
                 this.points.push({
                     x: this.scaled.x(parseTime(d[this.xField])),
@@ -181,6 +202,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
     .graph-wrap:hover {
         cursor: pointer;
@@ -207,6 +229,12 @@ export default {
         stroke-linejoin: round;
         stroke-linecap: round;
         stroke-width: 1.5;
+    }
+    .goal-line {
+        fill: none;
+        stroke: lightgrey;
+        stroke-opacity: 0.7;
+        stroke-width: 1.0;
     }
     .axis {
         font-size: 0.5em;
