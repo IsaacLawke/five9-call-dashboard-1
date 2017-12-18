@@ -15,9 +15,9 @@ h2, h3 {
     border-radius: 40px;
     text-align: center;
     line-height: 40px;
-    color: #888;
+    color: #7a7c82;
     font-size: 1.5em;
-    background-color: hsla(0,0%,75%, 0.4);
+    background-color: #5d1c1c;
 }
 .add-button span {
     text-align: center;
@@ -26,24 +26,35 @@ h2, h3 {
 }
 .add-button:hover {
     border: none;
-    background-color: hsl(23, 60%, 82%);
+    background-color: #9e5555;
     color: black;
 }
 .button-test {
-    width:40px;
+    width: 40px;
     height: 40px;
     position: absolute;
     top: 0;
-    right: 3em;
+    left: 2em;
     margin: 1em;
     border-radius: 40px;
     text-align: center;
-    color: #888
-    font-size: 1.5em
-    background-color: hsla(0,0%,75%,0.4);
+    line-height: 40px;
+    color: #7a7c82;
+    font-size: 1.5em;
+    background-color: #5d1c1c;
 }
 
+.button-test:hover {
+    border: none;
+    background-color: #9e5555;
+    color: black;
+}
 
+.button span {
+    text-align: center;
+    width: 40px;
+    margin: auto;
+}
 .scorecard-wrapper {
     display: flex;
     flex-direction: row;
