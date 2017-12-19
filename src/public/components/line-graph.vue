@@ -107,10 +107,8 @@ export default {
     },
 
     watch: {
-        width: function widthChanged() {
-            this.initialize();
-            this.update();
-        }
+        width: function() { this.update(); },
+        data: function() { this.update(); }
     },
 
     methods: {
@@ -139,6 +137,7 @@ export default {
             d3.axisBottom().scale(this.scaled.y);
         },
         update() {
+            this.initialize();
             const parseTime = d3.timeParse('%Y-%m-%d');
             for (let d of this.data) {
                 d[this.yField] *= 1;
