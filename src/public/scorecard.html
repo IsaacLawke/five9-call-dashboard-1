@@ -13,11 +13,13 @@
     <body>
     <div id="app" class="content-wrapper">
         <div class="scorecard-wrapper">
-            <card
-                v-for="(card, i) in layout.cards"
-                v-bind="card"
-                :key="i"
-            ></card>
+            <draggable v-model="layout.cards" class="drag-area">
+                <card
+                    v-for="(card, i) in layout.cards"
+                    v-bind="card"
+                    :key="i"
+                ></card>
+            </draggable>
         </div>
 
         <button
