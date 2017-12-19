@@ -11,15 +11,44 @@
     </head>
 
     <body>
-    <div class = "dropdown">
-        <button class = "dropm">Button</button>
-        <div class = "dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
+    <!-- <div class="dropdown">
+        <button class="dropm">&#9776;</button>
+        <div class="dropdown-content">
+            <button
+                class="insidedrop"
+                @click="$store.commit('toggleEditMode')"
+                id="toggle-edit-mode">
+                <a> Edit Mode </a>
+            </button>
+            <button class="insidedrop"> <a>+ Link 2</a> </button>
+            <button class="insidedrop"> <a>Link 3</a> </button>
         </div>
-    </div>
+    </div> -->
     <div id="app" class="content-wrapper">
+        <div class="dropdown">
+            <button class="dropm">&#9776;</button>
+            <div class="dropdown-content">
+                <button
+                    class="insidedrop"
+                    @click="$store.commit('toggleEditMode')"
+                    id="toggle-edit-mode">
+                    <a> Edit Mode </a>
+                </button>
+                <button class="insidedrop"
+                    v-if="$store.state.editMode"
+                    @click="exportLayout"
+                    id="export-layout">
+                    <a> Format </a>
+                </button>
+                <button class="insidedrop"
+                    v-if="$store.state.editMode"
+                    @click="exportLayout"
+                    id="export-layout">
+                    <a> Export </a>
+                </button>
+                <button class="insidedrop"> <a>Link 3</a> </button>
+            </div>
+        </div>
         <div class="scorecard-wrapper">
             <card
                 v-for="(card, i) in layout.cards"
@@ -52,7 +81,8 @@
             </ul>
         </div> -->
 
-        <button
+        <!-- <button
+            class = "insidedrop"
             @click="$store.commit('toggleEditMode')"
             id="toggle-edit-mode">
             Edit Mode
@@ -62,7 +92,7 @@
             @click="exportLayout"
             id="export-layout">
             Export
-        </button>
+        </button> -->
 
     </div>
     </body>

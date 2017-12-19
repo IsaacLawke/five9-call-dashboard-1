@@ -6,42 +6,60 @@ h2, h3 {
 }
 /* style dropdown menu */
 .dropm {
-    background-color: #191a1c;
+    background-color: #2b2b2d;
     color: #ccc;
-    padding: 16px;
+
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    margin: auto;
     font-size: 16px;
     border: none;
     cursor: pointer;
 }
+.insidedrop {
+    background-color: #2b2b2d;
+    padding: 0;
+    font-size: 14px;
+    text-align: Left;
+}
 
 /* Container - needed to position the dropdown content */
 .dropdown {
-    position: relative;
-    margin: 1em;
+    position: fixed;
     display: inline-block;
+    box-shadow: 0 1px 5px rgba(0,0,0,1),
+                0 1px 30px rgba(0,0,0,1),
+                0 4px 20px rgba(0,0,0,1),
+                0 1px 4px rgba(0,0,0,1);
 }
+/* dropdown button format */
 
 /* dropdown content (hidden by default) */
 .dropdown-content {
     display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    position: relative;
+    background-color: #0f0f11;
+    min-width: 100px;
+    max-width: 130px;
+    overflow-y: hidden;
     z-index: 1;
 }
 
 /* Links insde the dropdown */
 .dropdown-content a {
     color: black;
-    padding: 12px 16px;
+    padding: 16px 16px;
     text-decoration: none;
     display: block;
+    border-top: 1px solid black;
 }
 
 /* chnage color of dropdown links on hover */
 .dropdown-content a:hover {
-        background-color: #f1f1f1;
+        background-color: #5d1c1c;
 }
 
 /* show the dropdown menu on hover */
@@ -52,11 +70,11 @@ h2, h3 {
 /* change the background color of the dropdown button when the dropdown
 content is shown */
 .dropdown:hover .dropm {
-    background-color: #1E4646;
-    box-shadow: 0 1px 5px rgba(0,0,0,1),
+    background-color: #2b2b2d;
+    /* box-shadow: 0 1px 5px rgba(0,0,0,1),
                 0 1px 30px rgba(0,0,0,1),
                 0 4px 20px rgba(0,0,0,1),
-                0 1px 4px rgba(0,0,0,1);
+                0 1px 4px rgba(0,0,0,1); */
 }
 
 .menu{
